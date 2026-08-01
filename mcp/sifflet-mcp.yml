@@ -1,0 +1,25 @@
+generated: '2026-07-21'
+method: searched
+status: published
+source: https://docs.siffletdata.com/docs/sifflet-mcp-server.md
+server:
+  name: sifflet-mcp
+  transport: stdio
+  repository: https://github.com/siffletdata/sifflet-mcp
+  docs: https://docs.siffletdata.com/docs/sifflet-mcp-server.md
+  description: >-
+    Official Sifflet MCP (Model Context Protocol) Server. Bridges Sifflet's data
+    observability APIs into IDEs and agent tools (e.g. Cursor). Authenticates with a
+    Sifflet Access Token.
+capabilities:
+  - name: explore_data_assets
+    description: Access and view metadata for data assets (tables, views, dashboards).
+  - name: discover_and_configure_monitors
+    description: Find existing monitors and generate their configurations to bootstrap new asset monitoring.
+  - name: list_incidents
+    description: Get an overview of data observability incidents detected by Sifflet.
+  - name: impact_analysis
+    description: Trace the downstream impact of a change or incident before pushing to production.
+notes: >-
+  Capabilities transcribed verbatim from the official docs "Key Features and Capabilities"
+  section; exact MCP tool names are defined in the sifflet-mcp GitHub repository.

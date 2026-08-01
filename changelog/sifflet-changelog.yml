@@ -1,0 +1,27 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.siffletdata.com/changelog
+scheme: rolling
+note: >-
+  Sifflet publishes a rolling product changelog on its documentation site (ReadMe-hosted).
+  Individual entries are not date-stamped in the page markdown; the most recent entries at
+  capture time are listed below (most recent first).
+entries:
+  - title: Incident Muting and Improvements to Monitor Muting
+    url: https://docs.siffletdata.com/changelog/incident-muting-and-improvements-to-monitor-muting
+    type: enhancement
+  - title: Data Catalog API
+    url: https://docs.siffletdata.com/changelog/data-catalog-api
+    type: addition
+    highlight: >-
+      New public Data Catalog API to push metadata from internal/third-party data catalogs
+      into Sifflet assets (POST publicImportExternalCatalog).
+  - title: Atlan integration (beta)
+    url: https://docs.siffletdata.com/changelog/atlan-integration-beta
+    type: addition
+  - title: 'Data Products: Status-Based Notifications and Summaries'
+    url: https://docs.siffletdata.com/changelog/data-products-status-based-notifications-and-summaries-1
+    type: enhancement
+  - title: 'Update: Notification rules'
+    url: https://docs.siffletdata.com/changelog/update-notification-rules
+    type: enhancement

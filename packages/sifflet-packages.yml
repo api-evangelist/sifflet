@@ -1,0 +1,25 @@
+generated: '2026-07-21'
+method: searched
+source: https://pypi.org/pypi/sifflet/json
+packages:
+  - language: python
+    registry: pypi
+    name: sifflet
+    url: https://pypi.org/project/sifflet/
+    install: pipx install sifflet
+    summary: Sifflet CLI
+    version_seen: 0.6.0
+    official: true
+    notes: >-
+      Official Sifflet command-line interface (Python 3.10+). Homepage points to
+      siffletdata.com. Provides configure/ingest/rules/status/code commands and powers
+      Monitors-as-Code. See cli/sifflet-cli.yml for the command surface.
+  - language: hcl
+    registry: terraform
+    name: siffletdata/sifflet
+    url: https://registry.terraform.io/providers/siffletdata/sifflet/latest
+    install: 'terraform { required_providers { sifflet = { source = "siffletdata/sifflet" } } }'
+    official: true
+    notes: >-
+      Official Sifflet Terraform provider. Manages Sifflet resources (credentials, sources,
+      users, etc.) as code. Docs: https://docs.siffletdata.com/docs/terraform-provider.md

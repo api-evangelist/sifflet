@@ -1,0 +1,47 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.siffletdata.com/reference/overview-1.md
+versioning:
+  scheme: uri-path
+  current: v2
+  note: >-
+    Public API paths are versioned in the URI (e.g. /api/v2/sources). A v1 Sources API and a
+    v1 monitor schema exist and are being phased out in favour of v2.
+  docs: https://docs.siffletdata.com/reference/overview-1.md
+deprecation:
+  policy: informal
+  signal: >-
+    Deprecated endpoints are flagged in the API reference with "This endpoint is deprecated
+    and will be removed soon. Please use the ... V2 endpoint instead" notices that name the
+    replacement operation. No formal Sunset/Deprecation HTTP header policy is documented.
+  docs: https://docs.siffletdata.com/reference/overview-1.md
+status_page: https://status.siffletdata.com/
+deployment_models:
+  - saas
+  - self-hosted
+deprecated_operations:
+  # Sources V1 -> replaced by Sources V2 (POST/GET /api/v2/sources ...)
+  - name: publicCreateSource
+    replacement: publicCreateSourceV2
+    ref: https://docs.siffletdata.com/reference/publiccreatesource.md
+  - name: publicGetSources
+    replacement: publicGetSourcesV2
+    ref: https://docs.siffletdata.com/reference/publicgetsources.md
+  - name: testSourceConnection
+    replacement: publicTestSourceConnectionV2
+    ref: https://docs.siffletdata.com/reference/testsourceconnection.md
+  - name: publicDeleteSourceById
+    replacement: publicDeleteSourceV2
+    ref: https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - name: publicGetSource
+    replacement: publicGetSourceV2
+    ref: https://docs.siffletdata.com/reference/publicgetsource.md
+  - name: publicEditSource
+    replacement: publicEditSourceV2
+    ref: https://docs.siffletdata.com/reference/publiceditsource.md
+  - name: publicSourceIngestionManualRun
+    replacement: publicRunSubsourceV2
+    ref: https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - name: monitor-schema-v1
+    replacement: monitor-schema (v2)
+    ref: https://docs.siffletdata.com/docs/monitor-schema-copy.md

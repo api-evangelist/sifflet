@@ -1,0 +1,49 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.siffletdata.com/reference/overview-1.md
+authentication:
+  style: bearer
+  detail: Access Token (bearer) required on all public API endpoints.
+  ref: authentication/sifflet-authentication.yml
+content_negotiation:
+  request_content_types:
+    - application/json
+    - application/x-yaml
+  response_content_types:
+    - application/json
+    - application/x-yaml
+  note: >-
+    All Sifflet API endpoints support both application/json and application/x-yaml for the
+    Content-Type. This dual JSON/YAML support aligns with the Monitors-as-Code workflow.
+base_url:
+  saas: https://<tenant_name>.siffletdata.com/api/v2
+  self_hosted: https://<sifflet-host>/api/v2
+  note: >-
+    SaaS API is served on the same host as the tenant UI (per-tenant subdomain of
+    siffletdata.com). Self-hosted deployments serve the API at the same URL as the UI, at
+    /api; a custom backendApiUrl Helm value may drop the /api prefix.
+pagination:
+  style: page
+  note: >-
+    List/convert endpoints (e.g. convert-all-monitors-to-as-code) return paginated results.
+    Exact page/cursor parameter names are defined per operation in the API reference.
+versioning:
+  style: uri-path
+  ref: lifecycle/sifflet-lifecycle.yml
+error_envelope:
+  ref: errors/sifflet-problem-types.yml
+  note: >-
+    Aggregate/batch operations use HTTP status to reflect outcome (200 all-success,
+    207 partial success, 400 all-failed). See errors artifact.
+idempotency:
+  supported: false
+  note: >-
+    No documented idempotency-key header/contract for the Sifflet public API. Many
+    mutating operations are keyed on stable natural identifiers (workspace name, calendar
+    id, domain id, source id) making create/update effectively addressable, but no explicit
+    idempotency mechanism is published, so no Idempotency pointer is emitted.
+resource_identifiers:
+  note: >-
+    Data assets are addressed by a technology-qualified URI (e.g.
+    "bigquery:project-id.dataset-id.table"). Other resources use UUID ids.
+  uri_docs: https://docs.siffletdata.com/docs/uri.md

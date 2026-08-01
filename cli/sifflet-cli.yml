@@ -1,0 +1,44 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.siffletdata.com/docs/cli-command-line-interface.md
+reference: https://docs.siffletdata.com/docs/cli-commands-reference.md
+name: sifflet
+summary: >-
+  The Sifflet CLI lets you interact with the Sifflet application from your terminal,
+  implementing functionality equivalent to the browser app. Requires Python 3.10+ and a
+  Sifflet Access Token. Used for metadata ingestion, running monitors, and Monitors-as-Code.
+prerequisites:
+  - Python 3.10 or greater
+  - A Sifflet Access Token
+  - 'SaaS: your tenant name (from https://<tenant_name>.siffletdata.com)'
+  - 'Self-hosted: your Sifflet backend URL (including https:// and /api)'
+install:
+  - method: pipx
+    command: pipx install sifflet
+  - method: pipx-upgrade
+    command: pipx install sifflet --upgrade
+config:
+  command: sifflet configure
+  env_vars: true
+  note: >-
+    Configuration (tenant/backend URL + access token) can be set via `sifflet configure`
+    (persisted to a config file) or via environment variables.
+commands:
+  - name: configure
+    description: Set tenant/backend URL and access token credentials.
+    docs: https://docs.siffletdata.com/docs/sifflet-configure.md
+  - name: ingest
+    description: Ingest metadata into Sifflet.
+    docs: https://docs.siffletdata.com/docs/sifflet-ingest.md
+  - name: rules
+    description: Manage and run Sifflet monitors/rules (Monitors-as-Code).
+    docs: https://docs.siffletdata.com/docs/sifflet-rules.md
+  - name: status
+    description: Check status.
+    docs: https://docs.siffletdata.com/docs/sifflet-status.md
+  - name: code
+    description: >-
+      Apply Monitors-as-Code / workspace definitions (command surface differs between CLI
+      versions <=0.3.22 and >=0.4.0).
+    docs: https://docs.siffletdata.com/docs/code-copy.md
+binary_package: packages/sifflet-packages.yml

@@ -1,0 +1,77 @@
+generated: '2026-07-21'
+method: derived
+source: https://docs.siffletdata.com/reference
+note: >-
+  Entity graph derived from the public API reference resource families (no machine-readable
+  OpenAPI was available to harvest; relationships inferred from documented endpoints and the
+  webhook payload shape). Identifiers are UUIDs except data assets, which use a
+  technology-qualified URI.
+entities:
+  - name: Asset
+    id: uri
+    id_format: '<technology>:<path> (e.g. bigquery:project.dataset.table)'
+    operations: [publicGetAsset, publicGetAssets, publicEditAsset, publicImportExternalCatalog]
+    relationships:
+      - belongs_to: Domain
+      - has_many: Tag
+      - has_many: Monitor
+        note: monitors run against assets
+  - name: Workspace
+    id: name
+    operations: [publicSyncAssets, publicDeleteWorkspace]
+    note: Monitors-as-Code workspace of declarative monitor/asset definitions.
+  - name: Monitor
+    aka: Rule
+    id: id
+    operations: [getAllRule, getSiffletRuleDetails, getSiffletRuleInfo, getSiffletRuleOverview, siffletRuleManualRun, getAllMonitorsAsCode]
+    relationships:
+      - has_many: MonitorRun
+        via: ruleId
+      - targets: Asset
+  - name: MonitorRun
+    aka: RuleRun
+    id: runId
+    operations: [getSiffletRuleRuns, getSiffletRuleRun]
+    relationships:
+      - belongs_to: Monitor
+        via: ruleId
+  - name: Source
+    id: id
+    versioned: v2
+    operations: [publicGetSourcesV2, publicCreateSourceV2, publicGetSourceV2, publicEditSourceV2, publicDeleteSourceV2, publicGetSourceSchemaList, publicRunSourceV2, publicRunSubsourceV2]
+    relationships:
+      - uses: Credentials
+      - has_many: Subsource
+      - produces: Asset
+  - name: Credentials
+    id: name
+    operations: [publicGetAllCredentials, publicCreateCredentials, publicGetCredentials, publicUpdateCredentials, publicDeleteCredentials]
+    note: Secret store for source connections; eventually consistent on create.
+  - name: Domain
+    id: id
+    operations: [publicGetDomains, publicCreateDomain, publicGetDomain, publicUpdateDomain, publicDeleteDomain]
+    relationships:
+      - has_many: Asset
+      - scopes: AccessToken
+  - name: NotificationRule
+    id: id
+    operations: [publicGetNotificationRules, publicCreateNotificationRule, publicGetNotificationRule, publicUpdateNotificationRule, publicDeleteNotificationRule]
+    relationships:
+      - routes: Monitor events
+  - name: Calendar
+    id: id
+    operations: [publicGetCalendars, publicCreateCalendar, publicGetCalendar, publicUpdateCalendar, publicDeleteCalendar]
+    note: Special-dates / scheduling calendars.
+  - name: Team
+    id: id
+    operations: [publicGetTeams, publicCreateTeam, publicGetTeam, publicUpdateTeam, publicDeleteTeam]
+    relationships:
+      - has_many: User
+  - name: User
+    id: id
+    operations: [publicGetUsers, publicCreateUser, publicGetUser, publicUpdateUser, publicDeleteUser, publicResetUserPassword]
+    relationships:
+      - belongs_to: Team
+  - name: Tag
+    id: id
+    note: Classification/generic tags on assets (kind = CLASSIFICATION | GENERIC), seen in webhook payloads.

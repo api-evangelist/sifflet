@@ -1,0 +1,43 @@
+generated: '2026-07-21'
+method: searched
+type: Webhooks
+source: https://docs.siffletdata.com/docs/webhooks.md
+summary: >-
+  Sifflet sends outbound webhook notifications about monitor/incident events to a
+  configured HTTP endpoint. Configured in-app under Settings > Collaboration tools >
+  Webhooks. Supports an optional custom header (for endpoint authentication). Delivery is
+  considered successful when the receiving endpoint returns a 2xx status code.
+scopes:
+  - name: linked-events
+    description: Sends only events related to the specific monitors or sources configured with the webhook.
+  - name: all-events
+    description: Sends every event generated in Sifflet, without linking specific monitors or assets.
+event_types:
+  - MONITOR_FAILURE
+  - MONITOR_NEEDS_ATTENTION
+  - MONITOR_SUCCESS
+  - MONITOR_STATUS_CHANGE
+  - TRANSFORMATION_RUN_FAILURE
+notes:
+  - Google Chat integrations do not receive the MONITOR_SUCCESS event type.
+payload_shape:
+  transport: http-post
+  content_type: application/json
+  example_fields:
+    - eventType
+    - eventDate
+    - monitor.id
+    - monitor.name
+    - monitor.link
+    - monitor.description
+    - monitor.displayType
+    - monitor.severity
+    - monitor.assets[].name
+    - monitor.assets[].uri
+    - monitor.assets[].link
+    - monitor.tags[].id
+    - monitor.tags[].name
+    - monitor.tags[].kind
+no_asyncapi: >-
+  Sifflet publishes a documented webhook catalog but no machine-readable AsyncAPI document.
+  Captured as a Webhooks event surface (not fabricating an AsyncAPI spec).

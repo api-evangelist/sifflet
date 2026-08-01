@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: probed
+host: https://www.siffletdata.com
+note: >-
+  Probed the standard /.well-known/ discovery surface on the marketing host and the docs
+  host. None returned 200 (absence is valid, recorded data). No WellKnown/SecurityTxt
+  pointer is emitted because no document was found.
+documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+docs_host_checked:
+  host: https://docs.siffletdata.com
+  results:
+    - path: /.well-known/security.txt
+      status: 404
+    - path: /.well-known/openid-configuration
+      status: 404
+    - path: /.well-known/oauth-authorization-server
+      status: 404
+    - path: /.well-known/api-catalog
+      status: 404
+    - path: /.well-known/ai-plugin.json
+      status: 404

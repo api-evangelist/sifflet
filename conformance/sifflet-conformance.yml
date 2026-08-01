@@ -1,0 +1,35 @@
+generated: '2026-07-21'
+method: searched
+source: https://www.siffletdata.com/product-security
+standards:
+  - id: soc2-type2
+    conforms: true
+    evidence: Listed on product-security page (SOC 2). See security/sifflet-trust-center.yml.
+  - id: iso-27001
+    conforms: true
+    evidence: Listed on product-security page (ISO/IEC 27001).
+  - id: hipaa
+    conforms: true
+    evidence: Listed on product-security page (HIPAA).
+  - id: gdpr
+    conforms: true
+    evidence: Listed on product-security page (GDPR).
+  - id: oidc
+    conforms: true
+    evidence: >-
+      SSO via Okta, Google, Azure Active Directory, ForgeRock (OpenID Connect) for
+      application sign-in. docs/single-sign-on-sso.md
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      Programmatic API auth is bearer Access Tokens with role-based authorization, not
+      OAuth2 scopes.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: No application/problem+json error registry published; uses plain HTTP status semantics.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: Deprecations announced in docs prose, not via Sunset/Deprecation headers.
+compliance:
+  program_page: https://www.siffletdata.com/product-security
+  certifications: [SOC 2, ISO 27001, HIPAA, GDPR]

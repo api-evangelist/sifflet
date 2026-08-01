@@ -1,9 +1,30 @@
 aid: sifflet
 name: Sifflet
-description: 'Sifflet is a company surfaced as a portfolio company of eqt-ventures and added to the API
-  Evangelist network as a stub for enrichment. Sector: data-analytics. This profile is a lead awaiting
-  the enrichment pipeline.'
+description: >-
+  Sifflet is a data observability platform positioned as the control plane for Data and AI.
+  It catches data issues before they reach the business, traces them to their root cause, and
+  helps teams fix them fast. The platform unifies a data catalog, data quality monitoring,
+  end-to-end data lineage (including field-level lineage), built-in security and access
+  control, and AI-powered agents (Sentinel auto-monitoring, Sage root-cause analysis, and an
+  AI chat/assistant) into one product. It integrates with major data platforms and tools
+  including Snowflake, Databricks, BigQuery, Amazon Redshift, dbt, Apache Airflow, Fivetran,
+  Tableau, Looker, and Power BI. Developers automate Sifflet through a public REST API
+  (Bearer Access Token auth), a Python CLI, a Terraform provider, Airflow operators, outbound
+  webhooks, and an official MCP server. Sifflet is a portfolio company of EQT Ventures.
 url: https://raw.githubusercontent.com/api-evangelist/sifflet/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://cdn.prod.website-files.com/6745ca418d70ad1c8e2b8442/67915a6a3d805d3e9c024aff_sifflet-logo-color.svg
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -12,11 +33,40 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
 - Data Analytics
-apis: []
+- Data Observability
+- Data Quality
+- Data Catalog
+- Data Lineage
+- Data Governance
+- Monitoring
+- Metadata
+- AI Agents
+apis:
+- name: Sifflet Public API
+  description: >-
+    Sifflet's public REST API for programmatically managing data observability resources —
+    assets and workspaces, monitors/rules and rule runs, sources (V2), credentials, domains,
+    calendars, notification rules, teams, and users. Endpoints are URI-versioned (/api/v2)
+    and authenticated with a Bearer Access Token. All endpoints accept application/json and
+    application/x-yaml. Base URL is per-tenant on SaaS (https://<tenant>.siffletdata.com) or
+    the deployment host when self-hosted.
+  humanURL: https://docs.siffletdata.com/reference/overview-1
+  baseURL: https://demo.siffletdata.com/api/v2
+  properties:
+  - type: APIReference
+    url: https://docs.siffletdata.com/reference
+  - type: Authentication
+    url: authentication/sifflet-authentication.yml
+  - type: Webhooks
+    url: asyncapi/sifflet-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/sifflet-problem-types.yml
+  - type: DataModel
+    url: data-model/sifflet-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -25,3 +75,68 @@ maintainers:
 common:
 - type: Website
   url: https://www.siffletdata.com/
+- type: DeveloperPortal
+  url: https://docs.siffletdata.com/
+- type: Documentation
+  url: https://docs.siffletdata.com/docs/overview
+- type: APIReference
+  url: https://docs.siffletdata.com/reference
+- type: GettingStarted
+  url: https://docs.siffletdata.com/docs/cli-command-line-interface
+- type: Blog
+  url: https://www.siffletdata.com/blog
+- type: Pricing
+  url: https://www.siffletdata.com/pricing
+- type: TermsOfService
+  url: https://www.siffletdata.com/terms-of-use
+- type: PrivacyPolicy
+  url: https://www.siffletdata.com/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/siffletdata
+- type: StatusPage
+  url: https://status.siffletdata.com/
+- type: ChangeLog
+  url: https://docs.siffletdata.com/changelog
+- type: TrustCenter
+  url: security/sifflet-trust-center.yml
+- type: Compliance
+  url: https://www.siffletdata.com/product-security
+- type: Security
+  url: https://docs.siffletdata.com/docs/how-to-report-a-security-incident
+- type: LLMsTxt
+  url: llms/sifflet-llms.txt
+- type: MCPServer
+  url: mcp/sifflet-mcp.yml
+- type: Authentication
+  url: authentication/sifflet-authentication.yml
+- type: Packages
+  url: packages/sifflet-packages.yml
+- type: SDKs
+  url: packages/sifflet-packages.yml
+- type: CLI
+  url: cli/sifflet-cli.yml
+- type: Webhooks
+  url: asyncapi/sifflet-webhooks.yml
+- type: ChangeLog
+  url: changelog/sifflet-changelog.yml
+- type: Lifecycle
+  url: lifecycle/sifflet-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/sifflet-lifecycle.yml
+- type: Conventions
+  url: conventions/sifflet-conventions.yml
+- type: ErrorCatalog
+  url: errors/sifflet-problem-types.yml
+- type: DataModel
+  url: data-model/sifflet-data-model.yml
+- type: Conformance
+  url: conformance/sifflet-conformance.yml
+- type: DomainSecurity
+  url: security/sifflet-domain-security.yml
+- type: VulnerabilityDisclosure
+  url: security/sifflet-vulnerability-disclosure.yml
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 16
+  pass: local-v1

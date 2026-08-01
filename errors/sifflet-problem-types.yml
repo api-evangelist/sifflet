@@ -1,0 +1,42 @@
+generated: '2026-07-21'
+method: searched
+format: http-status
+source: https://docs.siffletdata.com/reference
+note: >-
+  Sifflet does not publish a machine-readable RFC 9457 problem-types registry. The
+  behaviours below are transcribed from the public API reference operation docs. Batch
+  operations map outcome onto standard HTTP status codes.
+problems:
+  - status: 200
+    title: Success
+    context: >-
+      Batch import (publicImportExternalCatalog): every asset processed successfully.
+    source_operation: https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - status: 207
+    title: Multi-Status (partial success)
+    context: >-
+      Batch import (publicImportExternalCatalog): some assets succeeded and some failed.
+      Each asset is processed independently.
+    source_operation: https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - status: 400
+    title: Bad Request / all failed
+    context: >-
+      Batch import (publicImportExternalCatalog): all assets failed. Also general
+      validation failure on malformed requests.
+    source_operation: https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - status: 404
+    title: Not Found
+    context: >-
+      Credential creation (publicCreateCredentials) is eventually consistent: a GET
+      immediately after create may return NotFound until the secret propagates.
+    source_operation: https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - status: 401
+    title: Unauthorized
+    context: Missing or invalid/expired Access Token (bearer).
+    source: authentication/sifflet-authentication.yml
+  - status: 403
+    title: Forbidden
+    context: >-
+      Access Token role lacks the required permission (e.g. "Catalog Editor" or
+      "Domain Editor" on the target asset's domain).
+    source_operation: https://docs.siffletdata.com/reference/publicimportexternalcatalog.md

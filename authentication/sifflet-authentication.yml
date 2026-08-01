@@ -1,0 +1,34 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.siffletdata.com/docs/access-tokens.md
+docs: https://docs.siffletdata.com/reference/overview-1.md
+summary:
+  types: [http]
+  http_schemes: [bearer]
+  api_key_in: []
+  oauth2_flows: []
+schemes:
+  - name: AccessToken
+    type: http
+    scheme: bearer
+    description: >-
+      All Sifflet public API endpoints require an Access Token passed as a Bearer token.
+      Access Tokens are created in the Sifflet UI under Settings > Access Tokens, are scoped
+      to a role (and optionally to specific domains with a per-domain role), are shown only
+      once at creation, and are valid for 24 months by default (custom expiry configurable).
+      The same Access Token authenticates the API, the CLI, and the Airflow operators.
+    sources: [https://docs.siffletdata.com/docs/access-tokens.md]
+identity:
+  sso:
+    note: >-
+      Human sign-in to the Sifflet application supports SSO / OpenID Connect via Okta,
+      Google, Azure Active Directory, and ForgeRock. SSO governs UI login; programmatic API
+      access uses Access Tokens (bearer).
+    docs: https://docs.siffletdata.com/docs/single-sign-on-sso.md
+authorization:
+  model: role-based
+  note: >-
+    Access Tokens carry a role (Admin, Editor, Viewer, Monitor Responder, Catalog Editor,
+    Domain Editor, etc.) and optional per-domain roles. This is role/permission based rather
+    than OAuth scopes, so no OAuth scope artifact applies.
+  docs: https://docs.siffletdata.com/docs/access-control.md

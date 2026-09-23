@@ -1,11 +1,12 @@
 generated: '2026-07-21'
 method: probed
 host: https://www.siffletdata.com
-note: >-
-  Probed the standard /.well-known/ discovery surface on the marketing host and the docs
-  host. None returned 200 (absence is valid, recorded data). No WellKnown/SecurityTxt
-  pointer is emitted because no document was found.
-documents:
+note: Probed the standard /.well-known/ discovery surface on the marketing host and the docs host. None
+  returned 200 (absence is valid, recorded data). No WellKnown/SecurityTxt pointer is emitted because
+  no document was found.
+docs_host_checked:
+  host: https://docs.siffletdata.com
+  results:
   - path: /.well-known/security.txt
     status: 404
   - path: /.well-known/openid-configuration
@@ -16,16 +17,21 @@ documents:
     status: 404
   - path: /.well-known/ai-plugin.json
     status: 404
-docs_host_checked:
-  host: https://docs.siffletdata.com
-  results:
-    - path: /.well-known/security.txt
-      status: 404
-    - path: /.well-known/openid-configuration
-      status: 404
-    - path: /.well-known/oauth-authorization-server
-      status: 404
-    - path: /.well-known/api-catalog
-      status: 404
-    - path: /.well-known/ai-plugin.json
-      status: 404
+hosts:
+- host: https://www.siffletdata.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+x-shape-fix:
+  converted: '2026-08-20'
+  from: documents
+  note: Rewritten into hosts[] -> documents[], the only shape well_known_docs() in score.rb reads. A served
+    .well-known surface recorded in any other shape scores as absent.

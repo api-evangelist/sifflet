@@ -1,0 +1,1225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/sifflet/main/json-schema/sifflet-rule-info-dto-schema.json",
+  "title": "RuleInfoDto",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/sifflet-backend-api-openapi.yml#/components/schemas/RuleInfoDto",
+  "required": [
+    "canBeQualified",
+    "canBeScheduled",
+    "canHaveFailingRows",
+    "canManuallyRun",
+    "criticality",
+    "id",
+    "name",
+    "readOnly",
+    "ruleLabel",
+    "ruleStatus",
+    "ruleTemplateName",
+    "sourcePlatform",
+    "supportAsCodeYAMLConversion",
+    "unresolvedIncidents"
+  ],
+  "type": "object",
+  "properties": {
+    "canBeQualified": {
+      "type": "boolean"
+    },
+    "canBeScheduled": {
+      "type": "boolean"
+    },
+    "canHaveFailingRows": {
+      "type": "boolean"
+    },
+    "canManuallyRun": {
+      "type": "boolean"
+    },
+    "criticality": {
+      "$ref": "#/$defs/Criticality"
+    },
+    "customMetadata": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EntityCustomMetadataDto"
+      }
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DatasetBriefDto"
+      }
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "lastIncident": {
+      "$ref": "#/$defs/IncidentLightDto"
+    },
+    "lastRunStatus": {
+      "type": "string",
+      "deprecated": true,
+      "enum": [
+        "PENDING",
+        "RUNNING",
+        "SUCCESS",
+        "REQUIRES_YOUR_ATTENTION",
+        "TECHNICAL_ERROR",
+        "FAILED"
+      ]
+    },
+    "lastRunTimestamp": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "lastUnresolvedIncident": {
+      "$ref": "#/$defs/IncidentLightDto"
+    },
+    "mails": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AlertingHookDto"
+      }
+    },
+    "msTeams": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AlertingHookDto"
+      }
+    },
+    "muted": {
+      "type": "boolean"
+    },
+    "mutedUntil": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "mutingMode": {
+      "type": "string",
+      "enum": [
+        "INDEFINITE",
+        "UNTIL_DATE",
+        "UNTIL_NEXT_STATUS_IMPROVES",
+        "NOT_MUTED"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "readOnly": {
+      "type": "boolean"
+    },
+    "ruleLabel": {
+      "type": "string"
+    },
+    "ruleStatus": {
+      "type": "string",
+      "enum": [
+        "NOT_EVALUATED",
+        "PASSING",
+        "NEEDS_ATTENTION",
+        "FAILING"
+      ]
+    },
+    "ruleTemplateName": {
+      "type": "string"
+    },
+    "schedule": {
+      "type": "string"
+    },
+    "scheduleTimezone": {
+      "$ref": "#/$defs/TimeZoneDto"
+    },
+    "slackChannels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AlertingHookDto"
+      }
+    },
+    "sourcePlatform": {
+      "type": "string",
+      "enum": [
+        "SIFFLET",
+        "DBT"
+      ]
+    },
+    "supportAsCodeYAMLConversion": {
+      "type": "boolean"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TagDto"
+      }
+    },
+    "unresolvedIncidents": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "workspace": {
+      "$ref": "#/$defs/WorkspaceSummaryDto"
+    }
+  },
+  "$defs": {
+    "AlertingHookDto": {
+      "required": [
+        "externalHook",
+        "id",
+        "name",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "externalHook": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastModifiedDate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "modifiedBy": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "params": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/DefaultWebhookParams"
+            },
+            {
+              "$ref": "#/$defs/GoogleChatWebhookParams"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SLACK",
+            "MAIL",
+            "MS_TEAMS",
+            "WEBHOOK"
+          ]
+        }
+      }
+    },
+    "AlertingHookParams": {
+      "required": [
+        "scope",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "ALL_EVENTS",
+            "LINKED_EVENTS"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "DEFAULT",
+            "GOOGLE_CHAT"
+          ]
+        }
+      }
+    },
+    "Criticality": {
+      "type": "string",
+      "enum": [
+        "CRITICAL",
+        "HIGH",
+        "MODERATE",
+        "LOW"
+      ]
+    },
+    "CustomHeader": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "DatasetBriefDto": {
+      "required": [
+        "datasourceName",
+        "datasourceType",
+        "id",
+        "name",
+        "urn"
+      ],
+      "type": "object",
+      "properties": {
+        "datasourceName": {
+          "type": "string"
+        },
+        "datasourceType": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "urn": {
+          "type": "string"
+        }
+      }
+    },
+    "DefaultWebhookParams": {
+      "required": [
+        "scope",
+        "type"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AlertingHookParams"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "headers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CustomHeader"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EntityCustomMetadataDto": {
+      "required": [
+        "entries",
+        "id",
+        "name",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/EntityCustomMetadataEntryLabelDto"
+              },
+              {
+                "$ref": "#/$defs/EntityCustomMetadataEntryStringDto"
+              },
+              {
+                "$ref": "#/$defs/EntityCustomMetadataEntryTeamDto"
+              },
+              {
+                "$ref": "#/$defs/EntityCustomMetadataEntryUserDto"
+              }
+            ]
+          }
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lineagePlatform": {
+          "type": "string",
+          "enum": [
+            "ATHENA",
+            "BIGQUERY",
+            "FIREBOLT",
+            "PRESTO",
+            "REDSHIFT",
+            "SNOWFLAKE",
+            "DATABRICKS",
+            "DATABRICKS_JOBS",
+            "ADF",
+            "MSSQL",
+            "MYSQL",
+            "SYNAPSE",
+            "POSTGRES",
+            "H2",
+            "ORACLE",
+            "LIGHTDASH",
+            "LOOKER",
+            "METABASE",
+            "MICROSTRATEGY",
+            "TABLEAU",
+            "POWER_BI",
+            "QLIK",
+            "QUICKSIGHT",
+            "STITCH",
+            "AIRBYTE",
+            "AIRFLOW",
+            "COMPOSER",
+            "DAGSTER",
+            "DBT",
+            "DBTCLOUD",
+            "FIVETRAN",
+            "MWAA",
+            "PREFECT",
+            "TALEND",
+            "HUBSPOT",
+            "INFORMATICA",
+            "MULESOFT",
+            "SALESFORCE",
+            "SEGMENT",
+            "SLACK",
+            "CENSUS",
+            "HIGH_TOUCH",
+            "AMAZON_SAGEMAKER",
+            "DATAIKU",
+            "MICROSOFT_AZURE_ML",
+            "GOOGLE_ANALYTICS",
+            "SIGMA",
+            "UNKNOWN",
+            "AZURE",
+            "CATALOG_GENERIC",
+            "GOOGLE_DRIVE",
+            "GOOGLE_SHEETS",
+            "GOOGLE_CLOUD_STORAGE",
+            "S3",
+            "EXCEL",
+            "GITHUB",
+            "SIXSENSE",
+            "FIFTEENFIVE",
+            "THREESIXTYLEARNING",
+            "ACCELDATA",
+            "ACRYL_DATA",
+            "ACTIAN_VECTOR",
+            "ACTIVE_CAMPAIGN",
+            "ADA",
+            "ADJUST",
+            "ADOBE",
+            "ADP_WFN",
+            "ADROLL",
+            "AFFINITY",
+            "AIRCALL",
+            "AIRTABLE",
+            "ALATION",
+            "ALCHEMER",
+            "ALVIN_AI",
+            "AMAZON",
+            "AMAZON_CLOUDFRONT",
+            "AMAZON_DOCUMENTDB",
+            "AMAZON_DYNAMODB",
+            "AMAZON_FIREHOSE",
+            "AMAZON_SELLING_PARTNER",
+            "AMPLITUDE",
+            "AMUNDSEN",
+            "ANAPLAN",
+            "ANOMALO",
+            "APACHE_ATLAS",
+            "APACHE_KAFKA",
+            "APACHE_SPARK",
+            "APPCUES",
+            "APPFIGURES",
+            "APPLE",
+            "APPLE_APP_STORE",
+            "APPSFLYER",
+            "ASANA",
+            "ASSEMBLED",
+            "ATLAN",
+            "ATLASSIAN_CONFLUENCE",
+            "ATLASSIAN_JIRA",
+            "ATLASSIAN_OPSGENIE",
+            "AUTH0",
+            "AUTODESK_BIM_360",
+            "AWIN",
+            "AWS_CLOUDTRAIL",
+            "AWS_COST_EXPLORER",
+            "AWS_INVENTORY",
+            "AWS_LAMBDA",
+            "BALLOT_READY",
+            "BAMBOOHR",
+            "BIGCOMMERCE",
+            "BIGEYE",
+            "BILLINGPLATFORM",
+            "BIRDEYE",
+            "BLACKBOARD",
+            "BOX",
+            "BRAINTREE",
+            "BRAZE",
+            "BREX",
+            "BUILDKITE",
+            "BUZZSPROUT",
+            "CALENDLY",
+            "CAMPAIGN_MONITOR",
+            "CANNY",
+            "CANVAS",
+            "CAPTERRA",
+            "CASTOR_DOC",
+            "CERTINIA",
+            "CHAMELEON",
+            "CHANNEL_ADVISOR",
+            "CHARGEBEE",
+            "CHARGEDESK",
+            "CHARTMOGUL",
+            "CHORUS_AI",
+            "CHURNKEY",
+            "CHURNZERO",
+            "CIMIS",
+            "CIN7",
+            "CIRCLE_CI",
+            "CLARI",
+            "CLICKUP",
+            "CLIFF_AI",
+            "CLOSE",
+            "COLLIBRA",
+            "COMMERCETOOLS",
+            "CONFLUENT_CLOUD",
+            "CONTRAST_SECURITY",
+            "COUPA",
+            "CRITEO",
+            "CROSSBEAM",
+            "CRUNCHBASE",
+            "CUSTOMER_IO",
+            "D2L_BRIGHTSPACE",
+            "DATA_WORLD",
+            "DATABAND",
+            "DATADOG",
+            "DATAEDO",
+            "DATAFOLD",
+            "DATAGALAXY",
+            "DATAHUB",
+            "DB2",
+            "DCL_LOGISTICS",
+            "DEAR",
+            "DECUBE",
+            "DELIGHTED",
+            "DEPUTY",
+            "DESTINI",
+            "DIXA",
+            "DOCEBO",
+            "DRATA",
+            "DRIFT",
+            "DRIP",
+            "DROPBOX",
+            "DUOPLANE",
+            "E_CONOMIC",
+            "EASY_POST",
+            "ELASTICSEARCH",
+            "ELEMENTARY",
+            "ELLUCIAN",
+            "ELOQUA",
+            "EMAIL",
+            "EMPLOYMENT_HERO",
+            "EPICOR_PROPHET_21",
+            "EVENTBRITE",
+            "EVERHOUR",
+            "EXPENSIFY",
+            "FACEBOOK",
+            "FIGMA",
+            "FIREBASE",
+            "FLEXPORT",
+            "FORJ",
+            "FOUNTAIN",
+            "FREIGHTVIEW",
+            "FRESHBOOKS",
+            "FRESHCHAT",
+            "FRESHDESK",
+            "FRESHDESK_CONTACT_CENTER",
+            "FRESHSERVICE",
+            "FRESHSUCCESS",
+            "FRESHTEAM",
+            "FRIENDBUY",
+            "FRONT",
+            "FTP",
+            "FULLSTORY",
+            "G2",
+            "GAINSIGHT",
+            "GEM",
+            "GIT",
+            "GITLAB",
+            "GLADLY",
+            "GOCARDLESS",
+            "GONG",
+            "GOOGLE",
+            "GOOGLE_AD_MANAGER",
+            "GOOGLE_ADS",
+            "GOOGLE_CALENDAR",
+            "GOOGLE_CAMPAIGN_MANAGER",
+            "GOOGLE_CHROME",
+            "GOOGLE_CLOUD",
+            "GOOGLE_DISPLAY",
+            "GOOGLE_PLAY",
+            "GOOGLE_SEARCH_ADS_360",
+            "GOOGLE_SEARCH_CONSOLE",
+            "GOOGLE_TASKS",
+            "GORGIAS",
+            "GREENHOUSE",
+            "GREENPLUM",
+            "GREEN_POWER_MONITOR",
+            "GREPSR",
+            "GRIN",
+            "GURU",
+            "HARVEST",
+            "HDFS",
+            "HEAP",
+            "HEIGHT",
+            "HELP_SCOUT",
+            "HELPSHIFT",
+            "HEROKU_KAFKA",
+            "HEX",
+            "HIBOB",
+            "HOPIN",
+            "IMPACT",
+            "INCIDENT_IO",
+            "INFOBIP",
+            "INSIGHTLY",
+            "INSTAGRAM",
+            "INTERCOM",
+            "INVESTOPEDIA",
+            "IRONCLAD",
+            "IRONSOURCE",
+            "ITERABLE",
+            "JAVA",
+            "JENKINS",
+            "JUSTCALL",
+            "KANDJI",
+            "KENSU",
+            "KHOROS_CARE",
+            "KISSMETRICS",
+            "KLAVIYO",
+            "KNOWBE4",
+            "KONNECT_INSIGHTS",
+            "KUSTOMER",
+            "LARIAT_DATA",
+            "LATTICE",
+            "LAUNCH_DARKLY",
+            "LEARN_UPON",
+            "LESSONLY",
+            "LEVER",
+            "LIFTOFF",
+            "LIGHTSPEED",
+            "LIGHTSUP",
+            "LINEAR",
+            "LINKEDIN",
+            "LIVECHAT",
+            "LOADED_COMMERCE",
+            "LOB",
+            "LOOP",
+            "LOOPIO",
+            "LUMA",
+            "MAGENTO",
+            "MAILCHIMP",
+            "MAILGUN",
+            "MANDRILL",
+            "MANTA",
+            "MARIADB",
+            "MARIN_SOFTWARE",
+            "MARKETO",
+            "MATILLION",
+            "MATTERMOST",
+            "MAVENLINK",
+            "MAXIO",
+            "MEDALLIA",
+            "META",
+            "METAPHOR",
+            "METAPLANE",
+            "MICROSOFT",
+            "MICROSOFT_AZURE_BLOB_STORAGE",
+            "MICROSOFT_DYNAMICS",
+            "MICROSOFT_ONEDRIVE",
+            "MICROSOFT_PURVIEW",
+            "MICROSOFT_TEAMS",
+            "MIXMAX",
+            "MIXPANEL",
+            "MONDAY_COM",
+            "MONGODB",
+            "MONTE_CARLO",
+            "MOUNTAIN",
+            "MUX",
+            "NAMELY",
+            "NCINO",
+            "NETSUITE_ANALYTICS",
+            "NEW_RELIC",
+            "NOTION",
+            "NYLAS",
+            "OBSERVE",
+            "OCTOPAI",
+            "OKTA",
+            "OPEN_DATA_DC",
+            "OPEN_EXCHANGES_RATES",
+            "OPEN_AI",
+            "OPEN_SEARCH",
+            "OPTIMIZELY",
+            "ORBIT_COMMUNITY_PLATFORM",
+            "ORDWAY",
+            "ORTTO",
+            "OS_COMMERCE",
+            "OUTBRAIN",
+            "OUTREACH",
+            "OVALEDGE",
+            "PAGERDUTY",
+            "PAGERSHIFT",
+            "PAYPAL",
+            "PENDO",
+            "PINGDOM",
+            "PINTEREST",
+            "PIPE17",
+            "PIPEDRIVE",
+            "PIVOTAL_TRACKER",
+            "PLAYVOX",
+            "POSTHOG",
+            "POWERSCHOOL",
+            "PRESTASHOP",
+            "PRODUCTBOARD",
+            "PYTHON",
+            "QUALAROO",
+            "QUALTRICS",
+            "QUICKBOOKS",
+            "RAMP",
+            "RARIBLE",
+            "RECHARGE",
+            "RECURLY",
+            "REDDIT",
+            "RELTIO",
+            "REPLY_IO",
+            "RETAILNEXT",
+            "RETENTLY",
+            "REVEL_SYSTEMS",
+            "RINGCENTRAL",
+            "RIPPLING",
+            "ROLLBAR",
+            "ROOTLY",
+            "SAGE_HR",
+            "SAGE_INTACCT",
+            "SAILTHRU",
+            "SALESLOFT",
+            "SALSIFY",
+            "SAMSARA",
+            "SAP",
+            "SAP_CONCUR",
+            "SCORM",
+            "SECODA",
+            "SECURITY_JOURNEY",
+            "SELECT_STAR",
+            "SENDGRID",
+            "BREVO",
+            "SERVICE_NOW",
+            "SFTP",
+            "SHAREPOINT",
+            "SHARETRIBE",
+            "SHIPHERO",
+            "SHIPSTATION",
+            "SHOPIFY",
+            "SHOPWARE",
+            "SHORT_IO",
+            "SIFFLET",
+            "SIMPLECAST",
+            "SIMPLESAT",
+            "SINGLESTORE",
+            "SISENSE",
+            "SKILLJAR",
+            "SKUVAULT",
+            "SLAB",
+            "SMADEX",
+            "SNAPCHAT",
+            "SNOWPLOW",
+            "SODA",
+            "SONARQUBE",
+            "SPLIT_IO",
+            "SPLUNK",
+            "SPOTIFY",
+            "SPREE_COMMERCE",
+            "SPROUT_SOCIAL",
+            "SQUARE",
+            "SQUARESPACE",
+            "SSIS",
+            "STACK_ADAPT",
+            "STATSIG",
+            "STRIPE",
+            "STYLIGHT",
+            "SUBSCRIPT",
+            "TABOOLA",
+            "TALKDESK",
+            "TALKWALKER",
+            "TEAMWORK_COM",
+            "TEMPO_IO",
+            "TERADATA",
+            "TERRAFORM",
+            "THE_TRADE_DESK",
+            "THOUGHT_SPOT",
+            "TIKTOK",
+            "TOGGL",
+            "TRANSCEND",
+            "TRELLO",
+            "TRISOLUTE",
+            "TWILIO",
+            "TYPEFORM",
+            "UPLAND",
+            "USERVOICE",
+            "VALIDIO",
+            "VEEVA",
+            "VERIZON_MEDIA",
+            "VITALLY",
+            "VONAGE",
+            "VUETIFY",
+            "WEB_SCRAPER",
+            "WEBHOOKS",
+            "WHEN_I_WORK",
+            "WHEREFOUR",
+            "WIKIPEDIA",
+            "WOOCOMMERCE",
+            "WORDPRESS",
+            "WORKABLE",
+            "WORKDAY",
+            "WORKFLOW_MAX",
+            "WRIKE",
+            "X",
+            "XERO",
+            "XRAY",
+            "YAHOO",
+            "YOTPO",
+            "YOUTUBE",
+            "ZEENEA",
+            "ZEN_CART",
+            "ZENDESK_CHAT",
+            "ZENDESK_SELL",
+            "ZENDESK_SUNSHINE",
+            "ZENDESK_SUPPORT",
+            "TRINET",
+            "ZINGTREE",
+            "ZOHO_BOOKS",
+            "ZOHO_CAMPAIGNS",
+            "ZOHO_CRM",
+            "ZOOM",
+            "ZUORA"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "LABEL",
+            "USER",
+            "STRING",
+            "TEAM"
+          ]
+        }
+      }
+    },
+    "EntityCustomMetadataEntryDto": {
+      "required": [
+        "id",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "LABEL",
+            "USER",
+            "STRING",
+            "TEAM"
+          ]
+        }
+      }
+    },
+    "EntityCustomMetadataEntryLabelDto": {
+      "required": [
+        "id",
+        "type",
+        "value"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntityCustomMetadataEntryDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EntityCustomMetadataEntryStringDto": {
+      "required": [
+        "id",
+        "type",
+        "value"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntityCustomMetadataEntryDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "EntityCustomMetadataEntryTeamDto": {
+      "required": [
+        "id",
+        "name",
+        "teamId",
+        "type"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntityCustomMetadataEntryDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "teamId": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    "EntityCustomMetadataEntryUserDto": {
+      "required": [
+        "id",
+        "login",
+        "name",
+        "type",
+        "userId"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/EntityCustomMetadataEntryDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "login": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      ]
+    },
+    "GetCollaborationToolItemDto": {
+      "required": [
+        "itemKey",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "itemKey": {
+          "type": "string"
+        },
+        "itemUrl": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "JIRA",
+            "SERVICENOW"
+          ]
+        }
+      }
+    },
+    "GoogleChatWebhookParams": {
+      "required": [
+        "scope",
+        "type"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AlertingHookParams"
+        }
+      ]
+    },
+    "IncidentLightDto": {
+      "required": [
+        "collaborationToolItems",
+        "compromisedAssets",
+        "criticality",
+        "datasets",
+        "id",
+        "isMutedIndefinitely",
+        "issueNo",
+        "lastOccurredDate",
+        "name",
+        "owners",
+        "status",
+        "teams",
+        "triggerTime"
+      ],
+      "type": "object",
+      "properties": {
+        "collaborationToolItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GetCollaborationToolItemDto"
+          }
+        },
+        "compromisedAssets": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "criticality": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "datasets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DatasetBriefDto"
+          }
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isMutedIndefinitely": {
+          "type": "boolean"
+        },
+        "issueNo": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastModifiedDate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastOccurredDate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "mutedUntil": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/UserDto"
+          }
+        },
+        "qualification": {
+          "type": "string",
+          "enum": [
+            "FIXED",
+            "FALSE_POSITIVE",
+            "NO_ACTION_NEEDED",
+            "DUPLICATE",
+            "AUTOMATIC",
+            "QUALIFIED_MONITORS_REVIEWED",
+            "QUALIFIED_MONITORS_NO_ACTION_NEEDED",
+            "QUALIFIED_MONITORS_FALSE_POSITIVE"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "IN_PROGRESS",
+            "CLOSED"
+          ]
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IncidentTeamDto"
+          }
+        },
+        "triggerTime": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "IncidentTeamDto": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "TagDto": {
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "editable": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastModifiedDate": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "modifiedBy": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "GENERIC",
+            "HIDDEN_DATA_CLASSIFICATION",
+            "VISIBLE_DATA_CLASSIFICATION",
+            "TERM",
+            "ATLAN_EXTERNAL_TERM",
+            "ALATION_EXTERNAL_TERM",
+            "AMUNDSEN_EXTERNAL_TERM",
+            "APACHE_ATLAS_EXTERNAL_TERM",
+            "CASTOR_DOC_EXTERNAL_TERM",
+            "COLLIBRA_EXTERNAL_TERM",
+            "DATAGALAXY_EXTERNAL_TERM",
+            "INFORMATICA_EXTERNAL_TERM",
+            "SECODA_EXTERNAL_TERM",
+            "SELECT_STAR_EXTERNAL_TERM",
+            "GENERIC_CATALOG_EXTERNAL_TERM",
+            "BIGQUERY_EXTERNAL",
+            "SNOWFLAKE_EXTERNAL",
+            "DATABRICKS_EXTERNAL",
+            "DBT_EXTERNAL",
+            "ADF_EXTERNAL",
+            "ATLAN_EXTERNAL",
+            "ALATION_EXTERNAL",
+            "AMUNDSEN_EXTERNAL",
+            "APACHE_ATLAS_EXTERNAL",
+            "CASTOR_DOC_EXTERNAL",
+            "COLLIBRA_EXTERNAL",
+            "DATAGALAXY_EXTERNAL",
+            "INFORMATICA_EXTERNAL",
+            "SECODA_EXTERNAL",
+            "SELECT_STAR_EXTERNAL",
+            "GENERIC_CATALOG_EXTERNAL"
+          ]
+        }
+      }
+    },
+    "TimeZoneDto": {
+      "required": [
+        "timezone",
+        "utcOffset"
+      ],
+      "type": "object",
+      "properties": {
+        "timezone": {
+          "type": "string"
+        },
+        "utcOffset": {
+          "type": "string"
+        }
+      }
+    },
+    "UserDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "login": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkspaceSummaryDto": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

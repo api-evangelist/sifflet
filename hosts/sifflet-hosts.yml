@@ -1,0 +1,73 @@
+generated: '2026-10-14'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 5
+  own: 4
+  other_domain: 0
+  platform: 1
+  roles:
+  - other
+  - portal
+  - source
+  - status
+  - website
+hosts:
+- host: demo.siffletdata.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: siffletdata.com
+  role: other
+  relation: own
+- host: docs.siffletdata.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - GettingStarted
+  - ChangeLog
+  - Security
+  serves:
+  - docs
+  registrable_domain: siffletdata.com
+  role: portal
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: status.siffletdata.com
+  found_by:
+  - pointer
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: siffletdata.com
+  role: status
+  relation: own
+- host: www.siffletdata.com
+  found_by:
+  - pointer
+  types:
+  - Website
+  - Blog
+  - Pricing
+  - TermsOfService
+  - PrivacyPolicy
+  - Compliance
+  serves: []
+  registrable_domain: siffletdata.com
+  role: website
+  relation: own

@@ -1,0 +1,419 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/sifflet-backend-api-openapi.yml
+vocabulary:
+  name: Sifflet Domain Vocabulary
+  description: 'Terms declared by Sifflet''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-14'
+  terms:
+  - term: ApiProblemSchema
+    definition: 'Object declared by the contract with fields: detail, response, status, title, type.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/ApiProblemSchema
+  - term: PublicCustomMetadataEntryReferenceDto
+    definition: Custom metadata entries to be associated with the declared asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCustomMetadataEntryReferenceDto
+  - term: PublicDescriptionDto
+    definition: Descriptions of the asset from external providers
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDescriptionDto
+  - term: PublicDomainGetDto
+    definition: Domains of the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDomainGetDto
+  - term: PublicExternalTagReferenceDto
+    definition: Asset tag from external providers.
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicExternalTagReferenceDto
+  - term: PublicExternalTermReferenceDto
+    definition: Asset business glossary from external providers.
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicExternalTermReferenceDto
+  - term: PublicGetAssetColumnDto
+    definition: Fields of the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetAssetColumnDto
+  - term: PublicGetAssetDto
+    definition: 'Object declared by the contract with fields: columns, customMetadataValues, description, domains, externalDescriptions, externalTags,
+      externalTerms, healthStatus, id, ingestionMethod, name, owners. (8 more)'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetAssetDto
+  - term: PublicGetCustomMetadataEntryDto
+    definition: Custom metadata values of the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetCustomMetadataEntryDto
+  - term: PublicReferenceByIdOrEmailDto
+    definition: Id or email reference to an owner
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicReferenceByIdOrEmailDto
+  - term: PublicReferenceByIdOrNameDto
+    definition: Id or name reference to an object
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicReferenceByIdOrNameDto
+  - term: PublicTagReferenceDto
+    definition: Tags of the source. A tag can either be referenced by its id or its name or its name and kind.
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicTagReferenceDto
+  - term: PublicTransformationRunDto
+    definition: Transformation associated to the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicTransformationRunDto
+  - term: PublicUpdateAssetColumnDto
+    definition: Fields of the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicUpdateAssetColumnDto
+  - term: PublicUpdateAssetDto
+    definition: 'Object declared by the contract with fields: columns, customMetadataValues, description, owners, tags, terms, uri.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicUpdateAssetDto
+  - term: PublicGetAssetRequestDto
+    definition: 'Object declared by the contract with fields: uri.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetAssetRequestDto
+  - term: PublicAssetFilterDto
+    definition: Filter to apply on the assets search
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicAssetFilterDto
+  - term: PublicAssetPaginationDto
+    definition: Pagination to apply on the assets search
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicAssetPaginationDto
+  - term: PublicAssetSearchCriteriaDto
+    definition: 'Object declared by the contract with fields: filter, pagination, sort.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicAssetSearchCriteriaDto
+  - term: PublicGetAssetListDto
+    definition: 'Object declared by the contract with fields: description, externalDescriptions, externalTags, externalTerms, healthStatus, id,
+      ingestionMethod, name, owners, tags, technology, terms. (5 more)'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetAssetListDto
+  - term: PublicPageDtoPublicGetAssetListDto
+    definition: 'Object declared by the contract with fields: data, totalCount.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicPageDtoPublicGetAssetListDto
+  - term: ChangeDto
+    definition: 'Object declared by the contract with fields: from, fromWorkspaceId, to, toWorkspaceId, type.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/ChangeDto
+  - term: LogDto
+    definition: 'Object declared by the contract with fields: level, message.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/LogDto
+  - term: PublicDeclarativeAssetDto
+    definition: Use this parameter to declare assets and their associated links. It is recommended to use the `lineages` object of the `assets`
+      array of objects rather than the `lineages` array of objects for cases where you want to declare assets and their corresponding lineage
+      links.
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDeclarativeAssetDto
+  - term: PublicDeclarativeLineageDto
+    definition: Use this parameter to declare lineage links between assets. It is recommended to use the `lineages` arrays of objects object rather
+      than the `lineages` object of the `assets` array of objects for cases where you want to declare lineage links between existing assets.
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDeclarativeLineageDto
+  - term: PublicDeclarativeLineageListDto
+    definition: Lineage links to be created for the declared asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDeclarativeLineageListDto
+  - term: PublicDeclarativePayloadDto
+    definition: 'Object declared by the contract with fields: assets, lineages, sources, workspace.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDeclarativePayloadDto
+  - term: PublicDeclarativeSourceDto
+    definition: Declaring sources is optional. Declaring a source is useful if you want to attach it specific metadata (e.g. a name, a description,
+      etc.). If no source is declared, Sifflet automatically adds declared assets to sources using declared assets URIs.
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDeclarativeSourceDto
+  - term: WorkspaceApplyObjectResponseDto
+    definition: 'Object declared by the contract with fields: change, id, kind, logs, status, subStatus.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/WorkspaceApplyObjectResponseDto
+  - term: WorkspaceApplyResponseDto
+    definition: 'Object declared by the contract with fields: changes.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/WorkspaceApplyResponseDto
+  - term: CalendarTimeslot
+    definition: 'Object declared by the contract with fields: date, description.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/CalendarTimeslot
+  - term: PublicCalendarGetDto
+    definition: 'Object declared by the contract with fields: description, editable, id, name, standardCalendar, timeslots.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCalendarGetDto
+  - term: PublicPageDtoPublicCalendarGetDto
+    definition: 'Object declared by the contract with fields: data, totalCount.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicPageDtoPublicCalendarGetDto
+  - term: PublicCalendarCreateDto
+    definition: 'Object declared by the contract with fields: description, name, timeslots.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCalendarCreateDto
+  - term: PublicCalendarUpdateDto
+    definition: 'Object declared by the contract with fields: description, name, timeslots.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCalendarUpdateDto
+  - term: PublicCredentialsGetDto
+    definition: 'Object declared by the contract with fields: description, name.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCredentialsGetDto
+  - term: PublicCredentialsPageDtoPublicCredentialsGetDto
+    definition: 'Object declared by the contract with fields: data, totalCount.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCredentialsPageDtoPublicCredentialsGetDto
+  - term: PublicCredentialsCreateDto
+    definition: 'Object declared by the contract with fields: description, name, value.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCredentialsCreateDto
+  - term: PublicCredentialsPatchDto
+    definition: 'Object declared by the contract with fields: description, value.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCredentialsPatchDto
+  - term: PublicDomainContentDefinitionDto
+    definition: Definition of the assets contained in the domain
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDomainContentDefinitionDto
+  - term: PublicDomainTeamPermissionDto
+    definition: Teams permissions granted in the domain
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicDomainTeamPermissionDto
+  - term: PublicFilterDomainConditionDto
+    definition: List of the conditions defining content of the domain
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicFilterDomainConditionDto
+  - term: PublicGetDomainDto
+    definition: 'Object declared by the contract with fields: assetContentDefinition, assetCount, description, id, name, parentDomainId, teamPermissions.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetDomainDto
+  - term: PublicPageDtoPublicGetDomainDto
+    definition: 'Object declared by the contract with fields: data, totalCount.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicPageDtoPublicGetDomainDto
+  - term: PublicCreateDomainDto
+    definition: 'Object declared by the contract with fields: assetContentDefinition, description, name, parentDomainId.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCreateDomainDto
+  - term: PublicUpdateDomainDto
+    definition: 'Object declared by the contract with fields: assetContentDefinition, description, name.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicUpdateDomainDto
+  - term: PublicAssetImportDto
+    definition: Assets to enrich with external catalog metadata
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicAssetImportDto
+  - term: PublicAssetImportResultDto
+    definition: Per-asset import status
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicAssetImportResultDto
+  - term: PublicConfigurationImportDto
+    definition: Configuration of the import
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicConfigurationImportDto
+  - term: PublicExternalCatalogImportDto
+    definition: 'Object declared by the contract with fields: assets, configuration.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicExternalCatalogImportDto
+  - term: PublicExternalCatalogImportResponseDto
+    definition: 'Object declared by the contract with fields: detail, status, title.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicExternalCatalogImportResponseDto
+  - term: PublicExternalCatalogImportResultDto
+    definition: Detailed import result
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicExternalCatalogImportResultDto
+  - term: PublicLabelExternalMetadataDto
+    definition: Labels to attach to the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicLabelExternalMetadataDto
+  - term: PublicNamedElementExternalMetadataDto
+    definition: Tags to attach to the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicNamedElementExternalMetadataDto
+  - term: PublicStringExternalMetadataDto
+    definition: String metadata to attach to the asset
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicStringExternalMetadataDto
+  - term: PublicFilterNotificationRuleAssetScopeConditionDto
+    definition: List of the conditions defining asset scope of the notification rule
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicFilterNotificationRuleAssetScopeConditionDto
+  - term: PublicGetNotificationRuleDto
+    definition: 'Object declared by the contract with fields: description, domainId, id, name, notificationDestinations, scope, ticketingDestinations.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicGetNotificationRuleDto
+  - term: PublicJiraTemplateFieldDto
+    definition: Custom fields for jira template
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicJiraTemplateFieldDto
+  - term: PublicNotificationDestinationReferenceDto
+    definition: Notification destination of the notification rule, like Slack or emails
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicNotificationDestinationReferenceDto
+  - term: PublicNotificationRuleAssetScopeDto
+    definition: Definition of the asset scope of the notification rule
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicNotificationRuleAssetScopeDto
+  - term: PublicNotificationRuleMonitorScopeDto
+    definition: Definition of the monitor scope of the notification rule
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicNotificationRuleMonitorScopeDto
+  - term: PublicNotificationRuleScopeDto
+    definition: Definition of the monitors bound to the notification rule
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicNotificationRuleScopeDto
+  - term: PublicPageDtoPublicGetNotificationRuleDto
+    definition: 'Object declared by the contract with fields: data, totalCount.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicPageDtoPublicGetNotificationRuleDto
+  - term: PublicServiceNowTemplateFieldDto
+    definition: Custom fields for service now template
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicServiceNowTemplateFieldDto
+  - term: PublicTicketingDestinationParamsDto
+    definition: Ticketing destination of the notification rule, like Jira or ServiceNow
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicTicketingDestinationParamsDto
+  - term: PublicCreateNotificationRuleDto
+    definition: 'Object declared by the contract with fields: description, domainId, name, notificationDestinations, scope, ticketingDestinations.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicCreateNotificationRuleDto
+  - term: PublicUpdateNotificationRuleDto
+    definition: 'Object declared by the contract with fields: description, name, notificationDestinations, scope, ticketingDestinations.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/PublicUpdateNotificationRuleDto
+  - term: AlertingHookDto
+    definition: 'Object declared by the contract with fields: createdBy, createdDate, externalHook, id, lastModifiedDate, modifiedBy, name, params,
+      type.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/AlertingHookDto
+  - term: AlertingHookParams
+    definition: 'Object declared by the contract with fields: scope, type.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/AlertingHookParams
+  - term: CatalogFilterDto
+    definition: 'Object declared by the contract with fields: children, id, name, query.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/CatalogFilterDto
+  - term: CustomHeader
+    definition: 'Object declared by the contract with fields: key, value.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/CustomHeader
+  - term: DatasetBriefWithUriDto
+    definition: 'Object declared by the contract with fields: datasourceName, datasourceType, id, name, qualifiedName, uri, urn.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/DatasetBriefWithUriDto
+  - term: FilterElementDto
+    definition: 'Object declared by the contract with fields: id, name, results.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/FilterElementDto
+  - term: LastRunStatusDto
+    definition: 'Object declared by the contract with fields: result, status, timestamp.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/LastRunStatusDto
+  - term: MonitoringSearchDto
+    definition: 'Object declared by the contract with fields: catalogFilters, searchRules.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/MonitoringSearchDto
+  - term: ProviderDto
+    definition: 'Object declared by the contract with fields: type.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/ProviderDto
+  - term: RuleCatalogAssetDto
+    definition: 'Object declared by the contract with fields: canManuallyRun, createdBy, criticality, datasetFieldNames, datasets, description,
+      hasAiRecommendations, id, lastRunId, lastRunStatus, lastWeekStatuses, mails. (15 more)'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/RuleCatalogAssetDto
+  - term: RuleStatusDto
+    definition: 'Object declared by the contract with fields: latestRunDate, ruleStatus.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/RuleStatusDto
+  - term: SearchCollectionRuleCatalogAssetDto
+    definition: 'Object declared by the contract with fields: data, totalElements.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/SearchCollectionRuleCatalogAssetDto
+  - term: TagDto
+    definition: 'Object declared by the contract with fields: createdBy, createdDate, description, editable, id, lastModifiedDate, modifiedBy,
+      name, type.'
+    tags:
+    - Object
+    source: openapi/sifflet-backend-api-openapi.yml#/components/schemas/TagDto

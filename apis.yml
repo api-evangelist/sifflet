@@ -1,17 +1,17 @@
 aid: sifflet
+
 name: Sifflet
-description: >-
-  Sifflet is a data observability platform positioned as the control plane for Data and AI.
-  It catches data issues before they reach the business, traces them to their root cause, and
-  helps teams fix them fast. The platform unifies a data catalog, data quality monitoring,
-  end-to-end data lineage (including field-level lineage), built-in security and access
-  control, and AI-powered agents (Sentinel auto-monitoring, Sage root-cause analysis, and an
-  AI chat/assistant) into one product. It integrates with major data platforms and tools
-  including Snowflake, Databricks, BigQuery, Amazon Redshift, dbt, Apache Airflow, Fivetran,
-  Tableau, Looker, and Power BI. Developers automate Sifflet through a public REST API
-  (Bearer Access Token auth), a Python CLI, a Terraform provider, Airflow operators, outbound
-  webhooks, and an official MCP server. Sifflet is a portfolio company of EQT Ventures.
+
+description: Sifflet is a data observability platform positioned as the control plane for Data and AI. It catches data issues before they reach
+  the business, traces them to their root cause, and helps teams fix them fast. The platform unifies a data catalog, data quality monitoring,
+  end-to-end data lineage (including field-level lineage), built-in security and access control, and AI-powered agents (Sentinel auto-monitoring,
+  Sage root-cause analysis, and an AI chat/assistant) into one product. It integrates with major data platforms and tools including Snowflake,
+  Databricks, BigQuery, Amazon Redshift, dbt, Apache Airflow, Fivetran, Tableau, Looker, and Power BI. Developers automate Sifflet through a public
+  REST API (Bearer Access Token auth), a Python CLI, a Terraform provider, Airflow operators, outbound webhooks, and an official MCP server. Sifflet
+  is a portfolio company of EQT Ventures.
+
 url: https://raw.githubusercontent.com/api-evangelist/sifflet/refs/heads/main/apis.yml
+
 deliveryModel:
   model: saas
   open_source: false
@@ -23,6 +23,7 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+
 accessModel:
   pricing: unknown
   onboarding: unknown
@@ -36,16 +37,26 @@ accessModel:
   - security
   generated: '2026-09-03'
   method: derived
+
 image: https://cdn.prod.website-files.com/6745ca418d70ad1c8e2b8442/67915a6a3d805d3e9c024aff_sifflet-logo-color.svg
+
 x-type: company
+
 x-source: vc-portfolio
+
 x-backed-by:
 - eqt-ventures
+
 x-tier: stub
+
 x-tier-reason: portfolio-lead
+
 specificationVersion: '0.23'
+
 created: '2026-07-17'
+
 modified: '2026-07-21'
+
 tags:
 - Company
 - Data Analytics
@@ -57,34 +68,34 @@ tags:
 - Monitoring
 - Metadata
 - AI Agents
-apis:
-- name: Sifflet Public API
-  description: >-
-    Sifflet's public REST API for programmatically managing data observability resources —
-    assets and workspaces, monitors/rules and rule runs, sources (V2), credentials, domains,
-    calendars, notification rules, teams, and users. Endpoints are URI-versioned (/api/v2)
-    and authenticated with a Bearer Access Token. All endpoints accept application/json and
-    application/x-yaml. Base URL is per-tenant on SaaS (https://<tenant>.siffletdata.com) or
-    the deployment host when self-hosted.
-  humanURL: https://docs.siffletdata.com/reference/overview-1
-  baseURL: https://demo.siffletdata.com/api/v2
-  properties:
-  - type: APIReference
-    url: https://docs.siffletdata.com/reference
-  - type: Authentication
-    url: authentication/sifflet-authentication.yml
-  - type: Webhooks
-    url: asyncapi/sifflet-webhooks.yml
-  - type: ErrorCatalog
-    url: errors/sifflet-problem-types.yml
-  - type: DataModel
-    url: data-model/sifflet-data-model.yml
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+- type: AgenticAccess
+  url: agentic-access/sifflet-agentic-access.yml
+- type: Spectral
+  url: rules/sifflet-rules.yml
+- type: JSONLD
+  url: json-ld/sifflet-context.jsonld
+- type: Vocabulary
+  url: vocabulary/sifflet-vocabulary.yml
+- type: Hosts
+  url: hosts/sifflet-hosts.yml
+- type: Vendors
+  url: vendors/sifflet-vendors.yml
+- type: Support
+  url: https://support.siffletdata.com/en/
+- type: SignUp
+  url: https://www.siffletdata.com/partners/register-a-deal
+- type: Newsroom
+  url: https://www.siffletdata.com/press
+- type: Leadership
+  url: https://www.siffletdata.com/team
 - type: Website
   url: https://www.siffletdata.com/
 - type: DeveloperPortal
@@ -147,8 +158,50 @@ common:
   url: security/sifflet-domain-security.yml
 - type: VulnerabilityDisclosure
   url: security/sifflet-vulnerability-disclosure.yml
+
+apis:
+- name: Sifflet Public API
+  description: Sifflet's public REST API for programmatically managing data observability resources — assets and workspaces, monitors/rules and
+    rule runs, sources (V2), credentials, domains, calendars, notification rules, teams, and users. Endpoints are URI-versioned (/api/v2) and
+    authenticated with a Bearer Access Token. All endpoints accept application/json and application/x-yaml. Base URL is per-tenant on SaaS (https://<tenant>.siffletdata.com)
+    or the deployment host when self-hosted.
+  humanURL: https://docs.siffletdata.com/reference/overview-1
+  baseURL: https://demo.siffletdata.com/api/v2
+  properties:
+  - url: openapi/sifflet-backend-api-openapi.yml
+    type: OpenAPI
+  - type: APIReference
+    url: https://docs.siffletdata.com/reference
+  - type: Authentication
+    url: authentication/sifflet-authentication.yml
+  - type: Webhooks
+    url: asyncapi/sifflet-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/sifflet-problem-types.yml
+  - type: DataModel
+    url: data-model/sifflet-data-model.yml
+  - type: JSONSchema
+    url: json-schema/sifflet-public-get-asset-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/sifflet-as-code-monitor-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/sifflet-rule-info-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/sifflet-public-get-source-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/sifflet-public-create-source-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/sifflet-public-update-source-dto-schema.json
+  aid: sifflet:sifflet-public-api
+
 x-enrichment:
   date: '2026-07-21'
   status: enriched
   artifacts_added: 16
   pass: local-v1
+
+x-readme-harvest:
+  date: '2026-10-14'
+  ops: 67
+  tool: harvest-readme-openapi.py
+  portal: https://docs.siffletdata.com

@@ -1,0 +1,16 @@
+generated: '2026-10-14'
+method: none
+source:
+- https://zapier.com/apps/sifflet/integrations
+- https://n8n.io/integrations/sifflet/
+- https://composio.dev/toolkits/sifflet
+- https://monid.ai/tools/sifflet
+checked:
+- https://composio.dev/toolkits/sifflet
+- https://monid.ai/tools/sifflet
+- https://n8n.io/integrations/sifflet/
+- https://zapier.com/apps/sifflet/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []

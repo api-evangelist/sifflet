@@ -1,0 +1,884 @@
+{
+  "@context": {
+    "@vocab": "https://siffletdata.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "sifflet": "https://siffletdata.com/schema#",
+    "ApiProblemSchema": "sifflet:ApiProblemSchema",
+    "detail": {
+      "@id": "sifflet:detail",
+      "@type": "xsd:string"
+    },
+    "response": {
+      "@id": "sifflet:response",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "sifflet:status",
+      "@type": "xsd:integer"
+    },
+    "title": {
+      "@id": "sifflet:title",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "sifflet:type",
+      "@type": "xsd:string"
+    },
+    "PublicCustomMetadataEntryReferenceDto": "sifflet:PublicCustomMetadataEntryReferenceDto",
+    "customMetadataName": {
+      "@id": "sifflet:customMetadataName",
+      "@type": "xsd:string"
+    },
+    "PublicDescriptionDto": "sifflet:PublicDescriptionDto",
+    "description": {
+      "@id": "sifflet:description",
+      "@type": "xsd:string"
+    },
+    "origin": {
+      "@id": "sifflet:origin",
+      "@type": "xsd:string"
+    },
+    "PublicDomainGetDto": "sifflet:PublicDomainGetDto",
+    "id": {
+      "@id": "sifflet:id",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "sifflet:name",
+      "@type": "xsd:string"
+    },
+    "PublicExternalTagReferenceDto": "sifflet:PublicExternalTagReferenceDto",
+    "kind": {
+      "@id": "sifflet:kind",
+      "@type": "xsd:string"
+    },
+    "PublicExternalTermReferenceDto": "sifflet:PublicExternalTermReferenceDto",
+    "PublicGetAssetColumnDto": "sifflet:PublicGetAssetColumnDto",
+    "externalDescriptions": {
+      "@id": "sifflet:externalDescriptions",
+      "@container": "@list"
+    },
+    "externalTags": {
+      "@id": "sifflet:externalTags",
+      "@container": "@list"
+    },
+    "tags": {
+      "@id": "sifflet:tags",
+      "@container": "@list"
+    },
+    "terms": {
+      "@id": "sifflet:terms",
+      "@container": "@list"
+    },
+    "PublicGetAssetDto": "sifflet:PublicGetAssetDto",
+    "columns": {
+      "@id": "sifflet:columns",
+      "@container": "@list"
+    },
+    "customMetadataValues": {
+      "@id": "sifflet:customMetadataValues",
+      "@container": "@list"
+    },
+    "domains": {
+      "@id": "sifflet:domains",
+      "@container": "@list"
+    },
+    "externalTerms": {
+      "@id": "sifflet:externalTerms",
+      "@container": "@list"
+    },
+    "healthStatus": {
+      "@id": "sifflet:healthStatus",
+      "@type": "xsd:string"
+    },
+    "ingestionMethod": {
+      "@id": "sifflet:ingestionMethod",
+      "@type": "xsd:string"
+    },
+    "owners": {
+      "@id": "sifflet:owners",
+      "@container": "@list"
+    },
+    "technology": {
+      "@id": "sifflet:technology",
+      "@type": "xsd:string"
+    },
+    "transformationRun": {
+      "@id": "sifflet:transformationRun",
+      "@type": "@id"
+    },
+    "uri": {
+      "@id": "sifflet:uri",
+      "@type": "xsd:string"
+    },
+    "urn": {
+      "@id": "sifflet:urn",
+      "@type": "xsd:string"
+    },
+    "usage": {
+      "@id": "sifflet:usage",
+      "@type": "xsd:string"
+    },
+    "PublicGetCustomMetadataEntryDto": "sifflet:PublicGetCustomMetadataEntryDto",
+    "PublicReferenceByIdOrEmailDto": "sifflet:PublicReferenceByIdOrEmailDto",
+    "email": {
+      "@id": "sifflet:email",
+      "@type": "xsd:string"
+    },
+    "PublicReferenceByIdOrNameDto": "sifflet:PublicReferenceByIdOrNameDto",
+    "PublicTagReferenceDto": "sifflet:PublicTagReferenceDto",
+    "PublicTransformationRunDto": "sifflet:PublicTransformationRunDto",
+    "lastRunDate": {
+      "@id": "sifflet:lastRunDate",
+      "@type": "xsd:integer"
+    },
+    "lastRunStatus": {
+      "@id": "sifflet:lastRunStatus",
+      "@type": "xsd:string"
+    },
+    "PublicUpdateAssetColumnDto": "sifflet:PublicUpdateAssetColumnDto",
+    "PublicUpdateAssetDto": "sifflet:PublicUpdateAssetDto",
+    "PublicGetAssetRequestDto": "sifflet:PublicGetAssetRequestDto",
+    "PublicAssetFilterDto": "sifflet:PublicAssetFilterDto",
+    "assetType": {
+      "@id": "sifflet:assetType",
+      "@container": "@list"
+    },
+    "domainId": {
+      "@id": "sifflet:domainId",
+      "@type": "xsd:string"
+    },
+    "levelOfUsage": {
+      "@id": "sifflet:levelOfUsage",
+      "@container": "@list"
+    },
+    "sourceId": {
+      "@id": "sifflet:sourceId",
+      "@container": "@list"
+    },
+    "subSourceUri": {
+      "@id": "sifflet:subSourceUri",
+      "@container": "@list"
+    },
+    "textSearch": {
+      "@id": "sifflet:textSearch",
+      "@type": "xsd:string"
+    },
+    "PublicAssetPaginationDto": "sifflet:PublicAssetPaginationDto",
+    "itemsPerPage": {
+      "@id": "sifflet:itemsPerPage",
+      "@type": "xsd:integer"
+    },
+    "page": {
+      "@id": "sifflet:page",
+      "@type": "xsd:integer"
+    },
+    "PublicAssetSearchCriteriaDto": "sifflet:PublicAssetSearchCriteriaDto",
+    "filter": {
+      "@id": "sifflet:filter",
+      "@type": "@id"
+    },
+    "pagination": {
+      "@id": "sifflet:pagination",
+      "@type": "@id"
+    },
+    "sort": {
+      "@id": "sifflet:sort",
+      "@container": "@list"
+    },
+    "PublicGetAssetListDto": "sifflet:PublicGetAssetListDto",
+    "PublicPageDtoPublicGetAssetListDto": "sifflet:PublicPageDtoPublicGetAssetListDto",
+    "data": {
+      "@id": "sifflet:data",
+      "@container": "@list"
+    },
+    "totalCount": {
+      "@id": "sifflet:totalCount",
+      "@type": "xsd:integer"
+    },
+    "ChangeDto": "sifflet:ChangeDto",
+    "from": {
+      "@id": "sifflet:from",
+      "@type": "@id"
+    },
+    "fromWorkspaceId": {
+      "@id": "sifflet:fromWorkspaceId",
+      "@type": "xsd:string"
+    },
+    "to": {
+      "@id": "sifflet:to",
+      "@type": "@id"
+    },
+    "toWorkspaceId": {
+      "@id": "sifflet:toWorkspaceId",
+      "@type": "xsd:string"
+    },
+    "LogDto": "sifflet:LogDto",
+    "level": {
+      "@id": "sifflet:level",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "sifflet:message",
+      "@type": "xsd:string"
+    },
+    "PublicDeclarativeAssetDto": "sifflet:PublicDeclarativeAssetDto",
+    "href": {
+      "@id": "sifflet:href",
+      "@type": "xsd:string"
+    },
+    "lineages": {
+      "@id": "sifflet:lineages",
+      "@type": "@id"
+    },
+    "subType": {
+      "@id": "sifflet:subType",
+      "@type": "xsd:string"
+    },
+    "PublicDeclarativeLineageDto": "sifflet:PublicDeclarativeLineageDto",
+    "PublicDeclarativeLineageListDto": "sifflet:PublicDeclarativeLineageListDto",
+    "PublicDeclarativePayloadDto": "sifflet:PublicDeclarativePayloadDto",
+    "assets": {
+      "@id": "sifflet:assets",
+      "@container": "@list"
+    },
+    "sources": {
+      "@id": "sifflet:sources",
+      "@container": "@list"
+    },
+    "workspace": {
+      "@id": "sifflet:workspace",
+      "@type": "xsd:string"
+    },
+    "PublicDeclarativeSourceDto": "sifflet:PublicDeclarativeSourceDto",
+    "WorkspaceApplyObjectResponseDto": "sifflet:WorkspaceApplyObjectResponseDto",
+    "change": {
+      "@id": "sifflet:change",
+      "@type": "@id"
+    },
+    "logs": {
+      "@id": "sifflet:logs",
+      "@container": "@list"
+    },
+    "subStatus": {
+      "@id": "sifflet:subStatus",
+      "@type": "xsd:string"
+    },
+    "WorkspaceApplyResponseDto": "sifflet:WorkspaceApplyResponseDto",
+    "changes": {
+      "@id": "sifflet:changes",
+      "@container": "@list"
+    },
+    "CalendarTimeslot": "sifflet:CalendarTimeslot",
+    "date": {
+      "@id": "sifflet:date",
+      "@type": "xsd:date"
+    },
+    "PublicCalendarGetDto": "sifflet:PublicCalendarGetDto",
+    "editable": {
+      "@id": "sifflet:editable",
+      "@type": "xsd:boolean"
+    },
+    "standardCalendar": {
+      "@id": "sifflet:standardCalendar",
+      "@type": "xsd:string"
+    },
+    "timeslots": {
+      "@id": "sifflet:timeslots",
+      "@container": "@list"
+    },
+    "PublicPageDtoPublicCalendarGetDto": "sifflet:PublicPageDtoPublicCalendarGetDto",
+    "PublicCalendarCreateDto": "sifflet:PublicCalendarCreateDto",
+    "PublicCalendarUpdateDto": "sifflet:PublicCalendarUpdateDto",
+    "PublicCredentialsGetDto": "sifflet:PublicCredentialsGetDto",
+    "PublicCredentialsPageDtoPublicCredentialsGetDto": "sifflet:PublicCredentialsPageDtoPublicCredentialsGetDto",
+    "PublicCredentialsCreateDto": "sifflet:PublicCredentialsCreateDto",
+    "value": {
+      "@id": "sifflet:value",
+      "@type": "xsd:string"
+    },
+    "PublicCredentialsPatchDto": "sifflet:PublicCredentialsPatchDto",
+    "PublicDomainContentDefinitionDto": "sifflet:PublicDomainContentDefinitionDto",
+    "PublicDomainTeamPermissionDto": "sifflet:PublicDomainTeamPermissionDto",
+    "domainRole": {
+      "@id": "sifflet:domainRole",
+      "@type": "xsd:string"
+    },
+    "teamId": {
+      "@id": "sifflet:teamId",
+      "@type": "xsd:string"
+    },
+    "PublicFilterDomainConditionDto": "sifflet:PublicFilterDomainConditionDto",
+    "PublicGetDomainDto": "sifflet:PublicGetDomainDto",
+    "assetContentDefinition": {
+      "@id": "sifflet:assetContentDefinition"
+    },
+    "assetCount": {
+      "@id": "sifflet:assetCount",
+      "@type": "xsd:integer"
+    },
+    "parentDomainId": {
+      "@id": "sifflet:parentDomainId",
+      "@type": "xsd:string"
+    },
+    "teamPermissions": {
+      "@id": "sifflet:teamPermissions",
+      "@container": "@list"
+    },
+    "PublicPageDtoPublicGetDomainDto": "sifflet:PublicPageDtoPublicGetDomainDto",
+    "PublicCreateDomainDto": "sifflet:PublicCreateDomainDto",
+    "PublicUpdateDomainDto": "sifflet:PublicUpdateDomainDto",
+    "PublicAssetImportDto": "sifflet:PublicAssetImportDto",
+    "catalogUrl": {
+      "@id": "sifflet:catalogUrl",
+      "@type": "xsd:string"
+    },
+    "labels": {
+      "@id": "sifflet:labels",
+      "@container": "@list"
+    },
+    "strings": {
+      "@id": "sifflet:strings",
+      "@container": "@list"
+    },
+    "PublicAssetImportResultDto": "sifflet:PublicAssetImportResultDto",
+    "PublicConfigurationImportDto": "sifflet:PublicConfigurationImportDto",
+    "catalogProvider": {
+      "@id": "sifflet:catalogProvider",
+      "@type": "xsd:string"
+    },
+    "PublicExternalCatalogImportDto": "sifflet:PublicExternalCatalogImportDto",
+    "configuration": {
+      "@id": "sifflet:configuration",
+      "@type": "@id"
+    },
+    "PublicExternalCatalogImportResponseDto": "sifflet:PublicExternalCatalogImportResponseDto",
+    "PublicExternalCatalogImportResultDto": "sifflet:PublicExternalCatalogImportResultDto",
+    "importStatus": {
+      "@id": "sifflet:importStatus",
+      "@type": "xsd:string"
+    },
+    "results": {
+      "@id": "sifflet:results",
+      "@container": "@list"
+    },
+    "PublicLabelExternalMetadataDto": "sifflet:PublicLabelExternalMetadataDto",
+    "showInFilter": {
+      "@id": "sifflet:showInFilter",
+      "@type": "xsd:boolean"
+    },
+    "PublicNamedElementExternalMetadataDto": "sifflet:PublicNamedElementExternalMetadataDto",
+    "PublicStringExternalMetadataDto": "sifflet:PublicStringExternalMetadataDto",
+    "PublicFilterNotificationRuleAssetScopeConditionDto": "sifflet:PublicFilterNotificationRuleAssetScopeConditionDto",
+    "PublicGetNotificationRuleDto": "sifflet:PublicGetNotificationRuleDto",
+    "notificationDestinations": {
+      "@id": "sifflet:notificationDestinations",
+      "@container": "@list"
+    },
+    "scope": {
+      "@id": "sifflet:scope",
+      "@type": "@id"
+    },
+    "ticketingDestinations": {
+      "@id": "sifflet:ticketingDestinations",
+      "@container": "@list"
+    },
+    "PublicJiraTemplateFieldDto": "sifflet:PublicJiraTemplateFieldDto",
+    "key": {
+      "@id": "sifflet:key",
+      "@type": "xsd:string"
+    },
+    "PublicNotificationDestinationReferenceDto": "sifflet:PublicNotificationDestinationReferenceDto",
+    "PublicNotificationRuleAssetScopeDto": "sifflet:PublicNotificationRuleAssetScopeDto",
+    "PublicNotificationRuleMonitorScopeDto": "sifflet:PublicNotificationRuleMonitorScopeDto",
+    "PublicNotificationRuleScopeDto": "sifflet:PublicNotificationRuleScopeDto",
+    "assetScope": {
+      "@id": "sifflet:assetScope"
+    },
+    "monitorScope": {
+      "@id": "sifflet:monitorScope"
+    },
+    "PublicPageDtoPublicGetNotificationRuleDto": "sifflet:PublicPageDtoPublicGetNotificationRuleDto",
+    "PublicServiceNowTemplateFieldDto": "sifflet:PublicServiceNowTemplateFieldDto",
+    "PublicTicketingDestinationParamsDto": "sifflet:PublicTicketingDestinationParamsDto",
+    "templateName": {
+      "@id": "sifflet:templateName",
+      "@type": "xsd:string"
+    },
+    "PublicCreateNotificationRuleDto": "sifflet:PublicCreateNotificationRuleDto",
+    "PublicUpdateNotificationRuleDto": "sifflet:PublicUpdateNotificationRuleDto",
+    "AlertingHookDto": "sifflet:AlertingHookDto",
+    "createdBy": {
+      "@id": "sifflet:createdBy",
+      "@type": "xsd:string"
+    },
+    "createdDate": {
+      "@id": "sifflet:createdDate",
+      "@type": "xsd:integer"
+    },
+    "externalHook": {
+      "@id": "sifflet:externalHook",
+      "@type": "xsd:string"
+    },
+    "lastModifiedDate": {
+      "@id": "sifflet:lastModifiedDate",
+      "@type": "xsd:integer"
+    },
+    "modifiedBy": {
+      "@id": "sifflet:modifiedBy",
+      "@type": "xsd:string"
+    },
+    "params": {
+      "@id": "sifflet:params"
+    },
+    "AlertingHookParams": "sifflet:AlertingHookParams",
+    "CatalogFilterDto": "sifflet:CatalogFilterDto",
+    "children": {
+      "@id": "sifflet:children",
+      "@container": "@list"
+    },
+    "query": {
+      "@id": "sifflet:query",
+      "@type": "xsd:string"
+    },
+    "CustomHeader": "sifflet:CustomHeader",
+    "DatasetBriefWithUriDto": "sifflet:DatasetBriefWithUriDto",
+    "datasourceName": {
+      "@id": "sifflet:datasourceName",
+      "@type": "xsd:string"
+    },
+    "datasourceType": {
+      "@id": "sifflet:datasourceType",
+      "@type": "xsd:string"
+    },
+    "qualifiedName": {
+      "@id": "sifflet:qualifiedName",
+      "@type": "xsd:string"
+    },
+    "FilterElementDto": "sifflet:FilterElementDto",
+    "LastRunStatusDto": "sifflet:LastRunStatusDto",
+    "result": {
+      "@id": "sifflet:result",
+      "@type": "xsd:string"
+    },
+    "timestamp": {
+      "@id": "sifflet:timestamp",
+      "@type": "xsd:integer"
+    },
+    "MonitoringSearchDto": "sifflet:MonitoringSearchDto",
+    "catalogFilters": {
+      "@id": "sifflet:catalogFilters",
+      "@container": "@list"
+    },
+    "searchRules": {
+      "@id": "sifflet:searchRules",
+      "@type": "@id"
+    },
+    "ProviderDto": "sifflet:ProviderDto",
+    "RuleCatalogAssetDto": "sifflet:RuleCatalogAssetDto",
+    "canManuallyRun": {
+      "@id": "sifflet:canManuallyRun",
+      "@type": "xsd:boolean"
+    },
+    "criticality": {
+      "@id": "sifflet:criticality",
+      "@type": "xsd:integer"
+    },
+    "datasetFieldNames": {
+      "@id": "sifflet:datasetFieldNames",
+      "@container": "@list"
+    },
+    "datasets": {
+      "@id": "sifflet:datasets",
+      "@container": "@list"
+    },
+    "hasAiRecommendations": {
+      "@id": "sifflet:hasAiRecommendations",
+      "@type": "xsd:boolean"
+    },
+    "lastRunId": {
+      "@id": "sifflet:lastRunId",
+      "@type": "xsd:string"
+    },
+    "lastWeekStatuses": {
+      "@id": "sifflet:lastWeekStatuses",
+      "@container": "@list"
+    },
+    "mails": {
+      "@id": "sifflet:mails",
+      "@container": "@list"
+    },
+    "msTeams": {
+      "@id": "sifflet:msTeams",
+      "@container": "@list"
+    },
+    "multiDimensional": {
+      "@id": "sifflet:multiDimensional",
+      "@type": "xsd:boolean"
+    },
+    "provider": {
+      "@id": "sifflet:provider"
+    },
+    "readOnly": {
+      "@id": "sifflet:readOnly",
+      "@type": "xsd:boolean"
+    },
+    "ruleLabel": {
+      "@id": "sifflet:ruleLabel",
+      "@type": "xsd:string"
+    },
+    "ruleStatus": {
+      "@id": "sifflet:ruleStatus",
+      "@type": "@id"
+    },
+    "ruleType": {
+      "@id": "sifflet:ruleType",
+      "@type": "xsd:string"
+    },
+    "schedule": {
+      "@id": "sifflet:schedule",
+      "@type": "xsd:string"
+    },
+    "selectable": {
+      "@id": "sifflet:selectable",
+      "@type": "xsd:boolean"
+    },
+    "slackChannels": {
+      "@id": "sifflet:slackChannels",
+      "@container": "@list"
+    },
+    "sourcePlatform": {
+      "@id": "sifflet:sourcePlatform",
+      "@type": "xsd:string"
+    },
+    "supportAsCodeYAMLConversion": {
+      "@id": "sifflet:supportAsCodeYAMLConversion",
+      "@type": "xsd:boolean"
+    },
+    "RuleStatusDto": "sifflet:RuleStatusDto",
+    "latestRunDate": {
+      "@id": "sifflet:latestRunDate",
+      "@type": "xsd:integer"
+    },
+    "SearchCollectionRuleCatalogAssetDto": "sifflet:SearchCollectionRuleCatalogAssetDto",
+    "totalElements": {
+      "@id": "sifflet:totalElements",
+      "@type": "xsd:integer"
+    },
+    "TagDto": "sifflet:TagDto",
+    "UserDto": "sifflet:UserDto",
+    "login": {
+      "@id": "sifflet:login",
+      "@type": "xsd:string"
+    },
+    "ParameterizedQueryDto": "sifflet:ParameterizedQueryDto",
+    "positionalParameters": {
+      "@id": "sifflet:positionalParameters",
+      "@container": "@list"
+    },
+    "PositionalParameterDto": "sifflet:PositionalParameterDto",
+    "RuleRunDto": "sifflet:RuleRunDto",
+    "canShowFailingRows": {
+      "@id": "sifflet:canShowFailingRows",
+      "@type": "xsd:boolean"
+    },
+    "debugSql": {
+      "@id": "sifflet:debugSql",
+      "@type": "@id"
+    },
+    "debuggable": {
+      "@id": "sifflet:debuggable",
+      "@type": "xsd:boolean"
+    },
+    "endDate": {
+      "@id": "sifflet:endDate",
+      "@type": "xsd:integer"
+    },
+    "hasGraph": {
+      "@id": "sifflet:hasGraph",
+      "@type": "xsd:boolean"
+    },
+    "hasGroupBy": {
+      "@id": "sifflet:hasGroupBy",
+      "@type": "xsd:boolean"
+    },
+    "incidentIssue": {
+      "@id": "sifflet:incidentIssue",
+      "@type": "xsd:integer"
+    },
+    "incidentName": {
+      "@id": "sifflet:incidentName",
+      "@type": "xsd:string"
+    },
+    "incidentStatus": {
+      "@id": "sifflet:incidentStatus",
+      "@type": "xsd:string"
+    },
+    "ruleId": {
+      "@id": "sifflet:ruleId",
+      "@type": "xsd:string"
+    },
+    "startDate": {
+      "@id": "sifflet:startDate",
+      "@type": "xsd:integer"
+    },
+    "values": {
+      "@id": "sifflet:values",
+      "@type": "@id"
+    },
+    "RuleRunExpectedValuesDto": "sifflet:RuleRunExpectedValuesDto",
+    "max": {
+      "@id": "sifflet:max",
+      "@type": "xsd:decimal"
+    },
+    "min": {
+      "@id": "sifflet:min",
+      "@type": "xsd:decimal"
+    },
+    "RuleRunValuesDto": "sifflet:RuleRunValuesDto",
+    "actual": {
+      "@id": "sifflet:actual",
+      "@type": "xsd:decimal"
+    },
+    "expected": {
+      "@id": "sifflet:expected",
+      "@type": "@id"
+    },
+    "GroupDecryptedValuesDto": "sifflet:GroupDecryptedValuesDto",
+    "decryptedValues": {
+      "@id": "sifflet:decryptedValues"
+    },
+    "RuleDetailsDto": "sifflet:RuleDetailsDto",
+    "createdByProvider": {
+      "@id": "sifflet:createdByProvider"
+    },
+    "jiraTemplateName": {
+      "@id": "sifflet:jiraTemplateName",
+      "@type": "xsd:string"
+    },
+    "modifiedByProvider": {
+      "@id": "sifflet:modifiedByProvider"
+    },
+    "ruleParams": {
+      "@id": "sifflet:ruleParams",
+      "@type": "@id"
+    },
+    "serviceNowTemplateName": {
+      "@id": "sifflet:serviceNowTemplateName",
+      "@type": "xsd:string"
+    },
+    "webhooks": {
+      "@id": "sifflet:webhooks",
+      "@container": "@list"
+    },
+    "Criticality": "sifflet:Criticality",
+    "DatasetBriefDto": "sifflet:DatasetBriefDto",
+    "EntityCustomMetadataDto": "sifflet:EntityCustomMetadataDto",
+    "entries": {
+      "@id": "sifflet:entries",
+      "@container": "@list"
+    },
+    "lineagePlatform": {
+      "@id": "sifflet:lineagePlatform",
+      "@type": "xsd:string"
+    },
+    "EntityCustomMetadataEntryDto": "sifflet:EntityCustomMetadataEntryDto",
+    "GetCollaborationToolItemDto": "sifflet:GetCollaborationToolItemDto",
+    "itemKey": {
+      "@id": "sifflet:itemKey",
+      "@type": "xsd:string"
+    },
+    "itemUrl": {
+      "@id": "sifflet:itemUrl",
+      "@type": "xsd:string"
+    },
+    "IncidentLightDto": "sifflet:IncidentLightDto",
+    "collaborationToolItems": {
+      "@id": "sifflet:collaborationToolItems",
+      "@container": "@list"
+    },
+    "compromisedAssets": {
+      "@id": "sifflet:compromisedAssets",
+      "@type": "xsd:integer"
+    },
+    "isMutedIndefinitely": {
+      "@id": "sifflet:isMutedIndefinitely",
+      "@type": "xsd:boolean"
+    },
+    "issueNo": {
+      "@id": "sifflet:issueNo",
+      "@type": "xsd:integer"
+    },
+    "lastOccurredDate": {
+      "@id": "sifflet:lastOccurredDate",
+      "@type": "xsd:integer"
+    },
+    "mutedUntil": {
+      "@id": "sifflet:mutedUntil",
+      "@type": "xsd:integer"
+    },
+    "qualification": {
+      "@id": "sifflet:qualification",
+      "@type": "xsd:string"
+    },
+    "teams": {
+      "@id": "sifflet:teams",
+      "@container": "@list"
+    },
+    "triggerTime": {
+      "@id": "sifflet:triggerTime",
+      "@type": "xsd:integer"
+    },
+    "IncidentTeamDto": "sifflet:IncidentTeamDto",
+    "RuleInfoDto": "sifflet:RuleInfoDto",
+    "canBeQualified": {
+      "@id": "sifflet:canBeQualified",
+      "@type": "xsd:boolean"
+    },
+    "canBeScheduled": {
+      "@id": "sifflet:canBeScheduled",
+      "@type": "xsd:boolean"
+    },
+    "canHaveFailingRows": {
+      "@id": "sifflet:canHaveFailingRows",
+      "@type": "xsd:boolean"
+    },
+    "customMetadata": {
+      "@id": "sifflet:customMetadata",
+      "@container": "@list"
+    },
+    "lastIncident": {
+      "@id": "sifflet:lastIncident",
+      "@type": "@id"
+    },
+    "lastRunTimestamp": {
+      "@id": "sifflet:lastRunTimestamp",
+      "@type": "xsd:integer"
+    },
+    "lastUnresolvedIncident": {
+      "@id": "sifflet:lastUnresolvedIncident",
+      "@type": "@id"
+    },
+    "muted": {
+      "@id": "sifflet:muted",
+      "@type": "xsd:boolean"
+    },
+    "mutingMode": {
+      "@id": "sifflet:mutingMode",
+      "@type": "xsd:string"
+    },
+    "ruleTemplateName": {
+      "@id": "sifflet:ruleTemplateName",
+      "@type": "xsd:string"
+    },
+    "scheduleTimezone": {
+      "@id": "sifflet:scheduleTimezone",
+      "@type": "@id"
+    },
+    "unresolvedIncidents": {
+      "@id": "sifflet:unresolvedIncidents",
+      "@type": "xsd:integer"
+    },
+    "TimeZoneDto": "sifflet:TimeZoneDto",
+    "timezone": {
+      "@id": "sifflet:timezone",
+      "@type": "xsd:string"
+    },
+    "utcOffset": {
+      "@id": "sifflet:utcOffset",
+      "@type": "xsd:string"
+    },
+    "WorkspaceSummaryDto": "sifflet:WorkspaceSummaryDto",
+    "RuleOverviewDto": "sifflet:RuleOverviewDto",
+    "AsCodeAggregationClauseDtoV1": "sifflet:AsCodeAggregationClauseDtoV1",
+    "AsCodeAggregationClauseDtoV2": "sifflet:AsCodeAggregationClauseDtoV2",
+    "AsCodeCalendarReferenceDto": "sifflet:AsCodeCalendarReferenceDto",
+    "AsCodeConditionDto": "sifflet:AsCodeConditionDto",
+    "AsCodeConnectionParamsOverrideDto": "sifflet:AsCodeConnectionParamsOverrideDto",
+    "credentials": {
+      "@id": "sifflet:credentials",
+      "@type": "xsd:string"
+    },
+    "AsCodeCustomMetadataEntryReferenceDto": "sifflet:AsCodeCustomMetadataEntryReferenceDto",
+    "AsCodeCustomMetadataEntryValueReferenceDto": "sifflet:AsCodeCustomMetadataEntryValueReferenceDto",
+    "AsCodeCustomMetricsTimeWindowDto": "sifflet:AsCodeCustomMetricsTimeWindowDto",
+    "offset": {
+      "@id": "sifflet:offset",
+      "@type": "@id"
+    },
+    "offsetPeriods": {
+      "@id": "sifflet:offsetPeriods",
+      "@type": "xsd:integer"
+    },
+    "AsCodeDatasetReferenceDto": "sifflet:AsCodeDatasetReferenceDto",
+    "datasource": {
+      "@id": "sifflet:datasource",
+      "@type": "@id"
+    },
+    "AsCodeDistributionChangeTimeWindowClauseDtoV2": "sifflet:AsCodeDistributionChangeTimeWindowClauseDtoV2",
+    "deltaQuerying": {
+      "@id": "sifflet:deltaQuerying",
+      "@type": "@id"
+    },
+    "duration": {
+      "@id": "sifflet:duration",
+      "@type": "@id"
+    },
+    "field": {
+      "@id": "sifflet:field",
+      "@type": "@id"
+    },
+    "firstRun": {
+      "@id": "sifflet:firstRun",
+      "@type": "@id"
+    },
+    "frequency": {
+      "@id": "sifflet:frequency",
+      "@type": "@id"
+    },
+    "rollingTimeWindow": {
+      "@id": "sifflet:rollingTimeWindow",
+      "@type": "@id"
+    },
+    "AsCodeDistributionReferenceDto": "sifflet:AsCodeDistributionReferenceDto",
+    "AsCodeDurationDto": "sifflet:AsCodeDurationDto",
+    "timeUnit": {
+      "@id": "sifflet:timeUnit",
+      "@type": "xsd:string"
+    },
+    "AsCodeDynamicFreshnessThresholdDto": "sifflet:AsCodeDynamicFreshnessThresholdDto",
+    "excludedDates": {
+      "@id": "sifflet:excludedDates",
+      "@container": "@list"
+    },
+    "sensitivity": {
+      "@id": "sifflet:sensitivity",
+      "@type": "xsd:integer"
+    },
+    "AsCodeDynamicThresholdDtoV1": "sifflet:AsCodeDynamicThresholdDtoV1",
+    "bounds": {
+      "@id": "sifflet:bounds",
+      "@type": "xsd:string"
+    },
+    "AsCodeExpressionDto": "sifflet:AsCodeExpressionDto",
+    "AsCodeFieldExpressionDto": "sifflet:AsCodeFieldExpressionDto",
+    "AsCodeFieldFormatValidationClauseDto": "sifflet:AsCodeFieldFormatValidationClauseDto",
+    "AsCodeFieldProfilingClauseDto": "sifflet:AsCodeFieldProfilingClauseDto",
+    "AsCodeFieldReferenceDto": "sifflet:AsCodeFieldReferenceDto",
+    "dataset": {
+      "@id": "sifflet:dataset",
+      "@type": "@id"
+    },
+    "AsCodeFreshnessThresholdDto": "sifflet:AsCodeFreshnessThresholdDto",
+    "AsCodeGroupByClauseDto": "sifflet:AsCodeGroupByClauseDto"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Sifflet API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Sifflet's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-14) from openapi/sifflet-backend-api-openapi.yml.",
+  "dcterms:created": "2026-10-14",
+  "dcterms:source": [
+    "openapi/sifflet-backend-api-openapi.yml"
+  ]
+}

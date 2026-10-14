@@ -1,0 +1,3394 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/sifflet/main/json-schema/sifflet-as-code-monitor-dto-schema.json",
+  "title": "AsCodeMonitorDto",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/sifflet-backend-api-openapi.yml#/components/schemas/AsCodeMonitorDto",
+  "required": [
+    "incident",
+    "joins",
+    "name",
+    "parameters",
+    "version"
+  ],
+  "type": "object",
+  "properties": {
+    "connection": {
+      "$ref": "#/$defs/AsCodeConnectionParamsOverrideDto"
+    },
+    "customMetadataEntries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AsCodeCustomMetadataEntryReferenceDto"
+      }
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AsCodeDatasetReferenceDto"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "friendlyId": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "incident": {
+      "$ref": "#/$defs/AsCodeIncidentDto"
+    },
+    "joins": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AsCodeJoinDto"
+      }
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "Workspace",
+        "Monitor",
+        "Asset",
+        "Source",
+        "Lineage"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "notifications": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/AsCodeAlertingHookNotificationDto"
+          },
+          {
+            "$ref": "#/$defs/AsCodeJiraNotificationDto"
+          },
+          {
+            "$ref": "#/$defs/AsCodeServiceNowNotificationDto"
+          }
+        ]
+      }
+    },
+    "overrideNotificationRules": {
+      "type": "boolean"
+    },
+    "parameters": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/AsCodeCompletenessMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeConditionalMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeCorrelatedMetricsMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeCustomMetricsMonitorParamsDtoV1"
+        },
+        {
+          "$ref": "#/$defs/AsCodeCustomMetricsMonitorParamsDtoV2"
+        },
+        {
+          "$ref": "#/$defs/AsCodeDistributionMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeDuplicatesMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeDynamicFieldProfilingMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeDynamicMetricMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldDuplicatesMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldFormatMonitorParamsDtoV1"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldFormatMonitorParamsDtoV2"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldInListConstraintMonitorParamsDtoV1"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldInListConstraintMonitorParamsDtoV2"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldNullsMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFieldUniquenessMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFreshnessMonitorParamsDtoV1"
+        },
+        {
+          "$ref": "#/$defs/AsCodeFreshnessMonitorParamsDtoV2"
+        },
+        {
+          "$ref": "#/$defs/AsCodeMetadataFreshnessMonitorParamsDtoV1"
+        },
+        {
+          "$ref": "#/$defs/AsCodeMetadataFreshnessMonitorParamsDtoV2"
+        },
+        {
+          "$ref": "#/$defs/AsCodeMetricsMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeReferentialIntegrityMonitorParamsDtoV1"
+        },
+        {
+          "$ref": "#/$defs/AsCodeReferentialIntegrityMonitorParamsDtoV2"
+        },
+        {
+          "$ref": "#/$defs/AsCodeRowDuplicatesMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeSchemaChangeMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeSqlConditionMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeSqlMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeStaticCompletenessMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeStaticFieldProfilingMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeStaticMetricMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeValueRangeMonitorParamsDto"
+        },
+        {
+          "$ref": "#/$defs/AsCodeVolumeMonitorParamsDto"
+        }
+      ]
+    },
+    "schedule": {
+      "type": "string"
+    },
+    "scheduleTimezone": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AsCodeTagReferenceDto"
+      }
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AsCodeReferenceByIdOrNameDtoImpl"
+      }
+    },
+    "version": {
+      "type": "integer",
+      "format": "int32"
+    }
+  },
+  "$defs": {
+    "AsCodeAggregationClauseDtoV1": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Average",
+            "NormalizedAverage",
+            "Count",
+            "DistinctCount",
+            "Sum",
+            "Max",
+            "Min",
+            "Quantile",
+            "Range",
+            "StandardDeviation",
+            "Variance"
+          ]
+        }
+      }
+    },
+    "AsCodeAggregationClauseDtoV2": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Average",
+            "NormalizedAverage",
+            "Count",
+            "CountAllRows",
+            "DistinctCount",
+            "Sum",
+            "Max",
+            "Min",
+            "Quantile",
+            "StandardDeviation",
+            "Variance",
+            "CustomAggregation"
+          ]
+        }
+      }
+    },
+    "AsCodeAlertingHookNotificationDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeNotificationReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCalendarReferenceDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "standardCalendar": {
+          "type": "string",
+          "enum": [
+            "US_PUBLIC_HOLIDAYS",
+            "FRANCE_PUBLIC_HOLIDAYS",
+            "UK_PUBLIC_HOLIDAYS",
+            "BELGIUM_PUBLIC_HOLIDAYS",
+            "SPAIN_PUBLIC_HOLIDAYS",
+            "GERMANY_PUBLIC_HOLIDAYS",
+            "NETHERLANDS_PUBLIC_HOLIDAYS",
+            "SUNDAYS",
+            "WEEKENDS"
+          ]
+        }
+      }
+    },
+    "AsCodeCompletenessMonitorParamsDto": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeDynamicThresholdDtoV1"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeConditionDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "andGroup",
+            "orGroup",
+            "equals",
+            "notEquals",
+            "greaterThan",
+            "greaterThanOrEquals",
+            "lessThan",
+            "lessThanOrEquals",
+            "isNull",
+            "isNotNull",
+            "contains",
+            "notContains",
+            "dateOlderThan",
+            "dateYoungerThan",
+            "isTrue",
+            "isFalse"
+          ]
+        }
+      }
+    },
+    "AsCodeConditionGroupDto": {
+      "required": [
+        "conditions",
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeConditionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "conditions": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/AsCodeConditionGroupDto"
+                  },
+                  {
+                    "$ref": "#/$defs/AsCodeDateConditionDto"
+                  },
+                  {
+                    "$ref": "#/$defs/AsCodeNumericComparisonConditionDto"
+                  },
+                  {
+                    "$ref": "#/$defs/AsCodeStringConditionDto"
+                  },
+                  {
+                    "$ref": "#/$defs/AsCodeUnaryConditionDto"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeConditionalMonitorParamsDto": {
+      "required": [
+        "condition",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "condition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeConditionGroupDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeDateConditionDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeNumericComparisonConditionDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStringConditionDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeUnaryConditionDto"
+                }
+              ]
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeConnectionParamsOverrideDto": {
+      "required": [
+        "credentials"
+      ],
+      "type": "object",
+      "properties": {
+        "credentials": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeCorrelatedMetricsMonitorParamsDto": {
+      "required": [
+        "metrics",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "metadataBased": {
+              "type": "boolean"
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/AsCodeMetricClauseDto"
+              }
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseWithoutFieldDtoV2"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomAggregationClauseDtoV2": {
+      "required": [
+        "kind",
+        "sql"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeAggregationClauseDtoV2"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sql": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetadataEntryLabelValueReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeCustomMetadataEntryValueReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "labelValue": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetadataEntryReferenceDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AsCodeCustomMetadataEntryLabelValueReferenceDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeCustomMetadataEntryStringValueReferenceDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeCustomMetadataEntryTeamValueReferenceDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeCustomMetadataEntryUserValueReferenceDto"
+            }
+          ]
+        }
+      }
+    },
+    "AsCodeCustomMetadataEntryStringValueReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeCustomMetadataEntryValueReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stringValue": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetadataEntryTeamValueReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeCustomMetadataEntryValueReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetadataEntryUserValueReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeCustomMetadataEntryValueReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetadataEntryValueReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "customMetadataName": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Label",
+            "String",
+            "User",
+            "Team"
+          ]
+        }
+      }
+    },
+    "AsCodeCustomMetricsMonitorParamsDtoV1": {
+      "required": [
+        "sql"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "sql": {
+              "type": "string"
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeDynamicThresholdDtoV1"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowOffsetClauseDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetricsMonitorParamsDtoV2": {
+      "required": [
+        "sql",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "emptyMeansZero": {
+              "type": "boolean"
+            },
+            "sql": {
+              "type": "string"
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeCustomMetricsTimeWindowDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeCustomMetricsTimeWindowDto": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offsetPeriods": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AsCodeDatasetReferenceDto": {
+      "type": "object",
+      "properties": {
+        "datasource": {
+          "$ref": "#/$defs/AsCodeReferenceByIdOrNameDtoImpl"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeDateConditionDto": {
+      "required": [
+        "dateExpression",
+        "duration",
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeConditionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dateExpression": {
+              "$ref": "#/$defs/AsCodeFieldExpressionDto"
+            },
+            "duration": {
+              "$ref": "#/$defs/AsCodeDurationDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeDistributionChangeTimeWindowClauseDtoV2": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "deltaQuerying": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "duration": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "field": {
+          "$ref": "#/$defs/AsCodeFieldReferenceDto"
+        },
+        "firstRun": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "frequency": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offsetPeriods": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rollingTimeWindow": {
+          "$ref": "#/$defs/SimpleDuration"
+        }
+      }
+    },
+    "AsCodeDistributionMonitorParamsDto": {
+      "required": [
+        "field",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/AsCodeFieldReferenceDto"
+              }
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "onAddedCategory": {
+              "type": "boolean"
+            },
+            "onRemovedCategory": {
+              "type": "boolean"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "reference": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFixedDistributionReferenceDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeRollingDistributionReferenceDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeDistributionChangeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeDistributionReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Rolling",
+            "Fixed"
+          ]
+        }
+      }
+    },
+    "AsCodeDuplicatesMonitorParamsDto": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeDynamicThresholdDtoV1"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowWithOffsetAndFrequencyClauseDto"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeDurationDto": {
+      "required": [
+        "timeUnit",
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "timeUnit": {
+          "type": "string",
+          "enum": [
+            "days",
+            "hours",
+            "minutes"
+          ]
+        },
+        "value": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AsCodeDynamicFieldProfilingMonitorParamsDto": {
+      "required": [
+        "field",
+        "profiling"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "profiling": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFieldProfilingClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeNullFieldProfilingClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeDynamicThresholdDtoV1"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeDynamicFreshnessThresholdDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Dynamic",
+            "Static"
+          ]
+        },
+        "sensitivity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AsCodeDynamicMetricMonitorParamsDto": {
+      "required": [
+        "aggregation",
+        "field"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "aggregation": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeAggregationClauseDtoV1"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeQuantileAggregationClauseDtoV1"
+                }
+              ]
+            },
+            "field": {
+              "type": "string"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeDynamicThresholdDtoV1"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeDynamicThresholdDtoV1": {
+      "type": "object",
+      "properties": {
+        "bounds": {
+          "type": "string",
+          "enum": [
+            "MinAndMax",
+            "Min",
+            "Max"
+          ]
+        },
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "sensitivity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AsCodeDynamicThresholdDtoV2": {
+      "required": [
+        "kind",
+        "sensitivity"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeThresholdBaseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "bounds": {
+              "type": "string",
+              "enum": [
+                "MinAndMax",
+                "Min",
+                "Max"
+              ]
+            },
+            "sensitivity": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeEqualityJoinConditionDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeJoinConditionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "fieldPairs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/AsCodeJoinFieldPairDto"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeExpressionDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "field",
+            "value"
+          ]
+        }
+      }
+    },
+    "AsCodeFieldDuplicatesMonitorParamsDto": {
+      "required": [
+        "field",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/AsCodeFieldReferenceDto"
+              }
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFieldExpressionDto": {
+      "required": [
+        "field",
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/AsCodeFieldReferenceDto"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "field",
+            "value"
+          ]
+        }
+      }
+    },
+    "AsCodeFieldFormatMonitorParamsDtoV1": {
+      "required": [
+        "field",
+        "format"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "format": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFieldFormatValidationClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeRegexFieldFormatValidationClauseDto"
+                }
+              ]
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV1"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFieldFormatMonitorParamsDtoV2": {
+      "required": [
+        "field",
+        "format",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "format": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFieldFormatValidationClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeRegexFieldFormatValidationClauseDto"
+                }
+              ]
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFieldFormatValidationClauseDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Email",
+            "Phone",
+            "UUID",
+            "Regex"
+          ]
+        }
+      }
+    },
+    "AsCodeFieldInListConstraintMonitorParamsDtoV1": {
+      "required": [
+        "field",
+        "values"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV1"
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFieldInListConstraintMonitorParamsDtoV2": {
+      "required": [
+        "field",
+        "threshold",
+        "values"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFieldNullsMonitorParamsDto": {
+      "required": [
+        "field",
+        "nullValues",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "nullValues": {
+              "type": "string",
+              "enum": [
+                "Null",
+                "NullAndEmpty",
+                "NullEmptyAndWhitespaces"
+              ]
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFieldProfilingClauseDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "DuplicatePercentage",
+            "DuplicateCount",
+            "NullPercentage",
+            "NullCount"
+          ]
+        }
+      }
+    },
+    "AsCodeFieldReferenceDto": {
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "$ref": "#/$defs/AsCodeDatasetReferenceDto"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeFieldUniquenessMonitorParamsDto": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV1"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFixedDistributionReferenceDto": {
+      "required": [
+        "kind",
+        "timestamp"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeDistributionReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "timestamp": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFreshnessMonitorParamsDtoV1": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFreshnessThresholdDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeDynamicFreshnessThresholdDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticFreshnessThresholdDto"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFreshnessMonitorParamsDtoV2": {
+      "required": [
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeFreshnessThresholdDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Dynamic",
+            "Static"
+          ]
+        }
+      }
+    },
+    "AsCodeGroupByClauseDto": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeFieldReferenceDto"
+          }
+        }
+      }
+    },
+    "AsCodeIncidentDto": {
+      "required": [
+        "severity"
+      ],
+      "type": "object",
+      "properties": {
+        "createOnFailure": {
+          "type": "boolean"
+        },
+        "customEmailSubject": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "Low",
+            "Moderate",
+            "High",
+            "Critical"
+          ]
+        }
+      }
+    },
+    "AsCodeIngestionTimePartitionClauseDto": {
+      "required": [
+        "interval"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodePartitionClauseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "interval": {
+              "$ref": "#/$defs/SimpleDuration"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeIntegerRangePartitionClauseDto": {
+      "required": [
+        "field",
+        "max",
+        "min"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodePartitionClauseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "max": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "min": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeJiraNotificationDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeNotificationReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "issueTypeId": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "projectKey": {
+              "type": "string"
+            },
+            "templateName": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeJoinConditionDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Equality"
+          ]
+        }
+      }
+    },
+    "AsCodeJoinDto": {
+      "required": [
+        "dataset",
+        "joinCondition",
+        "joinType"
+      ],
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "$ref": "#/$defs/AsCodeDatasetReferenceDto"
+        },
+        "joinCondition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AsCodeEqualityJoinConditionDto"
+            }
+          ]
+        },
+        "joinType": {
+          "type": "string",
+          "enum": [
+            "Inner",
+            "Left",
+            "Right",
+            "Outer"
+          ]
+        }
+      }
+    },
+    "AsCodeJoinFieldPairDto": {
+      "required": [
+        "leftField",
+        "rightField"
+      ],
+      "type": "object",
+      "properties": {
+        "leftField": {
+          "$ref": "#/$defs/AsCodeFieldReferenceDto"
+        },
+        "rightField": {
+          "$ref": "#/$defs/AsCodeFieldReferenceDto"
+        }
+      }
+    },
+    "AsCodeMetadataFreshnessMonitorParamsDtoV1": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "threshold": {
+              "$ref": "#/$defs/AsCodeDynamicFreshnessThresholdDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeMetadataFreshnessMonitorParamsDtoV2": {
+      "required": [
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeMetricClauseDto": {
+      "required": [
+        "aggregation",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "aggregation": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AsCodeAggregationClauseDtoV2"
+            },
+            {
+              "$ref": "#/$defs/AsCodeCustomAggregationClauseDtoV2"
+            },
+            {
+              "$ref": "#/$defs/AsCodeQuantileAggregationClauseDtoV2"
+            }
+          ]
+        },
+        "field": {
+          "type": "string"
+        },
+        "groupBy": {
+          "$ref": "#/$defs/AsCodeGroupByClauseDto"
+        },
+        "name": {
+          "type": "string"
+        },
+        "partition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+            }
+          ]
+        },
+        "timeWindowField": {
+          "type": "string"
+        },
+        "whereStatement": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeMetricsMonitorParamsDto": {
+      "required": [
+        "aggregation",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "aggregation": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeAggregationClauseDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeCustomAggregationClauseDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeQuantileAggregationClauseDtoV2"
+                }
+              ]
+            },
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeMonitorParamsDto": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Metrics",
+            "Freshness",
+            "RowDuplicates",
+            "FieldUniqueness",
+            "SchemaChange",
+            "Sql",
+            "Conditional",
+            "SqlCondition",
+            "CorrelatedMetrics",
+            "Distribution",
+            "CustomMetrics",
+            "FieldFormat",
+            "FieldInList",
+            "MetadataFreshness",
+            "ReferentialIntegrity",
+            "Volume",
+            "ValueRange",
+            "FieldDuplicates",
+            "FieldNulls",
+            "StaticFieldProfiling",
+            "DynamicFieldProfiling",
+            "StaticMetrics",
+            "DynamicMetrics",
+            "Completeness",
+            "StaticCompleteness",
+            "Duplicates"
+          ]
+        }
+      }
+    },
+    "AsCodeNotificationReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Slack",
+            "Email",
+            "MicrosoftTeams",
+            "Jira",
+            "ServiceNow",
+            "Webhook"
+          ]
+        }
+      }
+    },
+    "AsCodeNullFieldProfilingClauseDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeFieldProfilingClauseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "nullValues": {
+              "type": "string",
+              "enum": [
+                "Null",
+                "NullAndEmpty",
+                "NullEmptyAndWhitespaces"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeNumericComparisonConditionDto": {
+      "required": [
+        "kind",
+        "leftExpression",
+        "rightExpression"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeConditionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "leftExpression": {
+              "$ref": "#/$defs/AsCodeFieldExpressionDto"
+            },
+            "rightExpression": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFieldExpressionDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeValueExpressionDto"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "AsCodePartitionClauseDto": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "IngestionTime",
+            "IntegerRange",
+            "TimeUnitColumn"
+          ]
+        }
+      }
+    },
+    "AsCodeQuantileAggregationClauseDtoV1": {
+      "required": [
+        "kind",
+        "quantile"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeAggregationClauseDtoV1"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "quantile": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeQuantileAggregationClauseDtoV2": {
+      "required": [
+        "kind",
+        "quantile"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeAggregationClauseDtoV2"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "quantile": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeRangeDto": {
+      "type": "object",
+      "properties": {
+        "isMaxInclusive": {
+          "type": "boolean"
+        },
+        "isMinInclusive": {
+          "type": "boolean"
+        },
+        "max": {
+          "$ref": "#/$defs/NumberDto"
+        },
+        "min": {
+          "$ref": "#/$defs/NumberDto"
+        }
+      }
+    },
+    "AsCodeReferenceByIdOrNameDtoImpl": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeReferentialIntegrityLeftDtoV1": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupBy": {
+          "$ref": "#/$defs/AsCodeGroupByClauseDto"
+        },
+        "partition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+            }
+          ]
+        },
+        "timeWindow": {
+          "$ref": "#/$defs/AsCodeTimeWindowWithOffsetAndFrequencyClauseDto"
+        },
+        "whereStatement": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeReferentialIntegrityLeftDtoV2": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupBy": {
+          "$ref": "#/$defs/AsCodeGroupByClauseDto"
+        },
+        "partition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+            },
+            {
+              "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+            }
+          ]
+        },
+        "timeWindow": {
+          "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+        },
+        "whereStatement": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeReferentialIntegrityMonitorParamsDtoV1": {
+      "required": [
+        "left",
+        "matchType",
+        "right"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "left": {
+              "$ref": "#/$defs/AsCodeReferentialIntegrityLeftDtoV1"
+            },
+            "matchType": {
+              "type": "string",
+              "enum": [
+                "Full",
+                "LeftOnRight",
+                "RightOnLeft"
+              ]
+            },
+            "right": {
+              "$ref": "#/$defs/AsCodeReferentialIntegrityRightDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeReferentialIntegrityMonitorParamsDtoV2": {
+      "required": [
+        "left",
+        "matchType",
+        "right",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "left": {
+              "$ref": "#/$defs/AsCodeReferentialIntegrityLeftDtoV2"
+            },
+            "matchType": {
+              "type": "string",
+              "enum": [
+                "Full",
+                "LeftOnRight",
+                "RightOnLeft"
+              ]
+            },
+            "right": {
+              "$ref": "#/$defs/AsCodeReferentialIntegrityRightDto"
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeReferentialIntegrityRightDto": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "whereStatement": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeRegexFieldFormatValidationClauseDto": {
+      "required": [
+        "kind",
+        "regex"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeFieldFormatValidationClauseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "regex": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeRollingDistributionReferenceDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeDistributionReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "delay": {
+              "$ref": "#/$defs/SimpleDuration"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeRowDuplicatesMonitorParamsDto": {
+      "required": [
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeSchemaChangeMonitorParamsDto": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        }
+      ]
+    },
+    "AsCodeServiceNowNotificationDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeNotificationReferenceDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "templateName": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeSqlConditionMonitorParamsDto": {
+      "required": [
+        "sql",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "sql": {
+              "type": "string"
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeSqlMonitorParamsDto": {
+      "required": [
+        "sql",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sql": {
+              "type": "string"
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeStaticCompletenessMonitorParamsDto": {
+      "required": [
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeStaticThresholdWithComparisonModeDto"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV1"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeStaticFieldProfilingMonitorParamsDto": {
+      "required": [
+        "field",
+        "profiling"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "profiling": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFieldProfilingClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeNullFieldProfilingClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeStaticFieldProfilingThresholdDto"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV1"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeStaticFieldProfilingThresholdDto": {
+      "required": [
+        "max"
+      ],
+      "type": "object",
+      "properties": {
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "max": {
+          "$ref": "#/$defs/NumberOrPercentageDto"
+        }
+      }
+    },
+    "AsCodeStaticFreshnessThresholdDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeFreshnessThresholdDto"
+        }
+      ]
+    },
+    "AsCodeStaticMetricMonitorParamsDto": {
+      "required": [
+        "aggregation",
+        "field",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "aggregation": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeAggregationClauseDtoV1"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeQuantileAggregationClauseDtoV1"
+                }
+              ]
+            },
+            "field": {
+              "type": "string"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "$ref": "#/$defs/AsCodeStaticThresholdDtoV1"
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV1"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeStaticThresholdDtoV1": {
+      "type": "object",
+      "properties": {
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "isMaxInclusive": {
+          "type": "boolean"
+        },
+        "isMinInclusive": {
+          "type": "boolean"
+        },
+        "max": {
+          "$ref": "#/$defs/NumberOrPercentageDto"
+        },
+        "min": {
+          "$ref": "#/$defs/NumberOrPercentageDto"
+        }
+      }
+    },
+    "AsCodeStaticThresholdDtoV2": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeThresholdBaseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "comparisonMode": {
+              "type": "string",
+              "enum": [
+                "Absolute",
+                "Relative",
+                "RelativePercentage"
+              ]
+            },
+            "isMaxInclusive": {
+              "type": "boolean"
+            },
+            "isMinInclusive": {
+              "type": "boolean"
+            },
+            "max": {
+              "$ref": "#/$defs/NumberOrPercentageDto"
+            },
+            "min": {
+              "$ref": "#/$defs/NumberOrPercentageDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeStaticThresholdWithComparisonModeDto": {
+      "type": "object",
+      "properties": {
+        "comparisonMode": {
+          "type": "string",
+          "enum": [
+            "Absolute",
+            "Difference",
+            "PercentageDifference"
+          ]
+        },
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "isMaxInclusive": {
+          "type": "boolean"
+        },
+        "isMinInclusive": {
+          "type": "boolean"
+        },
+        "max": {
+          "$ref": "#/$defs/NumberOrPercentageDto"
+        },
+        "min": {
+          "$ref": "#/$defs/NumberOrPercentageDto"
+        }
+      }
+    },
+    "AsCodeStringConditionDto": {
+      "required": [
+        "kind",
+        "leftExpression",
+        "rightExpression"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeConditionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "leftExpression": {
+              "$ref": "#/$defs/AsCodeFieldExpressionDto"
+            },
+            "rightExpression": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeFieldExpressionDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeValueExpressionDto"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeTagReferenceDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Tag",
+            "Classification"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeThresholdBaseDto": {
+      "required": [
+        "kind"
+      ],
+      "type": "object",
+      "properties": {
+        "excludedDates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AsCodeCalendarReferenceDto"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Static",
+            "Dynamic"
+          ]
+        },
+        "valueMode": {
+          "type": "string",
+          "enum": [
+            "Count",
+            "Percentage"
+          ]
+        }
+      }
+    },
+    "AsCodeTimeUnitColumnPartitionClauseDto": {
+      "required": [
+        "field",
+        "interval"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodePartitionClauseDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "interval": {
+              "$ref": "#/$defs/SimpleDuration"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeTimeWindowClauseDtoV1": {
+      "required": [
+        "duration",
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "duration": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "field": {
+          "type": "string"
+        }
+      }
+    },
+    "AsCodeTimeWindowClauseDtoV2": {
+      "required": [
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "deltaQuerying": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "field": {
+          "$ref": "#/$defs/AsCodeFieldReferenceDto"
+        },
+        "firstRun": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "frequency": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offsetPeriods": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rollingTimeWindow": {
+          "$ref": "#/$defs/SimpleDuration"
+        }
+      }
+    },
+    "AsCodeTimeWindowClauseWithoutFieldDtoV2": {
+      "type": "object",
+      "properties": {
+        "deltaQuerying": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "firstRun": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "frequency": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offsetPeriods": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rollingTimeWindow": {
+          "$ref": "#/$defs/SimpleDuration"
+        }
+      }
+    },
+    "AsCodeTimeWindowOffsetClauseDto": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        }
+      }
+    },
+    "AsCodeTimeWindowWithOffsetAndFrequencyClauseDto": {
+      "required": [
+        "duration",
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "deltaQuerying": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "disableDeltaQuerying": {
+          "type": "boolean"
+        },
+        "duration": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "field": {
+          "type": "string"
+        },
+        "frequency": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        }
+      }
+    },
+    "AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto": {
+      "required": [
+        "duration",
+        "field"
+      ],
+      "type": "object",
+      "properties": {
+        "deltaQuerying": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "disableDeltaQuerying": {
+          "type": "boolean"
+        },
+        "duration": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "field": {
+          "type": "string"
+        },
+        "frequency": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "offset": {
+          "$ref": "#/$defs/SimpleDuration"
+        },
+        "rollingTimeWindow": {
+          "$ref": "#/$defs/SimpleDuration"
+        }
+      }
+    },
+    "AsCodeUnaryConditionDto": {
+      "required": [
+        "expression",
+        "kind"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeConditionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expression": {
+              "$ref": "#/$defs/AsCodeFieldExpressionDto"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeValueExpressionDto": {
+      "required": [
+        "kind",
+        "value"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeExpressionDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeValueRangeMonitorParamsDto": {
+      "required": [
+        "field",
+        "range",
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/AsCodeFieldReferenceDto"
+            },
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "range": {
+              "$ref": "#/$defs/AsCodeRangeDto"
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AsCodeVolumeMonitorParamsDto": {
+      "required": [
+        "threshold"
+      ],
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/$defs/AsCodeMonitorParamsDto"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "groupBy": {
+              "$ref": "#/$defs/AsCodeGroupByClauseDto"
+            },
+            "metadataBased": {
+              "type": "boolean"
+            },
+            "partition": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeIngestionTimePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeIntegerRangePartitionClauseDto"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeTimeUnitColumnPartitionClauseDto"
+                }
+              ]
+            },
+            "threshold": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AsCodeDynamicThresholdDtoV2"
+                },
+                {
+                  "$ref": "#/$defs/AsCodeStaticThresholdDtoV2"
+                }
+              ]
+            },
+            "timeWindow": {
+              "$ref": "#/$defs/AsCodeTimeWindowClauseDtoV2"
+            },
+            "whereStatement": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "NumberDto": {
+      "type": "object",
+      "properties": {
+        "floatValue": {
+          "type": "number",
+          "format": "float"
+        },
+        "integer": {
+          "type": "boolean"
+        },
+        "integerValue": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "zero": {
+          "type": "boolean"
+        }
+      }
+    },
+    "NumberOrPercentageDto": {
+      "type": "object",
+      "properties": {
+        "floatValue": {
+          "type": "number",
+          "format": "float"
+        },
+        "integer": {
+          "type": "boolean"
+        },
+        "integerValue": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "percentage": {
+          "type": "boolean"
+        },
+        "zero": {
+          "type": "boolean"
+        }
+      }
+    },
+    "SimpleDuration": {
+      "type": "object",
+      "properties": {
+        "unit": {
+          "type": "string",
+          "enum": [
+            "SECONDS",
+            "MINUTES",
+            "HOURS",
+            "DAYS",
+            "WEEKS",
+            "MONTHS",
+            "YEARS"
+          ]
+        },
+        "value": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2053 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Rule API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Rule
+paths:
+  /v1/rules:
+    get:
+      operationId: getAllRule
+      parameters:
+      - description: Global text search
+        in: query
+        name: textSearch
+        required: false
+        schema:
+          type: string
+      - description: Filter on given rule template name
+        in: query
+        name: ruleTemplateName
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - deprecated: true
+        description: Filter on given last run statuses
+        in: query
+        name: lastRunStatus
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - PENDING
+            - RUNNING
+            - SUCCESS
+            - REQUIRES_YOUR_ATTENTION
+            - TECHNICAL_ERROR
+            - FAILED
+      - description: Filter on given rule status
+        in: query
+        name: ruleStatus
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - NOT_EVALUATED
+            - PASSING
+            - NEEDS_ATTENTION
+            - FAILING
+      - description: Filter on given dataset ids
+        in: query
+        name: dataset
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - description: Filter on given tag ids
+        in: query
+        name: tag
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - description: Filter on given datasource ids
+        in: query
+        name: datasource
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - in: query
+        name: criticality
+        required: false
+        schema:
+          type: array
+          items:
+            maximum: 3
+            minimum: 0
+            type: integer
+            format: int32
+      - description: Domain searched
+        in: query
+        name: domain
+        required: false
+        schema:
+          type: string
+      - description: The requested page number. Zero-based page index (0..N)
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - description: The number of elements to be returned inside the page. Pass a value of -1, to bypass pagination and fetch all items
+        in: query
+        name: itemsPerPage
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      - description: 'The resource fields on which to apply the sort, format : property,ASC|DESC'
+        in: query
+        name: sort
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: The resource field on which to apply the sort followed by the direction
+            format: property,ASC|DESC
+            example: name,ASC
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringSearchDto'
+          description: Successfully fetch all rule catalog assets
+        '206':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonitoringSearchDto'
+          description: Successfully fetch partial content of rule catalog assets
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get all Sifflet rules
+      tags:
+      - Rule
+  /v1/rules/{id}/_run:
+    post:
+      operationId: siffletRuleManualRun
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleRunDto'
+          description: Successfully trigger Sifflet rule manual run
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Trigger a run of the given Sifflet rule id
+      tags:
+      - Rule
+  /v1/rules/{id}/decrypt:
+    get:
+      operationId: decryptRuleGroups
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupDecryptedValuesDto'
+          description: Successfully fetch rule groups decryption
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Decrypt rule groups
+      tags:
+      - Rule
+  /v1/rules/{id}/details:
+    get:
+      operationId: getSiffletRuleDetails
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleDetailsDto'
+          description: Successfully fetch rule details
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get Sifflet rule details by rule id
+      tags:
+      - Rule
+  /v1/rules/{id}/info:
+    get:
+      operationId: getSiffletRuleInfo
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleInfoDto'
+          description: Successfully fetch rule info
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get Sifflet rule information by rule id
+      tags:
+      - Rule
+  /v1/rules/{id}/overview:
+    get:
+      operationId: getSiffletRuleOverview
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleOverviewDto'
+          description: Successfully fetch rule overview
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get Sifflet rule overview by rule id
+      tags:
+      - Rule
+components:
+  schemas:
+    GroupDecryptedValuesDto:
+      type: object
+      properties:
+        decryptedValues:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    CustomHeader:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    AlertingHookDto:
+      required:
+      - externalHook
+      - id
+      - name
+      - type
+      type: object
+      properties:
+        createdBy:
+          type: string
+        createdDate:
+          type: integer
+          format: int64
+        externalHook:
+          type: string
+        id:
+          type: string
+          format: uuid
+        lastModifiedDate:
+          type: integer
+          format: int64
+        modifiedBy:
+          type: string
+        name:
+          type: string
+        params:
+          oneOf:
+          - $ref: '#/components/schemas/DefaultWebhookParams'
+          - $ref: '#/components/schemas/GoogleChatWebhookParams'
+        type:
+          type: string
+          enum:
+          - SLACK
+          - MAIL
+          - MS_TEAMS
+          - WEBHOOK
+    TimeZoneDto:
+      required:
+      - timezone
+      - utcOffset
+      type: object
+      properties:
+        timezone:
+          type: string
+        utcOffset:
+          type: string
+    RuleStatusDto:
+      required:
+      - ruleStatus
+      type: object
+      properties:
+        latestRunDate:
+          type: integer
+          format: int64
+        ruleStatus:
+          type: string
+          enum:
+          - NOT_EVALUATED
+          - PASSING
+          - NEEDS_ATTENTION
+          - FAILING
+    UserProviderDto:
+      required:
+      - name
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ProviderDto'
+      - type: object
+        properties:
+          name:
+            type: string
+    DatasourceProviderDto:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ProviderDto'
+      - type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          name:
+            type: string
+    RuleDetailsDto:
+      required:
+      - createdByProvider
+      - mails
+      - modifiedByProvider
+      - msTeams
+      - provider
+      - slackChannels
+      - tags
+      - terms
+      - webhooks
+      type: object
+      properties:
+        createdBy:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+        createdByProvider:
+          oneOf:
+          - $ref: '#/components/schemas/AccessTokenProviderDto'
+          - $ref: '#/components/schemas/DatasourceProviderDto'
+          - $ref: '#/components/schemas/GenericProviderDto'
+          - $ref: '#/components/schemas/UserProviderDto'
+        createdDate:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        jiraTemplateName:
+          type: string
+        lastModifiedDate:
+          type:
+          - integer
+          - 'null'
+          format: int64
+        mails:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        modifiedBy:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+        modifiedByProvider:
+          oneOf:
+          - $ref: '#/components/schemas/AccessTokenProviderDto'
+          - $ref: '#/components/schemas/DatasourceProviderDto'
+          - $ref: '#/components/schemas/GenericProviderDto'
+          - $ref: '#/components/schemas/UserProviderDto'
+        msTeams:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        provider:
+          oneOf:
+          - $ref: '#/components/schemas/AccessTokenProviderDto'
+          - $ref: '#/components/schemas/DatasourceProviderDto'
+          - $ref: '#/components/schemas/GenericProviderDto'
+          - $ref: '#/components/schemas/UserProviderDto'
+        ruleParams:
+          $ref: '#/components/schemas/JsonNode'
+        serviceNowTemplateName:
+          type: string
+        slackChannels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+        webhooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    RuleInfoDto:
+      required:
+      - canBeQualified
+      - canBeScheduled
+      - canHaveFailingRows
+      - canManuallyRun
+      - criticality
+      - id
+      - name
+      - readOnly
+      - ruleLabel
+      - ruleStatus
+      - ruleTemplateName
+      - sourcePlatform
+      - supportAsCodeYAMLConversion
+      - unresolvedIncidents
+      type: object
+      properties:
+        canBeQualified:
+          type: boolean
+        canBeScheduled:
+          type: boolean
+        canHaveFailingRows:
+          type: boolean
+        canManuallyRun:
+          type: boolean
+        criticality:
+          $ref: '#/components/schemas/Criticality'
+        customMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityCustomMetadataDto'
+        datasets:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetBriefDto'
+        id:
+          type: string
+          format: uuid
+        lastIncident:
+          $ref: '#/components/schemas/IncidentLightDto'
+        lastRunStatus:
+          type: string
+          deprecated: true
+          enum:
+          - PENDING
+          - RUNNING
+          - SUCCESS
+          - REQUIRES_YOUR_ATTENTION
+          - TECHNICAL_ERROR
+          - FAILED
+        lastRunTimestamp:
+          type: integer
+          format: int64
+        lastUnresolvedIncident:
+          $ref: '#/components/schemas/IncidentLightDto'
+        mails:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        msTeams:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        muted:
+          type: boolean
+        mutedUntil:
+          type: integer
+          format: int64
+        mutingMode:
+          type: string
+          enum:
+          - INDEFINITE
+          - UNTIL_DATE
+          - UNTIL_NEXT_STATUS_IMPROVES
+          - NOT_MUTED
+        name:
+          type: string
+        readOnly:
+          type: boolean
+        ruleLabel:
+          type: string
+        ruleStatus:
+          type: string
+          enum:
+          - NOT_EVALUATED
+          - PASSING
+          - NEEDS_ATTENTION
+          - FAILING
+        ruleTemplateName:
+          type: string
+        schedule:
+          type: string
+        scheduleTimezone:
+          $ref: '#/components/schemas/TimeZoneDto'
+        slackChannels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        sourcePlatform:
+          type: string
+          enum:
+          - SIFFLET
+          - DBT
+        supportAsCodeYAMLConversion:
+          type: boolean
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+        unresolvedIncidents:
+          type: integer
+          format: int32
+        workspace:
+          $ref: '#/components/schemas/WorkspaceSummaryDto'
+    FilterElementDto:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        results:
+          type: integer
+          format: int32
+    RuleOverviewDto:
+      type: object
+      properties:
+        description:
+          type: string
+    WorkspaceSummaryDto:
+      type: object
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    SearchCollectionRuleCatalogAssetDto:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleCatalogAssetDto'
+        totalElements:
+          type: integer
+          format: int64
+    RuleRunValuesDto:
+      type: object
+      properties:
+        actual:
+          type: number
+          format: float
+        expected:
+          $ref: '#/components/schemas/RuleRunExpectedValuesDto'
+    ProviderDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - GENERIC
+          - DATASOURCE
+          - USER
+          - ACCESS_TOKEN
+      discriminator:
+        mapping:
+          ACCESS_TOKEN: '#/components/schemas/AccessTokenProviderDto'
+          DATASOURCE: '#/components/schemas/DatasourceProviderDto'
+          GENERIC: '#/components/schemas/GenericProviderDto'
+          USER: '#/components/schemas/UserProviderDto'
+        propertyName: type
+    AccessTokenProviderDto:
+      required:
+      - name
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ProviderDto'
+      - type: object
+        properties:
+          name:
+            type: string
+    GenericProviderDto:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ProviderDto'
+      - type: object
+        properties:
+          createdBy:
+            type: string
+    IncidentTeamDto:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    DatasetBriefDto:
+      required:
+      - datasourceName
+      - datasourceType
+      - id
+      - name
+      - urn
+      type: object
+      properties:
+        datasourceName:
+          type: string
+        datasourceType:
+          type: string
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        urn:
+          type: string
+    EntityCustomMetadataDto:
+      required:
+      - entries
+      - id
+      - name
+      - type
+      type: object
+      properties:
+        description:
+          type: string
+        entries:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/EntityCustomMetadataEntryLabelDto'
+            - $ref: '#/components/schemas/EntityCustomMetadataEntryStringDto'
+            - $ref: '#/components/schemas/EntityCustomMetadataEntryTeamDto'
+            - $ref: '#/components/schemas/EntityCustomMetadataEntryUserDto'
+        id:
+          type: string
+          format: uuid
+        lineagePlatform:
+          type: string
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - FIREBOLT
+          - PRESTO
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - ADF
+          - MSSQL
+          - MYSQL
+          - SYNAPSE
+          - POSTGRES
+          - H2
+          - ORACLE
+          - LIGHTDASH
+          - LOOKER
+          - METABASE
+          - MICROSTRATEGY
+          - TABLEAU
+          - POWER_BI
+          - QLIK
+          - QUICKSIGHT
+          - STITCH
+          - AIRBYTE
+          - AIRFLOW
+          - COMPOSER
+          - DAGSTER
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - MWAA
+          - PREFECT
+          - TALEND
+          - HUBSPOT
+          - INFORMATICA
+          - MULESOFT
+          - SALESFORCE
+          - SEGMENT
+          - SLACK
+          - CENSUS
+          - HIGH_TOUCH
+          - AMAZON_SAGEMAKER
+          - DATAIKU
+          - MICROSOFT_AZURE_ML
+          - GOOGLE_ANALYTICS
+          - SIGMA
+          - UNKNOWN
+          - AZURE
+          - CATALOG_GENERIC
+          - GOOGLE_DRIVE
+          - GOOGLE_SHEETS
+          - GOOGLE_CLOUD_STORAGE
+          - S3
+          - EXCEL
+          - GITHUB
+          - SIXSENSE
+          - FIFTEENFIVE
+          - THREESIXTYLEARNING
+          - ACCELDATA
+          - ACRYL_DATA
+          - ACTIAN_VECTOR
+          - ACTIVE_CAMPAIGN
+          - ADA
+          - ADJUST
+          - ADOBE
+          - ADP_WFN
+          - ADROLL
+          - AFFINITY
+          - AIRCALL
+          - AIRTABLE
+          - ALATION
+          - ALCHEMER
+          - ALVIN_AI
+          - AMAZON
+          - AMAZON_CLOUDFRONT
+          - AMAZON_DOCUMENTDB
+          - AMAZON_DYNAMODB
+          - AMAZON_FIREHOSE
+          - AMAZON_SELLING_PARTNER
+          - AMPLITUDE
+          - AMUNDSEN
+          - ANAPLAN
+          - ANOMALO
+          - APACHE_ATLAS
+          - APACHE_KAFKA
+          - APACHE_SPARK
+          - APPCUES
+          - APPFIGURES
+          - APPLE
+          - APPLE_APP_STORE
+          - APPSFLYER
+          - ASANA
+          - ASSEMBLED
+          - ATLAN
+          - ATLASSIAN_CONFLUENCE
+          - ATLASSIAN_JIRA
+          - ATLASSIAN_OPSGENIE
+          - AUTH0
+          - AUTODESK_BIM_360
+          - AWIN
+          - AWS_CLOUDTRAIL
+          - AWS_COST_EXPLORER
+          - AWS_INVENTORY
+          - AWS_LAMBDA
+          - BALLOT_READY
+          - BAMBOOHR
+          - BIGCOMMERCE
+          - BIGEYE
+          - BILLINGPLATFORM
+          - BIRDEYE
+          - BLACKBOARD
+          - BOX
+          - BRAINTREE
+          - BRAZE
+          - BREX
+          - BUILDKITE
+          - BUZZSPROUT
+          - CALENDLY
+          - CAMPAIGN_MONITOR
+          - CANNY
+          - CANVAS
+          - CAPTERRA
+          - CASTOR_DOC
+          - CERTINIA
+          - CHAMELEON
+          - CHANNEL_ADVISOR
+          - CHARGEBEE
+          - CHARGEDESK
+          - CHARTMOGUL
+          - CHORUS_AI
+          - CHURNKEY
+          - CHURNZERO
+          - CIMIS
+          - CIN7
+          - CIRCLE_CI
+          - CLARI
+          - CLICKUP
+          - CLIFF_AI
+          - CLOSE
+          - COLLIBRA
+          - COMMERCETOOLS
+          - CONFLUENT_CLOUD
+          - CONTRAST_SECURITY
+          - COUPA
+          - CRITEO
+          - CROSSBEAM
+          - CRUNCHBASE
+          - CUSTOMER_IO
+          - D2L_BRIGHTSPACE
+          - DATA_WORLD
+          - DATABAND
+          - DATADOG
+          - DATAEDO
+          - DATAFOLD
+          - DATAGALAXY
+          - DATAHUB
+          - DB2
+          - DCL_LOGISTICS
+          - DEAR
+          - DECUBE
+          - DELIGHTED
+          - DEPUTY
+          - DESTINI
+          - DIXA
+          - DOCEBO
+          - DRATA
+          - DRIFT
+          - DRIP
+          - DROPBOX
+          - DUOPLANE
+          - E_CONOMIC
+          - EASY_POST
+          - ELASTICSEARCH
+          - ELEMENTARY
+          - ELLUCIAN
+          - ELOQUA
+          - EMAIL
+          - EMPLOYMENT_HERO
+          - EPICOR_PROPHET_21
+          - EVENTBRITE
+          - EVERHOUR
+          - EXPENSIFY
+          - FACEBOOK
+          - FIGMA
+          - FIREBASE
+          - FLEXPORT
+          - FORJ
+          - FOUNTAIN
+          - FREIGHTVIEW
+          - FRESHBOOKS
+          - FRESHCHAT
+          - FRESHDESK
+          - FRESHDESK_CONTACT_CENTER
+          - FRESHSERVICE
+          - FRESHSUCCESS
+          - FRESHTEAM
+          - FRIENDBUY
+          - FRONT
+          - FTP
+          - FULLSTORY
+          - G2
+          - GAINSIGHT
+          - GEM
+          - GIT
+          - GITLAB
+          - GLADLY
+          - GOCARDLESS
+          - GONG
+          - GOOGLE
+          - GOOGLE_AD_MANAGER
+          - GOOGLE_ADS
+          - GOOGLE_CALENDAR
+          - GOOGLE_CAMPAIGN_MANAGER
+          - GOOGLE_CHROME
+          - GOOGLE_CLOUD
+          - GOOGLE_DISPLAY
+          - GOOGLE_PLAY
+          - GOOGLE_SEARCH_ADS_360
+          - GOOGLE_SEARCH_CONSOLE
+          - GOOGLE_TASKS
+          - GORGIAS
+          - GREENHOUSE
+          - GREENPLUM
+          - GREEN_POWER_MONITOR
+          - GREPSR
+          - GRIN
+          - GURU
+          - HARVEST
+          - HDFS
+          - HEAP
+          - HEIGHT
+          - HELP_SCOUT
+          - HELPSHIFT
+          - HEROKU_KAFKA
+          - HEX
+          - HIBOB
+          - HOPIN
+          - IMPACT
+          - INCIDENT_IO
+          - INFOBIP
+          - INSIGHTLY
+          - INSTAGRAM
+          - INTERCOM
+          - INVESTOPEDIA
+          - IRONCLAD
+          - IRONSOURCE
+          - ITERABLE
+          - JAVA
+          - JENKINS
+          - JUSTCALL
+          - KANDJI
+          - KENSU
+          - KHOROS_CARE
+          - KISSMETRICS
+          - KLAVIYO
+          - KNOWBE4
+          - KONNECT_INSIGHTS
+          - KUSTOMER
+          - LARIAT_DATA
+          - LATTICE
+          - LAUNCH_DARKLY
+          - LEARN_UPON
+          - LESSONLY
+          - LEVER
+          - LIFTOFF
+          - LIGHTSPEED
+          - LIGHTSUP
+          - LINEAR
+          - LINKEDIN
+          - LIVECHAT
+          - LOADED_COMMERCE
+          - LOB
+          - LOOP
+          - LOOPIO
+          - LUMA
+          - MAGENTO
+          - MAILCHIMP
+          - MAILGUN
+          - MANDRILL
+          - MANTA
+          - MARIADB
+          - MARIN_SOFTWARE
+          - MARKETO
+          - MATILLION
+          - MATTERMOST
+          - MAVENLINK
+          - MAXIO
+          - MEDALLIA
+          - META
+          - METAPHOR
+          - METAPLANE
+          - MICROSOFT
+          - MICROSOFT_AZURE_BLOB_STORAGE
+          - MICROSOFT_DYNAMICS
+          - MICROSOFT_ONEDRIVE
+          - MICROSOFT_PURVIEW
+          - MICROSOFT_TEAMS
+          - MIXMAX
+          - MIXPANEL
+          - MONDAY_COM
+          - MONGODB
+          - MONTE_CARLO
+          - MOUNTAIN
+          - MUX
+          - NAMELY
+          - NCINO
+          - NETSUITE_ANALYTICS
+          - NEW_RELIC
+          - NOTION
+          - NYLAS
+          - OBSERVE
+          - OCTOPAI
+          - OKTA
+          - OPEN_DATA_DC
+          - OPEN_EXCHANGES_RATES
+          - OPEN_AI
+          - OPEN_SEARCH
+          - OPTIMIZELY
+          - ORBIT_COMMUNITY_PLATFORM
+          - ORDWAY
+          - ORTTO
+          - OS_COMMERCE
+          - OUTBRAIN
+          - OUTREACH
+          - OVALEDGE
+          - PAGERDUTY
+          - PAGERSHIFT
+          - PAYPAL
+          - PENDO
+          - PINGDOM
+          - PINTEREST
+          - PIPE17
+          - PIPEDRIVE
+          - PIVOTAL_TRACKER
+          - PLAYVOX
+          - POSTHOG
+          - POWERSCHOOL
+          - PRESTASHOP
+          - PRODUCTBOARD
+          - PYTHON
+          - QUALAROO
+          - QUALTRICS
+          - QUICKBOOKS
+          - RAMP
+          - RARIBLE
+          - RECHARGE
+          - RECURLY
+          - REDDIT
+          - RELTIO
+          - REPLY_IO
+          - RETAILNEXT
+          - RETENTLY
+          - REVEL_SYSTEMS
+          - RINGCENTRAL
+          - RIPPLING
+          - ROLLBAR
+          - ROOTLY
+          - SAGE_HR
+          - SAGE_INTACCT
+          - SAILTHRU
+          - SALESLOFT
+          - SALSIFY
+          - SAMSARA
+          - SAP
+          - SAP_CONCUR
+          - SCORM
+          - SECODA
+          - SECURITY_JOURNEY
+          - SELECT_STAR
+          - SENDGRID
+          - BREVO
+          - SERVICE_NOW
+          - SFTP
+          - SHAREPOINT
+          - SHARETRIBE
+          - SHIPHERO
+          - SHIPSTATION
+          - SHOPIFY
+          - SHOPWARE
+          - SHORT_IO
+          - SIFFLET
+          - SIMPLECAST
+          - SIMPLESAT
+          - SINGLESTORE
+          - SISENSE
+          - SKILLJAR
+          - SKUVAULT
+          - SLAB
+          - SMADEX
+          - SNAPCHAT
+          - SNOWPLOW
+          - SODA
+          - SONARQUBE
+          - SPLIT_IO
+          - SPLUNK
+          - SPOTIFY
+          - SPREE_COMMERCE
+          - SPROUT_SOCIAL
+          - SQUARE
+          - SQUARESPACE
+          - SSIS
+          - STACK_ADAPT
+          - STATSIG
+          - STRIPE
+          - STYLIGHT
+          - SUBSCRIPT
+          - TABOOLA
+          - TALKDESK
+          - TALKWALKER
+          - TEAMWORK_COM
+          - TEMPO_IO
+          - TERADATA
+          - TERRAFORM
+          - THE_TRADE_DESK
+          - THOUGHT_SPOT
+          - TIKTOK
+          - TOGGL
+          - TRANSCEND
+          - TRELLO
+          - TRISOLUTE
+          - TWILIO
+          - TYPEFORM
+          - UPLAND
+          - USERVOICE
+          - VALIDIO
+          - VEEVA
+          - VERIZON_MEDIA
+          - VITALLY
+          - VONAGE
+          - VUETIFY
+          - WEB_SCRAPER
+          - WEBHOOKS
+          - WHEN_I_WORK
+          - WHEREFOUR
+          - WIKIPEDIA
+          - WOOCOMMERCE
+          - WORDPRESS
+          - WORKABLE
+          - WORKDAY
+          - WORKFLOW_MAX
+          - WRIKE
+          - X
+          - XERO
+          - XRAY
+          - YAHOO
+          - YOTPO
+          - YOUTUBE
+          - ZEENEA
+          - ZEN_CART
+          - ZENDESK_CHAT
+          - ZENDESK_SELL
+          - ZENDESK_SUNSHINE
+          - ZENDESK_SUPPORT
+          - TRINET
+          - ZINGTREE
+          - ZOHO_BOOKS
+          - ZOHO_CAMPAIGNS
+          - ZOHO_CRM
+          - ZOOM
+          - ZUORA
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - LABEL
+          - USER
+          - STRING
+          - TEAM
+    RuleRunExpectedValuesDto:
+      type: object
+      properties:
+        max:
+          type: number
+          format: float
+        min:
+          type: number
+          format: float
+    RuleCatalogAssetDto:
+      required:
+      - canManuallyRun
+      - criticality
+      - datasetFieldNames
+      - datasets
+      - hasAiRecommendations
+      - id
+      - lastWeekStatuses
+      - mails
+      - msTeams
+      - multiDimensional
+      - name
+      - readOnly
+      - ruleStatus
+      - ruleType
+      - selectable
+      - slackChannels
+      - sourcePlatform
+      - supportAsCodeYAMLConversion
+      - tags
+      - terms
+      type: object
+      properties:
+        canManuallyRun:
+          type: boolean
+        createdBy:
+          $ref: '#/components/schemas/UserDto'
+        criticality:
+          type: integer
+          format: int32
+        datasetFieldNames:
+          type: array
+          items:
+            type: string
+        datasets:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetBriefWithUriDto'
+        description:
+          type: string
+        hasAiRecommendations:
+          type: boolean
+        id:
+          type: string
+          format: uuid
+        lastRunId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        lastRunStatus:
+          $ref: '#/components/schemas/LastRunStatusDto'
+        lastWeekStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/LastRunStatusDto'
+        mails:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        msTeams:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        multiDimensional:
+          type: boolean
+        name:
+          type: string
+        provider:
+          oneOf:
+          - $ref: '#/components/schemas/AccessTokenProviderDto'
+          - $ref: '#/components/schemas/DatasourceProviderDto'
+          - $ref: '#/components/schemas/GenericProviderDto'
+          - $ref: '#/components/schemas/UserProviderDto'
+        readOnly:
+          type: boolean
+        ruleLabel:
+          type: string
+        ruleStatus:
+          $ref: '#/components/schemas/RuleStatusDto'
+        ruleType:
+          type: string
+          enum:
+          - AUTOMATIC_RULE
+          - CUSTOM_RULE
+          - SIFFLET_RULE
+        schedule:
+          type: string
+        selectable:
+          type: boolean
+        slackChannels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertingHookDto'
+        sourcePlatform:
+          type: string
+          enum:
+          - SIFFLET
+          - DBT
+        supportAsCodeYAMLConversion:
+          type: boolean
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+    EntityCustomMetadataEntryStringDto:
+      required:
+      - id
+      - type
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EntityCustomMetadataEntryDto'
+      - type: object
+        properties:
+          value:
+            type: string
+    RuleRunDto:
+      required:
+      - canShowFailingRows
+      - debuggable
+      - hasGraph
+      - hasGroupBy
+      - id
+      type: object
+      properties:
+        canShowFailingRows:
+          type: boolean
+          deprecated: true
+        createdBy:
+          type: string
+        createdDate:
+          type: integer
+          format: int64
+        debugSql:
+          $ref: '#/components/schemas/ParameterizedQueryDto'
+        debuggable:
+          type: boolean
+        endDate:
+          type: integer
+          format: int64
+        hasGraph:
+          type: boolean
+        hasGroupBy:
+          type: boolean
+        id:
+          type: string
+          format: uuid
+        incidentIssue:
+          type: integer
+          format: int32
+        incidentName:
+          type: string
+        incidentStatus:
+          type: string
+          enum:
+          - OPEN
+          - IN_PROGRESS
+          - CLOSED
+        result:
+          type: string
+        ruleId:
+          type: string
+          format: uuid
+        startDate:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum:
+          - PENDING
+          - RUNNING
+          - SUCCESS
+          - REQUIRES_YOUR_ATTENTION
+          - TECHNICAL_ERROR
+          - FAILED
+        type:
+          type: string
+          enum:
+          - MANUAL
+          - SCHEDULED
+          - DBT
+        values:
+          $ref: '#/components/schemas/RuleRunValuesDto'
+    EntityCustomMetadataEntryUserDto:
+      required:
+      - id
+      - login
+      - name
+      - type
+      - userId
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EntityCustomMetadataEntryDto'
+      - type: object
+        properties:
+          login:
+            type: string
+          name:
+            type: string
+          userId:
+            type: string
+            format: uuid
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        login:
+          type: string
+        name:
+          type: string
+    ParameterizedQueryDto:
+      required:
+      - positionalParameters
+      - query
+      type: object
+      properties:
+        positionalParameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/PositionalParameterDto'
+        query:
+          type: string
+    EntityCustomMetadataEntryDto:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+          - LABEL
+          - USER
+          - STRING
+          - TEAM
+      discriminator:
+        mapping:
+          LABEL: '#/components/schemas/EntityCustomMetadataEntryLabelDto'
+          STRING: '#/components/schemas/EntityCustomMetadataEntryStringDto'
+          TEAM: '#/components/schemas/EntityCustomMetadataEntryTeamDto'
+          USER: '#/components/schemas/EntityCustomMetadataEntryUserDto'
+        propertyName: type
+    TagDto:
+      required:
+      - id
+      - name
+      - type
+      type: object
+      properties:
+        createdBy:
+          type: string
+        createdDate:
+          type: integer
+          format: int64
+        description:
+          type: string
+        editable:
+          type: boolean
+        id:
+          type: string
+          format: uuid
+        lastModifiedDate:
+          type: integer
+          format: int64
+        modifiedBy:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - GENERIC
+          - HIDDEN_DATA_CLASSIFICATION
+          - VISIBLE_DATA_CLASSIFICATION
+          - TERM
+          - ATLAN_EXTERNAL_TERM
+          - ALATION_EXTERNAL_TERM
+          - AMUNDSEN_EXTERNAL_TERM
+          - APACHE_ATLAS_EXTERNAL_TERM
+          - CASTOR_DOC_EXTERNAL_TERM
+          - COLLIBRA_EXTERNAL_TERM
+          - DATAGALAXY_EXTERNAL_TERM
+          - INFORMATICA_EXTERNAL_TERM
+          - SECODA_EXTERNAL_TERM
+          - SELECT_STAR_EXTERNAL_TERM
+          - GENERIC_CATALOG_EXTERNAL_TERM
+          - BIGQUERY_EXTERNAL
+          - SNOWFLAKE_EXTERNAL
+          - DATABRICKS_EXTERNAL
+          - DBT_EXTERNAL
+          - ADF_EXTERNAL
+          - ATLAN_EXTERNAL
+          - ALATION_EXTERNAL
+          - AMUNDSEN_EXTERNAL
+          - APACHE_ATLAS_EXTERNAL
+          - CASTOR_DOC_EXTERNAL
+          - COLLIBRA_EXTERNAL
+          - DATAGALAXY_EXTERNAL
+          - INFORMATICA_EXTERNAL
+          - SECODA_EXTERNAL
+          - SELECT_STAR_EXTERNAL
+          - GENERIC_CATALOG_EXTERNAL
+    PositionalParameterDto:
+      type: object
+      properties:
+        value:
+          type: object
+    DatasetBriefWithUriDto:
+      required:
+      - datasourceName
+      - datasourceType
+      - id
+      - name
+      - urn
+      type: object
+      properties:
+        datasourceName:
+          type: string
+        datasourceType:
+          type: string
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        qualifiedName:
+          type: string
+        uri:
+          type: string
+        urn:
+          type: string
+    IncidentLightDto:
+      required:
+      - collaborationToolItems
+      - compromisedAssets
+      - criticality
+      - datasets
+      - id
+      - isMutedIndefinitely
+      - issueNo
+      - lastOccurredDate
+      - name
+      - owners
+      - status
+      - teams
+      - triggerTime
+      type: object
+      properties:
+        collaborationToolItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetCollaborationToolItemDto'
+        compromisedAssets:
+          type: integer
+          format: int32
+        criticality:
+          type: integer
+          format: int32
+        datasets:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetBriefDto'
+        id:
+          type: string
+          format: uuid
+        isMutedIndefinitely:
+          type: boolean
+        issueNo:
+          type: integer
+          format: int32
+        lastModifiedDate:
+          type: integer
+          format: int64
+        lastOccurredDate:
+          type: integer
+          format: int64
+        mutedUntil:
+          type: integer
+          format: int64
+        name:
+          type: string
+        owners:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDto'
+        qualification:
+          type: string
+          enum:
+          - FIXED
+          - FALSE_POSITIVE
+          - NO_ACTION_NEEDED
+          - DUPLICATE
+          - AUTOMATIC
+          - QUALIFIED_MONITORS_REVIEWED
+          - QUALIFIED_MONITORS_NO_ACTION_NEEDED
+          - QUALIFIED_MONITORS_FALSE_POSITIVE
+        status:
+          type: string
+          enum:
+          - OPEN
+          - IN_PROGRESS
+          - CLOSED
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentTeamDto'
+        triggerTime:
+          type: integer
+          format: int64
+    JsonNode:
+      type: object
+    AlertingHookParams:
+      required:
+      - scope
+      - type
+      type: object
+      properties:
+        scope:
+          type: string
+          enum:
+          - ALL_EVENTS
+          - LINKED_EVENTS
+        type:
+          type: string
+          enum:
+          - DEFAULT
+          - GOOGLE_CHAT
+      discriminator:
+        mapping:
+          DEFAULT: '#/components/schemas/DefaultWebhookParams'
+          GOOGLE_CHAT: '#/components/schemas/GoogleChatWebhookParams'
+        propertyName: type
+    GoogleChatWebhookParams:
+      required:
+      - scope
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AlertingHookParams'
+    Criticality:
+      type: string
+      enum:
+      - CRITICAL
+      - HIGH
+      - MODERATE
+      - LOW
+    LastRunStatusDto:
+      required:
+      - status
+      - timestamp
+      type: object
+      properties:
+        result:
+          type:
+          - string
+          - 'null'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - RUNNING
+          - SUCCESS
+          - REQUIRES_YOUR_ATTENTION
+          - TECHNICAL_ERROR
+          - FAILED
+        timestamp:
+          type: integer
+          format: int64
+    CatalogFilterDto:
+      type: object
+      properties:
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterElementDto'
+        id:
+          type: string
+        name:
+          type: string
+        query:
+          type: string
+    MonitoringSearchDto:
+      required:
+      - catalogFilters
+      - searchRules
+      type: object
+      properties:
+        catalogFilters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogFilterDto'
+        searchRules:
+          $ref: '#/components/schemas/SearchCollectionRuleCatalogAssetDto'
+    EntityCustomMetadataEntryTeamDto:
+      required:
+      - id
+      - name
+      - teamId
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EntityCustomMetadataEntryDto'
+      - type: object
+        properties:
+          name:
+            type: string
+          teamId:
+            type: string
+            format: uuid
+    EntityCustomMetadataEntryLabelDto:
+      required:
+      - id
+      - type
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EntityCustomMetadataEntryDto'
+      - type: object
+        properties:
+          value:
+            type: string
+    GetCollaborationToolItemDto:
+      required:
+      - itemKey
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        itemKey:
+          type: string
+        itemUrl:
+          type: string
+        type:
+          type: string
+          enum:
+          - JIRA
+          - SERVICENOW
+    DefaultWebhookParams:
+      required:
+      - scope
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AlertingHookParams'
+      - type: object
+        properties:
+          headers:
+            type: array
+            items:
+              $ref: '#/components/schemas/CustomHeader'
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

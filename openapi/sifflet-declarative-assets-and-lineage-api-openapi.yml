@@ -1,0 +1,564 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Declarative Assets and Lineage API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Declarative Assets and Lineage
+paths:
+  /v1/assets/sync:
+    post:
+      operationId: publicSyncAssets
+      parameters:
+      - in: query
+        name: dryRun
+        required: false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicDeclarativePayloadDto'
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/PublicDeclarativePayloadDto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceApplyResponseDto'
+          description: Successfully applied workspace
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Sync a workspace
+      tags:
+      - Declarative Assets and Lineage
+  /v1/assets/{name}:
+    delete:
+      operationId: publicDeleteWorkspace
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: dryRun
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceApplyResponseDto'
+          description: Successfully deleted workspace
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Delete workspace by name
+      tags:
+      - Declarative Assets and Lineage
+components:
+  schemas:
+    PublicTagReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        kind:
+          type: string
+          description: Type of the referenced tag
+          enum:
+          - TAG
+          - CLASSIFICATION
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Tags of the source. A tag can either be referenced by its id or its name or its name and kind.
+      example:
+      - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+        name: PII
+        kind: CLASSIFICATION
+      - name: tag-name
+      - name: PII
+        kind: CLASSIFICATION
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    LogDto:
+      type: object
+      properties:
+        level:
+          type: string
+          enum:
+          - Info
+          - Warning
+          - Error
+          - Fatal
+        message:
+          type: string
+    PublicCustomMetadataEntryStringReferenceDto:
+      required:
+      - customMetadataName
+      - stringValue
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          stringValue:
+            type: string
+            description: Value of the referenced custom metadata string
+    PublicDeclarativePayloadDto:
+      required:
+      - workspace
+      type: object
+      properties:
+        assets:
+          type: array
+          description: Use this parameter to declare assets and their associated links. It is recommended to use the `lineages` object of the `assets` array of objects rather than the `lineages` array of objects for cases where you want to declare assets and their corresponding lineage links.
+          items:
+            $ref: '#/components/schemas/PublicDeclarativeAssetDto'
+        lineages:
+          type: array
+          description: Use this parameter to declare lineage links between assets. It is recommended to use the `lineages` arrays of objects object rather than the `lineages` object of the `assets` array of objects for cases where you want to declare lineage links between existing assets.
+          items:
+            $ref: '#/components/schemas/PublicDeclarativeLineageDto'
+        sources:
+          type: array
+          description: Declaring sources is optional. Declaring a source is useful if you want to attach it specific metadata (e.g. a name, a description, etc.). If no source is declared, Sifflet automatically adds declared assets to sources using declared assets URIs.
+          items:
+            $ref: '#/components/schemas/PublicDeclarativeSourceDto'
+        workspace:
+          type: string
+          description: Name of the workspace containing declared assets and sources. <a href="https://docs.siffletdata.com/docs/declarative-assets#workspaces">[Read more about workspaces]</a>
+    WorkspaceApplyObjectResponseDto:
+      type: object
+      properties:
+        change:
+          $ref: '#/components/schemas/ChangeDto'
+        id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogDto'
+        status:
+          type: string
+          enum:
+          - OK
+          - Error
+          - Fatal
+        subStatus:
+          type: string
+          enum:
+          - Success
+          - Skipped
+          - ValidationError
+          - DeserializationError
+          - Unauthorized
+          - InternalServerError
+    PublicDeclarativeAssetDto:
+      required:
+      - type
+      - uri
+      type: object
+      properties:
+        customMetadataValues:
+          type: array
+          description: Custom metadata entries to be associated with the declared asset
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryLabelReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryStringReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryTeamReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryUserReferenceDto'
+        description:
+          type: string
+          description: Description of the declared asset
+        href:
+          type: string
+          description: External link to be associated with the declared asset (e.g. link to your actual BI dashboard, ML model, etc.). This link will show up as a button on your asset page.
+        lineages:
+          $ref: '#/components/schemas/PublicDeclarativeLineageListDto'
+        name:
+          type: string
+          description: Display name of the declared asset
+        owners:
+          type: array
+          description: Owners to be associated with the declared asset
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrEmailDto'
+        subType:
+          type: string
+          description: 'Secondary type of the declared asset. Shows up in the Data Catalog as an additional metadata giving more details about the asset type (e.g. "type": "Dataset", "subType": "View"). "type": "Generic" declared assets will have their subType value added to the Asset type filter category of the Data Catalog.'
+        tags:
+          type: array
+          description: Tags to be associated with the declared asset
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        terms:
+          type: array
+          description: Business terms to be associated with the declared asset. Business terms can be referenced either through their `id`, their `name`, or both.
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+        type:
+          type: string
+          description: 'Primary type of the declared asset, indicating the overall category the asset falls in.
+
+            Utilized to know which value the declared asset should be nested in in the Asset type filter category of the Data Catalog. Selecting Generic will result in the subType value being added as a value of this Asset type filter category.'
+          enum:
+          - Dataset
+          - Dashboard
+          - Pipeline
+          - MlModel
+          - Generic
+        uri:
+          type: string
+          description: URI string identifying the declared asset. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+      description: Use this parameter to declare assets and their associated links. It is recommended to use the `lineages` object of the `assets` array of objects rather than the `lineages` array of objects for cases where you want to declare assets and their corresponding lineage links.
+    WorkspaceApplyResponseDto:
+      type: object
+      properties:
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkspaceApplyObjectResponseDto'
+    PublicCustomMetadataEntryReferenceDto:
+      required:
+      - customMetadataName
+      - type
+      type: object
+      properties:
+        customMetadataName:
+          type: string
+          description: Name of the referenced custom metadata
+        type:
+          type: string
+          enum:
+          - LABEL
+          - STRING
+          - USER
+          - TEAM
+      description: Custom metadata entries to be associated with the declared asset
+      discriminator:
+        mapping:
+          LABEL: '#/components/schemas/PublicCustomMetadataEntryLabelReferenceDto'
+          STRING: '#/components/schemas/PublicCustomMetadataEntryStringReferenceDto'
+          TEAM: '#/components/schemas/PublicCustomMetadataEntryTeamReferenceDto'
+          USER: '#/components/schemas/PublicCustomMetadataEntryUserReferenceDto'
+        propertyName: type
+    PublicCustomMetadataEntryUserReferenceDto:
+      required:
+      - customMetadataName
+      - email
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          email:
+            type: string
+            description: Value of the referenced custom metadata user email
+    PublicDeclarativeSourceDto:
+      required:
+      - name
+      - uri
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the declared source
+        name:
+          type: string
+          description: Display name of the declared source
+        tags:
+          type: array
+          description: Tags to be associated with the declared source
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        uri:
+          type: string
+          description: URI string identifying the declared source. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+      description: Declaring sources is optional. Declaring a source is useful if you want to attach it specific metadata (e.g. a name, a description, etc.). If no source is declared, Sifflet automatically adds declared assets to sources using declared assets URIs.
+    PublicDeclarativeLineageListDto:
+      type: object
+      properties:
+        from:
+          type: array
+          description: URI strings identifying the upstream assets. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+          items:
+            type: string
+            description: URI strings identifying the upstream assets. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+        to:
+          type: array
+          description: URI strings identifying the downstream assets. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+          items:
+            type: string
+            description: URI strings identifying the downstream assets. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+      description: Lineage links to be created for the declared asset
+    ChangeDto:
+      type: object
+      properties:
+        from:
+          $ref: '#/components/schemas/JsonNode'
+        fromWorkspaceId:
+          type: string
+          format: uuid
+        to:
+          $ref: '#/components/schemas/JsonNode'
+        toWorkspaceId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+          - None
+          - Create
+          - CreateIfMissing
+          - Move
+          - MoveAndUpdate
+          - Update
+          - Delete
+    JsonNode:
+      type: object
+    PublicReferenceByIdOrEmailDto:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email of the referenced owner
+        id:
+          type: string
+          description: Id of the referenced owner
+          format: uuid
+      description: Id or email reference to an owner
+    PublicCustomMetadataEntryLabelReferenceDto:
+      required:
+      - customMetadataName
+      - labelValue
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          labelValue:
+            type: string
+            description: Value of the referenced custom metadata label
+    PublicDeclarativeLineageDto:
+      required:
+      - from
+      - to
+      type: object
+      properties:
+        from:
+          type: string
+          description: URI string identifying the upstream asset of the lineage. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+        to:
+          type: string
+          description: URI string identifying the downstream asset of the lineage. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+      description: Use this parameter to declare lineage links between assets. It is recommended to use the `lineages` arrays of objects object rather than the `lineages` object of the `assets` array of objects for cases where you want to declare lineage links between existing assets.
+    PublicCustomMetadataEntryTeamReferenceDto:
+      required:
+      - customMetadataName
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          name:
+            type: string
+            description: Value of the referenced custom metadata team name
+    PublicReferenceByIdOrNameDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Id or name reference to an object
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

@@ -1,0 +1,2491 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Assets API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Assets
+paths:
+  /v1/assets:
+    patch:
+      operationId: publicEditAsset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicUpdateAssetDto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetAssetDto'
+          description: Asset edited
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Edit an asset
+      tags:
+      - Assets
+  /v1/assets/get-asset-with-uri:
+    post:
+      operationId: publicGetAsset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicGetAssetRequestDto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetAssetDto'
+          description: Asset retrieved
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get asset by uri
+      tags:
+      - Assets
+  /v1/assets/search:
+    post:
+      operationId: publicGetAssets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicAssetSearchCriteriaDto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPageDtoPublicGetAssetListDto'
+          description: Assets retrieved
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get search results for assets
+      tags:
+      - Assets
+components:
+  schemas:
+    PublicTagReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        kind:
+          type: string
+          description: Type of the referenced tag
+          enum:
+          - TAG
+          - CLASSIFICATION
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Tags of the source. A tag can either be referenced by its id or its name or its name and kind.
+      example:
+      - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+        name: PII
+        kind: CLASSIFICATION
+      - name: tag-name
+      - name: PII
+        kind: CLASSIFICATION
+    PublicTransformationRunDto:
+      type:
+      - object
+      - 'null'
+      properties:
+        lastRunDate:
+          type: integer
+          description: Last run date of the transformation
+          format: int64
+        lastRunStatus:
+          type: string
+          description: Last run status of the transformation
+          enum:
+          - SUCCESS
+          - ERROR
+          - SKIPPED
+          - PARTIAL_SUCCESS
+          - NOT_TARGETED
+          - UNKNOWN
+        type:
+          type: string
+          description: Type of the transformation
+      description: Transformation associated to the asset
+    PublicDomainGetDto:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+      description: Domains of the asset
+    PublicGetCustomMetadataEntryStringDto:
+      required:
+      - customMetadataName
+      - stringValue
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetCustomMetadataEntryDto'
+      - type: object
+        properties:
+          stringValue:
+            type: string
+    PublicGetAssetDto:
+      required:
+      - domains
+      - healthStatus
+      - id
+      - ingestionMethod
+      - name
+      - technology
+      - type
+      - uri
+      - urn
+      - usage
+      type: object
+      properties:
+        columns:
+          type: array
+          description: Fields of the asset
+          items:
+            $ref: '#/components/schemas/PublicGetAssetColumnDto'
+        customMetadataValues:
+          type: array
+          description: Custom metadata values of the asset
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicGetCustomMetadataEntryLabelDto'
+            - $ref: '#/components/schemas/PublicGetCustomMetadataEntryStringDto'
+            - $ref: '#/components/schemas/PublicGetCustomMetadataEntryTeamDto'
+            - $ref: '#/components/schemas/PublicGetCustomMetadataEntryUserDto'
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the asset
+        domains:
+          type: array
+          description: Domains of the asset
+          items:
+            $ref: '#/components/schemas/PublicDomainGetDto'
+        externalDescriptions:
+          type: array
+          description: Descriptions of the asset from external providers
+          items:
+            $ref: '#/components/schemas/PublicDescriptionDto'
+        externalTags:
+          type: array
+          description: Asset tags from external providers
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: BIGQUERY_EXTERNAL
+            name: env:prod
+          items:
+            $ref: '#/components/schemas/PublicExternalTagReferenceDto'
+        externalTerms:
+          type: array
+          description: Business terms from external providers
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: ATLAN_EXTERNAL
+            name: Product
+          items:
+            $ref: '#/components/schemas/PublicExternalTermReferenceDto'
+        healthStatus:
+          type: string
+          description: Asset health status
+          enum:
+          - URGENT_INCIDENTS
+          - HIGH_RISK_INCIDENTS
+          - NO_INCIDENTS
+          - NOT_MONITORED
+          - UNSUPPORTED
+        id:
+          type: string
+          format: uuid
+        ingestionMethod:
+          type: string
+          description: Ingestion method of the asset
+          enum:
+          - DECLARATIVE
+          - SIFFLET_SOURCED
+        name:
+          type: string
+          description: Name of the asset
+        owners:
+          type: array
+          description: Owners of the asset
+          example:
+          - email: john.smith@example.com
+            id: 01a15466-1e58-321e-bb5c-1c7388fcb222
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrEmailDto'
+        tags:
+          type: array
+          description: Tags of the asset
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: CLASSIFICATION
+            name: PII
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        technology:
+          type: string
+          description: Technology of the asset
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - FIREBOLT
+          - PRESTO
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - ADF
+          - MSSQL
+          - MYSQL
+          - SYNAPSE
+          - POSTGRES
+          - H2
+          - ORACLE
+          - LIGHTDASH
+          - LOOKER
+          - METABASE
+          - MICROSTRATEGY
+          - TABLEAU
+          - POWER_BI
+          - QLIK
+          - QUICKSIGHT
+          - STITCH
+          - AIRBYTE
+          - AIRFLOW
+          - COMPOSER
+          - DAGSTER
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - MWAA
+          - PREFECT
+          - TALEND
+          - HUBSPOT
+          - INFORMATICA
+          - MULESOFT
+          - SALESFORCE
+          - SEGMENT
+          - SLACK
+          - CENSUS
+          - HIGH_TOUCH
+          - AMAZON_SAGEMAKER
+          - DATAIKU
+          - MICROSOFT_AZURE_ML
+          - GOOGLE_ANALYTICS
+          - SIGMA
+          - UNKNOWN
+          - AZURE
+          - CATALOG_GENERIC
+          - GOOGLE_DRIVE
+          - GOOGLE_SHEETS
+          - GOOGLE_CLOUD_STORAGE
+          - S3
+          - EXCEL
+          - GITHUB
+          - SIXSENSE
+          - FIFTEENFIVE
+          - THREESIXTYLEARNING
+          - ACCELDATA
+          - ACRYL_DATA
+          - ACTIAN_VECTOR
+          - ACTIVE_CAMPAIGN
+          - ADA
+          - ADJUST
+          - ADOBE
+          - ADP_WFN
+          - ADROLL
+          - AFFINITY
+          - AIRCALL
+          - AIRTABLE
+          - ALATION
+          - ALCHEMER
+          - ALVIN_AI
+          - AMAZON
+          - AMAZON_CLOUDFRONT
+          - AMAZON_DOCUMENTDB
+          - AMAZON_DYNAMODB
+          - AMAZON_FIREHOSE
+          - AMAZON_SELLING_PARTNER
+          - AMPLITUDE
+          - AMUNDSEN
+          - ANAPLAN
+          - ANOMALO
+          - APACHE_ATLAS
+          - APACHE_KAFKA
+          - APACHE_SPARK
+          - APPCUES
+          - APPFIGURES
+          - APPLE
+          - APPLE_APP_STORE
+          - APPSFLYER
+          - ASANA
+          - ASSEMBLED
+          - ATLAN
+          - ATLASSIAN_CONFLUENCE
+          - ATLASSIAN_JIRA
+          - ATLASSIAN_OPSGENIE
+          - AUTH0
+          - AUTODESK_BIM_360
+          - AWIN
+          - AWS_CLOUDTRAIL
+          - AWS_COST_EXPLORER
+          - AWS_INVENTORY
+          - AWS_LAMBDA
+          - BALLOT_READY
+          - BAMBOOHR
+          - BIGCOMMERCE
+          - BIGEYE
+          - BILLINGPLATFORM
+          - BIRDEYE
+          - BLACKBOARD
+          - BOX
+          - BRAINTREE
+          - BRAZE
+          - BREX
+          - BUILDKITE
+          - BUZZSPROUT
+          - CALENDLY
+          - CAMPAIGN_MONITOR
+          - CANNY
+          - CANVAS
+          - CAPTERRA
+          - CASTOR_DOC
+          - CERTINIA
+          - CHAMELEON
+          - CHANNEL_ADVISOR
+          - CHARGEBEE
+          - CHARGEDESK
+          - CHARTMOGUL
+          - CHORUS_AI
+          - CHURNKEY
+          - CHURNZERO
+          - CIMIS
+          - CIN7
+          - CIRCLE_CI
+          - CLARI
+          - CLICKUP
+          - CLIFF_AI
+          - CLOSE
+          - COLLIBRA
+          - COMMERCETOOLS
+          - CONFLUENT_CLOUD
+          - CONTRAST_SECURITY
+          - COUPA
+          - CRITEO
+          - CROSSBEAM
+          - CRUNCHBASE
+          - CUSTOMER_IO
+          - D2L_BRIGHTSPACE
+          - DATA_WORLD
+          - DATABAND
+          - DATADOG
+          - DATAEDO
+          - DATAFOLD
+          - DATAGALAXY
+          - DATAHUB
+          - DB2
+          - DCL_LOGISTICS
+          - DEAR
+          - DECUBE
+          - DELIGHTED
+          - DEPUTY
+          - DESTINI
+          - DIXA
+          - DOCEBO
+          - DRATA
+          - DRIFT
+          - DRIP
+          - DROPBOX
+          - DUOPLANE
+          - E_CONOMIC
+          - EASY_POST
+          - ELASTICSEARCH
+          - ELEMENTARY
+          - ELLUCIAN
+          - ELOQUA
+          - EMAIL
+          - EMPLOYMENT_HERO
+          - EPICOR_PROPHET_21
+          - EVENTBRITE
+          - EVERHOUR
+          - EXPENSIFY
+          - FACEBOOK
+          - FIGMA
+          - FIREBASE
+          - FLEXPORT
+          - FORJ
+          - FOUNTAIN
+          - FREIGHTVIEW
+          - FRESHBOOKS
+          - FRESHCHAT
+          - FRESHDESK
+          - FRESHDESK_CONTACT_CENTER
+          - FRESHSERVICE
+          - FRESHSUCCESS
+          - FRESHTEAM
+          - FRIENDBUY
+          - FRONT
+          - FTP
+          - FULLSTORY
+          - G2
+          - GAINSIGHT
+          - GEM
+          - GIT
+          - GITLAB
+          - GLADLY
+          - GOCARDLESS
+          - GONG
+          - GOOGLE
+          - GOOGLE_AD_MANAGER
+          - GOOGLE_ADS
+          - GOOGLE_CALENDAR
+          - GOOGLE_CAMPAIGN_MANAGER
+          - GOOGLE_CHROME
+          - GOOGLE_CLOUD
+          - GOOGLE_DISPLAY
+          - GOOGLE_PLAY
+          - GOOGLE_SEARCH_ADS_360
+          - GOOGLE_SEARCH_CONSOLE
+          - GOOGLE_TASKS
+          - GORGIAS
+          - GREENHOUSE
+          - GREENPLUM
+          - GREEN_POWER_MONITOR
+          - GREPSR
+          - GRIN
+          - GURU
+          - HARVEST
+          - HDFS
+          - HEAP
+          - HEIGHT
+          - HELP_SCOUT
+          - HELPSHIFT
+          - HEROKU_KAFKA
+          - HEX
+          - HIBOB
+          - HOPIN
+          - IMPACT
+          - INCIDENT_IO
+          - INFOBIP
+          - INSIGHTLY
+          - INSTAGRAM
+          - INTERCOM
+          - INVESTOPEDIA
+          - IRONCLAD
+          - IRONSOURCE
+          - ITERABLE
+          - JAVA
+          - JENKINS
+          - JUSTCALL
+          - KANDJI
+          - KENSU
+          - KHOROS_CARE
+          - KISSMETRICS
+          - KLAVIYO
+          - KNOWBE4
+          - KONNECT_INSIGHTS
+          - KUSTOMER
+          - LARIAT_DATA
+          - LATTICE
+          - LAUNCH_DARKLY
+          - LEARN_UPON
+          - LESSONLY
+          - LEVER
+          - LIFTOFF
+          - LIGHTSPEED
+          - LIGHTSUP
+          - LINEAR
+          - LINKEDIN
+          - LIVECHAT
+          - LOADED_COMMERCE
+          - LOB
+          - LOOP
+          - LOOPIO
+          - LUMA
+          - MAGENTO
+          - MAILCHIMP
+          - MAILGUN
+          - MANDRILL
+          - MANTA
+          - MARIADB
+          - MARIN_SOFTWARE
+          - MARKETO
+          - MATILLION
+          - MATTERMOST
+          - MAVENLINK
+          - MAXIO
+          - MEDALLIA
+          - META
+          - METAPHOR
+          - METAPLANE
+          - MICROSOFT
+          - MICROSOFT_AZURE_BLOB_STORAGE
+          - MICROSOFT_DYNAMICS
+          - MICROSOFT_ONEDRIVE
+          - MICROSOFT_PURVIEW
+          - MICROSOFT_TEAMS
+          - MIXMAX
+          - MIXPANEL
+          - MONDAY_COM
+          - MONGODB
+          - MONTE_CARLO
+          - MOUNTAIN
+          - MUX
+          - NAMELY
+          - NCINO
+          - NETSUITE_ANALYTICS
+          - NEW_RELIC
+          - NOTION
+          - NYLAS
+          - OBSERVE
+          - OCTOPAI
+          - OKTA
+          - OPEN_DATA_DC
+          - OPEN_EXCHANGES_RATES
+          - OPEN_AI
+          - OPEN_SEARCH
+          - OPTIMIZELY
+          - ORBIT_COMMUNITY_PLATFORM
+          - ORDWAY
+          - ORTTO
+          - OS_COMMERCE
+          - OUTBRAIN
+          - OUTREACH
+          - OVALEDGE
+          - PAGERDUTY
+          - PAGERSHIFT
+          - PAYPAL
+          - PENDO
+          - PINGDOM
+          - PINTEREST
+          - PIPE17
+          - PIPEDRIVE
+          - PIVOTAL_TRACKER
+          - PLAYVOX
+          - POSTHOG
+          - POWERSCHOOL
+          - PRESTASHOP
+          - PRODUCTBOARD
+          - PYTHON
+          - QUALAROO
+          - QUALTRICS
+          - QUICKBOOKS
+          - RAMP
+          - RARIBLE
+          - RECHARGE
+          - RECURLY
+          - REDDIT
+          - RELTIO
+          - REPLY_IO
+          - RETAILNEXT
+          - RETENTLY
+          - REVEL_SYSTEMS
+          - RINGCENTRAL
+          - RIPPLING
+          - ROLLBAR
+          - ROOTLY
+          - SAGE_HR
+          - SAGE_INTACCT
+          - SAILTHRU
+          - SALESLOFT
+          - SALSIFY
+          - SAMSARA
+          - SAP
+          - SAP_CONCUR
+          - SCORM
+          - SECODA
+          - SECURITY_JOURNEY
+          - SELECT_STAR
+          - SENDGRID
+          - BREVO
+          - SERVICE_NOW
+          - SFTP
+          - SHAREPOINT
+          - SHARETRIBE
+          - SHIPHERO
+          - SHIPSTATION
+          - SHOPIFY
+          - SHOPWARE
+          - SHORT_IO
+          - SIFFLET
+          - SIMPLECAST
+          - SIMPLESAT
+          - SINGLESTORE
+          - SISENSE
+          - SKILLJAR
+          - SKUVAULT
+          - SLAB
+          - SMADEX
+          - SNAPCHAT
+          - SNOWPLOW
+          - SODA
+          - SONARQUBE
+          - SPLIT_IO
+          - SPLUNK
+          - SPOTIFY
+          - SPREE_COMMERCE
+          - SPROUT_SOCIAL
+          - SQUARE
+          - SQUARESPACE
+          - SSIS
+          - STACK_ADAPT
+          - STATSIG
+          - STRIPE
+          - STYLIGHT
+          - SUBSCRIPT
+          - TABOOLA
+          - TALKDESK
+          - TALKWALKER
+          - TEAMWORK_COM
+          - TEMPO_IO
+          - TERADATA
+          - TERRAFORM
+          - THE_TRADE_DESK
+          - THOUGHT_SPOT
+          - TIKTOK
+          - TOGGL
+          - TRANSCEND
+          - TRELLO
+          - TRISOLUTE
+          - TWILIO
+          - TYPEFORM
+          - UPLAND
+          - USERVOICE
+          - VALIDIO
+          - VEEVA
+          - VERIZON_MEDIA
+          - VITALLY
+          - VONAGE
+          - VUETIFY
+          - WEB_SCRAPER
+          - WEBHOOKS
+          - WHEN_I_WORK
+          - WHEREFOUR
+          - WIKIPEDIA
+          - WOOCOMMERCE
+          - WORDPRESS
+          - WORKABLE
+          - WORKDAY
+          - WORKFLOW_MAX
+          - WRIKE
+          - X
+          - XERO
+          - XRAY
+          - YAHOO
+          - YOTPO
+          - YOUTUBE
+          - ZEENEA
+          - ZEN_CART
+          - ZENDESK_CHAT
+          - ZENDESK_SELL
+          - ZENDESK_SUNSHINE
+          - ZENDESK_SUPPORT
+          - TRINET
+          - ZINGTREE
+          - ZOHO_BOOKS
+          - ZOHO_CAMPAIGNS
+          - ZOHO_CRM
+          - ZOOM
+          - ZUORA
+        terms:
+          type: array
+          description: Business terms of the asset
+          example:
+          - id: 02a15466-1e58-321e-aa5c-1c7388fcb136
+            name: Product
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+        transformationRun:
+          $ref: '#/components/schemas/PublicTransformationRunDto'
+        type:
+          type: string
+          description: Type of the asset
+          enum:
+          - CONNECTOR
+          - DAG
+          - DASHBOARD
+          - EXTERNAL_TABLE
+          - MATERIALIZED_VIEW
+          - ML_MODEL
+          - MODEL
+          - ORCHESTRATOR
+          - OTHER
+          - PIPELINE
+          - REPORT
+          - SNOWFLAKE_STREAM
+          - TABLE
+          - TRANSFORMATION
+          - VIEW
+        uri:
+          type: string
+          description: URI string identifying the asset. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+        urn:
+          type: string
+          description: Internal Sifflet identifier for the asset
+        usage:
+          type: string
+          description: Usage level of the asset
+          enum:
+          - UNSUPPORTED
+          - LOW
+          - MEDIUM
+          - HIGH
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    PublicGetAssetRequestDto:
+      required:
+      - uri
+      type: object
+      properties:
+        uri:
+          type: string
+          description: URI string identifying the asset. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+    PublicDescriptionDto:
+      type: object
+      properties:
+        description:
+          type: string
+        origin:
+          type: string
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - FIREBOLT
+          - PRESTO
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - ADF
+          - MSSQL
+          - MYSQL
+          - SYNAPSE
+          - POSTGRES
+          - H2
+          - ORACLE
+          - LIGHTDASH
+          - LOOKER
+          - METABASE
+          - MICROSTRATEGY
+          - TABLEAU
+          - POWER_BI
+          - QLIK
+          - QUICKSIGHT
+          - STITCH
+          - AIRBYTE
+          - AIRFLOW
+          - COMPOSER
+          - DAGSTER
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - MWAA
+          - PREFECT
+          - TALEND
+          - HUBSPOT
+          - INFORMATICA
+          - MULESOFT
+          - SALESFORCE
+          - SEGMENT
+          - SLACK
+          - CENSUS
+          - HIGH_TOUCH
+          - AMAZON_SAGEMAKER
+          - DATAIKU
+          - MICROSOFT_AZURE_ML
+          - GOOGLE_ANALYTICS
+          - SIGMA
+          - UNKNOWN
+          - AZURE
+          - CATALOG_GENERIC
+          - GOOGLE_DRIVE
+          - GOOGLE_SHEETS
+          - GOOGLE_CLOUD_STORAGE
+          - S3
+          - EXCEL
+          - GITHUB
+          - SIXSENSE
+          - FIFTEENFIVE
+          - THREESIXTYLEARNING
+          - ACCELDATA
+          - ACRYL_DATA
+          - ACTIAN_VECTOR
+          - ACTIVE_CAMPAIGN
+          - ADA
+          - ADJUST
+          - ADOBE
+          - ADP_WFN
+          - ADROLL
+          - AFFINITY
+          - AIRCALL
+          - AIRTABLE
+          - ALATION
+          - ALCHEMER
+          - ALVIN_AI
+          - AMAZON
+          - AMAZON_CLOUDFRONT
+          - AMAZON_DOCUMENTDB
+          - AMAZON_DYNAMODB
+          - AMAZON_FIREHOSE
+          - AMAZON_SELLING_PARTNER
+          - AMPLITUDE
+          - AMUNDSEN
+          - ANAPLAN
+          - ANOMALO
+          - APACHE_ATLAS
+          - APACHE_KAFKA
+          - APACHE_SPARK
+          - APPCUES
+          - APPFIGURES
+          - APPLE
+          - APPLE_APP_STORE
+          - APPSFLYER
+          - ASANA
+          - ASSEMBLED
+          - ATLAN
+          - ATLASSIAN_CONFLUENCE
+          - ATLASSIAN_JIRA
+          - ATLASSIAN_OPSGENIE
+          - AUTH0
+          - AUTODESK_BIM_360
+          - AWIN
+          - AWS_CLOUDTRAIL
+          - AWS_COST_EXPLORER
+          - AWS_INVENTORY
+          - AWS_LAMBDA
+          - BALLOT_READY
+          - BAMBOOHR
+          - BIGCOMMERCE
+          - BIGEYE
+          - BILLINGPLATFORM
+          - BIRDEYE
+          - BLACKBOARD
+          - BOX
+          - BRAINTREE
+          - BRAZE
+          - BREX
+          - BUILDKITE
+          - BUZZSPROUT
+          - CALENDLY
+          - CAMPAIGN_MONITOR
+          - CANNY
+          - CANVAS
+          - CAPTERRA
+          - CASTOR_DOC
+          - CERTINIA
+          - CHAMELEON
+          - CHANNEL_ADVISOR
+          - CHARGEBEE
+          - CHARGEDESK
+          - CHARTMOGUL
+          - CHORUS_AI
+          - CHURNKEY
+          - CHURNZERO
+          - CIMIS
+          - CIN7
+          - CIRCLE_CI
+          - CLARI
+          - CLICKUP
+          - CLIFF_AI
+          - CLOSE
+          - COLLIBRA
+          - COMMERCETOOLS
+          - CONFLUENT_CLOUD
+          - CONTRAST_SECURITY
+          - COUPA
+          - CRITEO
+          - CROSSBEAM
+          - CRUNCHBASE
+          - CUSTOMER_IO
+          - D2L_BRIGHTSPACE
+          - DATA_WORLD
+          - DATABAND
+          - DATADOG
+          - DATAEDO
+          - DATAFOLD
+          - DATAGALAXY
+          - DATAHUB
+          - DB2
+          - DCL_LOGISTICS
+          - DEAR
+          - DECUBE
+          - DELIGHTED
+          - DEPUTY
+          - DESTINI
+          - DIXA
+          - DOCEBO
+          - DRATA
+          - DRIFT
+          - DRIP
+          - DROPBOX
+          - DUOPLANE
+          - E_CONOMIC
+          - EASY_POST
+          - ELASTICSEARCH
+          - ELEMENTARY
+          - ELLUCIAN
+          - ELOQUA
+          - EMAIL
+          - EMPLOYMENT_HERO
+          - EPICOR_PROPHET_21
+          - EVENTBRITE
+          - EVERHOUR
+          - EXPENSIFY
+          - FACEBOOK
+          - FIGMA
+          - FIREBASE
+          - FLEXPORT
+          - FORJ
+          - FOUNTAIN
+          - FREIGHTVIEW
+          - FRESHBOOKS
+          - FRESHCHAT
+          - FRESHDESK
+          - FRESHDESK_CONTACT_CENTER
+          - FRESHSERVICE
+          - FRESHSUCCESS
+          - FRESHTEAM
+          - FRIENDBUY
+          - FRONT
+          - FTP
+          - FULLSTORY
+          - G2
+          - GAINSIGHT
+          - GEM
+          - GIT
+          - GITLAB
+          - GLADLY
+          - GOCARDLESS
+          - GONG
+          - GOOGLE
+          - GOOGLE_AD_MANAGER
+          - GOOGLE_ADS
+          - GOOGLE_CALENDAR
+          - GOOGLE_CAMPAIGN_MANAGER
+          - GOOGLE_CHROME
+          - GOOGLE_CLOUD
+          - GOOGLE_DISPLAY
+          - GOOGLE_PLAY
+          - GOOGLE_SEARCH_ADS_360
+          - GOOGLE_SEARCH_CONSOLE
+          - GOOGLE_TASKS
+          - GORGIAS
+          - GREENHOUSE
+          - GREENPLUM
+          - GREEN_POWER_MONITOR
+          - GREPSR
+          - GRIN
+          - GURU
+          - HARVEST
+          - HDFS
+          - HEAP
+          - HEIGHT
+          - HELP_SCOUT
+          - HELPSHIFT
+          - HEROKU_KAFKA
+          - HEX
+          - HIBOB
+          - HOPIN
+          - IMPACT
+          - INCIDENT_IO
+          - INFOBIP
+          - INSIGHTLY
+          - INSTAGRAM
+          - INTERCOM
+          - INVESTOPEDIA
+          - IRONCLAD
+          - IRONSOURCE
+          - ITERABLE
+          - JAVA
+          - JENKINS
+          - JUSTCALL
+          - KANDJI
+          - KENSU
+          - KHOROS_CARE
+          - KISSMETRICS
+          - KLAVIYO
+          - KNOWBE4
+          - KONNECT_INSIGHTS
+          - KUSTOMER
+          - LARIAT_DATA
+          - LATTICE
+          - LAUNCH_DARKLY
+          - LEARN_UPON
+          - LESSONLY
+          - LEVER
+          - LIFTOFF
+          - LIGHTSPEED
+          - LIGHTSUP
+          - LINEAR
+          - LINKEDIN
+          - LIVECHAT
+          - LOADED_COMMERCE
+          - LOB
+          - LOOP
+          - LOOPIO
+          - LUMA
+          - MAGENTO
+          - MAILCHIMP
+          - MAILGUN
+          - MANDRILL
+          - MANTA
+          - MARIADB
+          - MARIN_SOFTWARE
+          - MARKETO
+          - MATILLION
+          - MATTERMOST
+          - MAVENLINK
+          - MAXIO
+          - MEDALLIA
+          - META
+          - METAPHOR
+          - METAPLANE
+          - MICROSOFT
+          - MICROSOFT_AZURE_BLOB_STORAGE
+          - MICROSOFT_DYNAMICS
+          - MICROSOFT_ONEDRIVE
+          - MICROSOFT_PURVIEW
+          - MICROSOFT_TEAMS
+          - MIXMAX
+          - MIXPANEL
+          - MONDAY_COM
+          - MONGODB
+          - MONTE_CARLO
+          - MOUNTAIN
+          - MUX
+          - NAMELY
+          - NCINO
+          - NETSUITE_ANALYTICS
+          - NEW_RELIC
+          - NOTION
+          - NYLAS
+          - OBSERVE
+          - OCTOPAI
+          - OKTA
+          - OPEN_DATA_DC
+          - OPEN_EXCHANGES_RATES
+          - OPEN_AI
+          - OPEN_SEARCH
+          - OPTIMIZELY
+          - ORBIT_COMMUNITY_PLATFORM
+          - ORDWAY
+          - ORTTO
+          - OS_COMMERCE
+          - OUTBRAIN
+          - OUTREACH
+          - OVALEDGE
+          - PAGERDUTY
+          - PAGERSHIFT
+          - PAYPAL
+          - PENDO
+          - PINGDOM
+          - PINTEREST
+          - PIPE17
+          - PIPEDRIVE
+          - PIVOTAL_TRACKER
+          - PLAYVOX
+          - POSTHOG
+          - POWERSCHOOL
+          - PRESTASHOP
+          - PRODUCTBOARD
+          - PYTHON
+          - QUALAROO
+          - QUALTRICS
+          - QUICKBOOKS
+          - RAMP
+          - RARIBLE
+          - RECHARGE
+          - RECURLY
+          - REDDIT
+          - RELTIO
+          - REPLY_IO
+          - RETAILNEXT
+          - RETENTLY
+          - REVEL_SYSTEMS
+          - RINGCENTRAL
+          - RIPPLING
+          - ROLLBAR
+          - ROOTLY
+          - SAGE_HR
+          - SAGE_INTACCT
+          - SAILTHRU
+          - SALESLOFT
+          - SALSIFY
+          - SAMSARA
+          - SAP
+          - SAP_CONCUR
+          - SCORM
+          - SECODA
+          - SECURITY_JOURNEY
+          - SELECT_STAR
+          - SENDGRID
+          - BREVO
+          - SERVICE_NOW
+          - SFTP
+          - SHAREPOINT
+          - SHARETRIBE
+          - SHIPHERO
+          - SHIPSTATION
+          - SHOPIFY
+          - SHOPWARE
+          - SHORT_IO
+          - SIFFLET
+          - SIMPLECAST
+          - SIMPLESAT
+          - SINGLESTORE
+          - SISENSE
+          - SKILLJAR
+          - SKUVAULT
+          - SLAB
+          - SMADEX
+          - SNAPCHAT
+          - SNOWPLOW
+          - SODA
+          - SONARQUBE
+          - SPLIT_IO
+          - SPLUNK
+          - SPOTIFY
+          - SPREE_COMMERCE
+          - SPROUT_SOCIAL
+          - SQUARE
+          - SQUARESPACE
+          - SSIS
+          - STACK_ADAPT
+          - STATSIG
+          - STRIPE
+          - STYLIGHT
+          - SUBSCRIPT
+          - TABOOLA
+          - TALKDESK
+          - TALKWALKER
+          - TEAMWORK_COM
+          - TEMPO_IO
+          - TERADATA
+          - TERRAFORM
+          - THE_TRADE_DESK
+          - THOUGHT_SPOT
+          - TIKTOK
+          - TOGGL
+          - TRANSCEND
+          - TRELLO
+          - TRISOLUTE
+          - TWILIO
+          - TYPEFORM
+          - UPLAND
+          - USERVOICE
+          - VALIDIO
+          - VEEVA
+          - VERIZON_MEDIA
+          - VITALLY
+          - VONAGE
+          - VUETIFY
+          - WEB_SCRAPER
+          - WEBHOOKS
+          - WHEN_I_WORK
+          - WHEREFOUR
+          - WIKIPEDIA
+          - WOOCOMMERCE
+          - WORDPRESS
+          - WORKABLE
+          - WORKDAY
+          - WORKFLOW_MAX
+          - WRIKE
+          - X
+          - XERO
+          - XRAY
+          - YAHOO
+          - YOTPO
+          - YOUTUBE
+          - ZEENEA
+          - ZEN_CART
+          - ZENDESK_CHAT
+          - ZENDESK_SELL
+          - ZENDESK_SUNSHINE
+          - ZENDESK_SUPPORT
+          - TRINET
+          - ZINGTREE
+          - ZOHO_BOOKS
+          - ZOHO_CAMPAIGNS
+          - ZOHO_CRM
+          - ZOOM
+          - ZUORA
+      description: Descriptions of the asset from external providers
+    PublicGetCustomMetadataEntryUserDto:
+      required:
+      - customMetadataName
+      - email
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetCustomMetadataEntryDto'
+      - type: object
+        properties:
+          email:
+            type: string
+    PublicAssetSearchCriteriaDto:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/PublicAssetFilterDto'
+        pagination:
+          $ref: '#/components/schemas/PublicAssetPaginationDto'
+        sort:
+          type: array
+          description: Sort to apply on the assets search. Possible values for field are 'name' and 'relevance'
+          example:
+          - direction: ASC
+            field: name
+          items:
+            type: string
+            description: The resource field on which to apply the sort followed by the direction
+            format: property,ASC|DESC
+            example: name,ASC
+    PublicGetCustomMetadataEntryTeamDto:
+      required:
+      - customMetadataName
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetCustomMetadataEntryDto'
+      - type: object
+        properties:
+          name:
+            type: string
+    PublicUpdateAssetDto:
+      required:
+      - uri
+      type: object
+      properties:
+        columns:
+          type: array
+          description: Fields of the asset
+          items:
+            $ref: '#/components/schemas/PublicUpdateAssetColumnDto'
+        customMetadataValues:
+          type: array
+          description: Custom metadata entries of the asset
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryLabelReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryStringReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryTeamReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryUserReferenceDto'
+        description:
+          type: string
+          description: Description of the asset
+        owners:
+          type: array
+          description: Owners of the asset
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrEmailDto'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        terms:
+          type: array
+          description: Terms of the asset
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+        uri:
+          type: string
+          description: URI string identifying the asset. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+    PublicCustomMetadataEntryStringReferenceDto:
+      required:
+      - customMetadataName
+      - stringValue
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          stringValue:
+            type: string
+            description: Value of the referenced custom metadata string
+    PublicCustomMetadataEntryReferenceDto:
+      required:
+      - customMetadataName
+      - type
+      type: object
+      properties:
+        customMetadataName:
+          type: string
+          description: Name of the referenced custom metadata
+        type:
+          type: string
+          enum:
+          - LABEL
+          - STRING
+          - USER
+          - TEAM
+      description: Custom metadata entries to be associated with the declared asset
+      discriminator:
+        mapping:
+          LABEL: '#/components/schemas/PublicCustomMetadataEntryLabelReferenceDto'
+          STRING: '#/components/schemas/PublicCustomMetadataEntryStringReferenceDto'
+          TEAM: '#/components/schemas/PublicCustomMetadataEntryTeamReferenceDto'
+          USER: '#/components/schemas/PublicCustomMetadataEntryUserReferenceDto'
+        propertyName: type
+    PublicCustomMetadataEntryUserReferenceDto:
+      required:
+      - customMetadataName
+      - email
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          email:
+            type: string
+            description: Value of the referenced custom metadata user email
+    PublicGetCustomMetadataEntryDto:
+      required:
+      - customMetadataName
+      - type
+      type: object
+      properties:
+        customMetadataName:
+          type: string
+          description: Name of the referenced custom metadata
+        type:
+          type: string
+          enum:
+          - LABEL
+          - STRING
+          - USER
+          - TEAM
+      description: Custom metadata values of the asset
+      discriminator:
+        mapping:
+          LABEL: '#/components/schemas/PublicGetCustomMetadataEntryLabelDto'
+          STRING: '#/components/schemas/PublicGetCustomMetadataEntryStringDto'
+          TEAM: '#/components/schemas/PublicGetCustomMetadataEntryTeamDto'
+          USER: '#/components/schemas/PublicGetCustomMetadataEntryUserDto'
+        propertyName: type
+    PublicGetAssetColumnDto:
+      required:
+      - id
+      - name
+      - type
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the field
+        externalDescriptions:
+          type: array
+          description: Descriptions of the field from external providers
+          items:
+            $ref: '#/components/schemas/PublicDescriptionDto'
+        externalTags:
+          type: array
+          description: Asset tags from external providers
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: BIGQUERY_EXTERNAL
+            name: env:prod
+          items:
+            $ref: '#/components/schemas/PublicExternalTagReferenceDto'
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: Name of the field
+        tags:
+          type: array
+          description: Tags of the column
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: CLASSIFICATION
+            name: PII
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        terms:
+          type: array
+          description: Business glossaries of the field
+          example:
+          - id: 02a15466-1e58-321e-aa5c-1c7388fcb136
+            name: Product
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+        type:
+          type: string
+          description: Type of the field
+      description: Fields of the asset
+    PublicAssetFilterDto:
+      type: object
+      properties:
+        assetType:
+          type: array
+          description: 'List of asset types to filter on. Valid values are TABLE_AND_VIEW, PIPELINE, DASHBOARD, ML_MODEL. For filtering declared assets with custom types, you can use the format declared-asset_{custom sub type}. For example: declared-asset_Storage'
+          items:
+            type: string
+            description: 'List of asset types to filter on. Valid values are TABLE_AND_VIEW, PIPELINE, DASHBOARD, ML_MODEL. For filtering declared assets with custom types, you can use the format declared-asset_{custom sub type}. For example: declared-asset_Storage'
+        customMetadataValues:
+          type: array
+          description: List of custom metadata values to filter on
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryLabelReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryStringReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryTeamReferenceDto'
+            - $ref: '#/components/schemas/PublicCustomMetadataEntryUserReferenceDto'
+        domainId:
+          type: string
+          description: Domain to search on
+          format: uuid
+        externalTerms:
+          type: array
+          description: List of external business terms to filter on
+          items:
+            $ref: '#/components/schemas/PublicExternalTermReferenceDto'
+        healthStatus:
+          type: array
+          description: List of health status to filter on
+          items:
+            type: string
+            description: List of health status to filter on
+            enum:
+            - URGENT_INCIDENTS
+            - HIGH_RISK_INCIDENTS
+            - NO_INCIDENTS
+            - NOT_MONITORED
+            - UNSUPPORTED
+        ingestionMethod:
+          type: array
+          description: List of ingestion methods to filter on
+          items:
+            type: string
+            description: List of ingestion methods to filter on
+            enum:
+            - DECLARATIVE
+            - SIFFLET_SOURCED
+        levelOfUsage:
+          type: array
+          description: List of usage qualifications to filter on
+          items:
+            type: string
+            description: List of usage qualifications to filter on
+            enum:
+            - UNSUPPORTED
+            - LOW
+            - MEDIUM
+            - HIGH
+        owners:
+          type: array
+          description: List of owners to filter on
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrEmailDto'
+        sourceId:
+          type: array
+          description: List of subSources to filter on by id. You should prefer using `subSourceUri` filter, and `subSourceUri` filter will be considered in priority if both of those filters are used.
+          items:
+            type: string
+            description: List of subSources to filter on by id. You should prefer using `subSourceUri` filter, and `subSourceUri` filter will be considered in priority if both of those filters are used.
+            format: uuid
+        subSourceUri:
+          type: array
+          description: List of subSources to filter on by subSource uri. SubSources uri for a given source can be fetched using <a href="https://docs.siffletdata.com/reference/publicgetsourceschemalist">[the list sub-sources endpoint]</a>
+          items:
+            type: string
+            description: List of subSources to filter on by subSource uri. SubSources uri for a given source can be fetched using <a href="https://docs.siffletdata.com/reference/publicgetsourceschemalist">[the list sub-sources endpoint]</a>
+        tags:
+          type: array
+          description: List of tags to filter on
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        terms:
+          type: array
+          description: List of business terms to filter on
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+        textSearch:
+          type: string
+          description: Text to match in the asset names
+      description: Filter to apply on the assets search
+    PublicGetCustomMetadataEntryLabelDto:
+      required:
+      - customMetadataName
+      - labelValue
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetCustomMetadataEntryDto'
+      - type: object
+        properties:
+          labelValue:
+            type: string
+    PublicAssetPaginationDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: integer
+          description: Number of items per page. Value -1 returns all items.
+          format: int32
+          default: 50
+        page:
+          type: integer
+          description: Page number. Default value returns first page.
+          format: int32
+          default: 0
+      description: Pagination to apply on the assets search
+    PublicReferenceByIdOrEmailDto:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email of the referenced owner
+        id:
+          type: string
+          description: Id of the referenced owner
+          format: uuid
+      description: Id or email reference to an owner
+    PublicCustomMetadataEntryLabelReferenceDto:
+      required:
+      - customMetadataName
+      - labelValue
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          labelValue:
+            type: string
+            description: Value of the referenced custom metadata label
+    PublicPageDtoPublicGetAssetListDto:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicGetAssetListDto'
+        totalCount:
+          type: integer
+          format: int64
+    PublicGetAssetListDto:
+      required:
+      - healthStatus
+      - id
+      - ingestionMethod
+      - name
+      - technology
+      - type
+      - uri
+      - urn
+      - usage
+      type: object
+      properties:
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the asset
+        externalDescriptions:
+          type: array
+          description: Descriptions of the asset from external providers
+          items:
+            $ref: '#/components/schemas/PublicDescriptionDto'
+        externalTags:
+          type: array
+          description: Asset tags from external providers
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: BIGQUERY_EXTERNAL
+            name: env:prod
+          items:
+            $ref: '#/components/schemas/PublicExternalTagReferenceDto'
+        externalTerms:
+          type: array
+          description: Business terms from external providers
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: ATLAN_EXTERNAL
+            name: Product
+          items:
+            $ref: '#/components/schemas/PublicExternalTermReferenceDto'
+        healthStatus:
+          type: string
+          description: Asset health status
+          enum:
+          - URGENT_INCIDENTS
+          - HIGH_RISK_INCIDENTS
+          - NO_INCIDENTS
+          - NOT_MONITORED
+          - UNSUPPORTED
+        id:
+          type: string
+          format: uuid
+        ingestionMethod:
+          type: string
+          description: Ingestion method of the asset
+          enum:
+          - DECLARATIVE
+          - SIFFLET_SOURCED
+        name:
+          type: string
+          description: Name of the asset
+        owners:
+          type: array
+          description: Owners of the asset
+          example:
+          - email: john.smith@example.com
+            id: 01a15466-1e58-321e-bb5c-1c7388fcb222
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrEmailDto'
+        tags:
+          type: array
+          description: Tags of the asset
+          example:
+          - id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+            kind: CLASSIFICATION
+            name: PII
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        technology:
+          type: string
+          description: Technology of the asset
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - FIREBOLT
+          - PRESTO
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - ADF
+          - MSSQL
+          - MYSQL
+          - SYNAPSE
+          - POSTGRES
+          - H2
+          - ORACLE
+          - LIGHTDASH
+          - LOOKER
+          - METABASE
+          - MICROSTRATEGY
+          - TABLEAU
+          - POWER_BI
+          - QLIK
+          - QUICKSIGHT
+          - STITCH
+          - AIRBYTE
+          - AIRFLOW
+          - COMPOSER
+          - DAGSTER
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - MWAA
+          - PREFECT
+          - TALEND
+          - HUBSPOT
+          - INFORMATICA
+          - MULESOFT
+          - SALESFORCE
+          - SEGMENT
+          - SLACK
+          - CENSUS
+          - HIGH_TOUCH
+          - AMAZON_SAGEMAKER
+          - DATAIKU
+          - MICROSOFT_AZURE_ML
+          - GOOGLE_ANALYTICS
+          - SIGMA
+          - UNKNOWN
+          - AZURE
+          - CATALOG_GENERIC
+          - GOOGLE_DRIVE
+          - GOOGLE_SHEETS
+          - GOOGLE_CLOUD_STORAGE
+          - S3
+          - EXCEL
+          - GITHUB
+          - SIXSENSE
+          - FIFTEENFIVE
+          - THREESIXTYLEARNING
+          - ACCELDATA
+          - ACRYL_DATA
+          - ACTIAN_VECTOR
+          - ACTIVE_CAMPAIGN
+          - ADA
+          - ADJUST
+          - ADOBE
+          - ADP_WFN
+          - ADROLL
+          - AFFINITY
+          - AIRCALL
+          - AIRTABLE
+          - ALATION
+          - ALCHEMER
+          - ALVIN_AI
+          - AMAZON
+          - AMAZON_CLOUDFRONT
+          - AMAZON_DOCUMENTDB
+          - AMAZON_DYNAMODB
+          - AMAZON_FIREHOSE
+          - AMAZON_SELLING_PARTNER
+          - AMPLITUDE
+          - AMUNDSEN
+          - ANAPLAN
+          - ANOMALO
+          - APACHE_ATLAS
+          - APACHE_KAFKA
+          - APACHE_SPARK
+          - APPCUES
+          - APPFIGURES
+          - APPLE
+          - APPLE_APP_STORE
+          - APPSFLYER
+          - ASANA
+          - ASSEMBLED
+          - ATLAN
+          - ATLASSIAN_CONFLUENCE
+          - ATLASSIAN_JIRA
+          - ATLASSIAN_OPSGENIE
+          - AUTH0
+          - AUTODESK_BIM_360
+          - AWIN
+          - AWS_CLOUDTRAIL
+          - AWS_COST_EXPLORER
+          - AWS_INVENTORY
+          - AWS_LAMBDA
+          - BALLOT_READY
+          - BAMBOOHR
+          - BIGCOMMERCE
+          - BIGEYE
+          - BILLINGPLATFORM
+          - BIRDEYE
+          - BLACKBOARD
+          - BOX
+          - BRAINTREE
+          - BRAZE
+          - BREX
+          - BUILDKITE
+          - BUZZSPROUT
+          - CALENDLY
+          - CAMPAIGN_MONITOR
+          - CANNY
+          - CANVAS
+          - CAPTERRA
+          - CASTOR_DOC
+          - CERTINIA
+          - CHAMELEON
+          - CHANNEL_ADVISOR
+          - CHARGEBEE
+          - CHARGEDESK
+          - CHARTMOGUL
+          - CHORUS_AI
+          - CHURNKEY
+          - CHURNZERO
+          - CIMIS
+          - CIN7
+          - CIRCLE_CI
+          - CLARI
+          - CLICKUP
+          - CLIFF_AI
+          - CLOSE
+          - COLLIBRA
+          - COMMERCETOOLS
+          - CONFLUENT_CLOUD
+          - CONTRAST_SECURITY
+          - COUPA
+          - CRITEO
+          - CROSSBEAM
+          - CRUNCHBASE
+          - CUSTOMER_IO
+          - D2L_BRIGHTSPACE
+          - DATA_WORLD
+          - DATABAND
+          - DATADOG
+          - DATAEDO
+          - DATAFOLD
+          - DATAGALAXY
+          - DATAHUB
+          - DB2
+          - DCL_LOGISTICS
+          - DEAR
+          - DECUBE
+          - DELIGHTED
+          - DEPUTY
+          - DESTINI
+          - DIXA
+          - DOCEBO
+          - DRATA
+          - DRIFT
+          - DRIP
+          - DROPBOX
+          - DUOPLANE
+          - E_CONOMIC
+          - EASY_POST
+          - ELASTICSEARCH
+          - ELEMENTARY
+          - ELLUCIAN
+          - ELOQUA
+          - EMAIL
+          - EMPLOYMENT_HERO
+          - EPICOR_PROPHET_21
+          - EVENTBRITE
+          - EVERHOUR
+          - EXPENSIFY
+          - FACEBOOK
+          - FIGMA
+          - FIREBASE
+          - FLEXPORT
+          - FORJ
+          - FOUNTAIN
+          - FREIGHTVIEW
+          - FRESHBOOKS
+          - FRESHCHAT
+          - FRESHDESK
+          - FRESHDESK_CONTACT_CENTER
+          - FRESHSERVICE
+          - FRESHSUCCESS
+          - FRESHTEAM
+          - FRIENDBUY
+          - FRONT
+          - FTP
+          - FULLSTORY
+          - G2
+          - GAINSIGHT
+          - GEM
+          - GIT
+          - GITLAB
+          - GLADLY
+          - GOCARDLESS
+          - GONG
+          - GOOGLE
+          - GOOGLE_AD_MANAGER
+          - GOOGLE_ADS
+          - GOOGLE_CALENDAR
+          - GOOGLE_CAMPAIGN_MANAGER
+          - GOOGLE_CHROME
+          - GOOGLE_CLOUD
+          - GOOGLE_DISPLAY
+          - GOOGLE_PLAY
+          - GOOGLE_SEARCH_ADS_360
+          - GOOGLE_SEARCH_CONSOLE
+          - GOOGLE_TASKS
+          - GORGIAS
+          - GREENHOUSE
+          - GREENPLUM
+          - GREEN_POWER_MONITOR
+          - GREPSR
+          - GRIN
+          - GURU
+          - HARVEST
+          - HDFS
+          - HEAP
+          - HEIGHT
+          - HELP_SCOUT
+          - HELPSHIFT
+          - HEROKU_KAFKA
+          - HEX
+          - HIBOB
+          - HOPIN
+          - IMPACT
+          - INCIDENT_IO
+          - INFOBIP
+          - INSIGHTLY
+          - INSTAGRAM
+          - INTERCOM
+          - INVESTOPEDIA
+          - IRONCLAD
+          - IRONSOURCE
+          - ITERABLE
+          - JAVA
+          - JENKINS
+          - JUSTCALL
+          - KANDJI
+          - KENSU
+          - KHOROS_CARE
+          - KISSMETRICS
+          - KLAVIYO
+          - KNOWBE4
+          - KONNECT_INSIGHTS
+          - KUSTOMER
+          - LARIAT_DATA
+          - LATTICE
+          - LAUNCH_DARKLY
+          - LEARN_UPON
+          - LESSONLY
+          - LEVER
+          - LIFTOFF
+          - LIGHTSPEED
+          - LIGHTSUP
+          - LINEAR
+          - LINKEDIN
+          - LIVECHAT
+          - LOADED_COMMERCE
+          - LOB
+          - LOOP
+          - LOOPIO
+          - LUMA
+          - MAGENTO
+          - MAILCHIMP
+          - MAILGUN
+          - MANDRILL
+          - MANTA
+          - MARIADB
+          - MARIN_SOFTWARE
+          - MARKETO
+          - MATILLION
+          - MATTERMOST
+          - MAVENLINK
+          - MAXIO
+          - MEDALLIA
+          - META
+          - METAPHOR
+          - METAPLANE
+          - MICROSOFT
+          - MICROSOFT_AZURE_BLOB_STORAGE
+          - MICROSOFT_DYNAMICS
+          - MICROSOFT_ONEDRIVE
+          - MICROSOFT_PURVIEW
+          - MICROSOFT_TEAMS
+          - MIXMAX
+          - MIXPANEL
+          - MONDAY_COM
+          - MONGODB
+          - MONTE_CARLO
+          - MOUNTAIN
+          - MUX
+          - NAMELY
+          - NCINO
+          - NETSUITE_ANALYTICS
+          - NEW_RELIC
+          - NOTION
+          - NYLAS
+          - OBSERVE
+          - OCTOPAI
+          - OKTA
+          - OPEN_DATA_DC
+          - OPEN_EXCHANGES_RATES
+          - OPEN_AI
+          - OPEN_SEARCH
+          - OPTIMIZELY
+          - ORBIT_COMMUNITY_PLATFORM
+          - ORDWAY
+          - ORTTO
+          - OS_COMMERCE
+          - OUTBRAIN
+          - OUTREACH
+          - OVALEDGE
+          - PAGERDUTY
+          - PAGERSHIFT
+          - PAYPAL
+          - PENDO
+          - PINGDOM
+          - PINTEREST
+          - PIPE17
+          - PIPEDRIVE
+          - PIVOTAL_TRACKER
+          - PLAYVOX
+          - POSTHOG
+          - POWERSCHOOL
+          - PRESTASHOP
+          - PRODUCTBOARD
+          - PYTHON
+          - QUALAROO
+          - QUALTRICS
+          - QUICKBOOKS
+          - RAMP
+          - RARIBLE
+          - RECHARGE
+          - RECURLY
+          - REDDIT
+          - RELTIO
+          - REPLY_IO
+          - RETAILNEXT
+          - RETENTLY
+          - REVEL_SYSTEMS
+          - RINGCENTRAL
+          - RIPPLING
+          - ROLLBAR
+          - ROOTLY
+          - SAGE_HR
+          - SAGE_INTACCT
+          - SAILTHRU
+          - SALESLOFT
+          - SALSIFY
+          - SAMSARA
+          - SAP
+          - SAP_CONCUR
+          - SCORM
+          - SECODA
+          - SECURITY_JOURNEY
+          - SELECT_STAR
+          - SENDGRID
+          - BREVO
+          - SERVICE_NOW
+          - SFTP
+          - SHAREPOINT
+          - SHARETRIBE
+          - SHIPHERO
+          - SHIPSTATION
+          - SHOPIFY
+          - SHOPWARE
+          - SHORT_IO
+          - SIFFLET
+          - SIMPLECAST
+          - SIMPLESAT
+          - SINGLESTORE
+          - SISENSE
+          - SKILLJAR
+          - SKUVAULT
+          - SLAB
+          - SMADEX
+          - SNAPCHAT
+          - SNOWPLOW
+          - SODA
+          - SONARQUBE
+          - SPLIT_IO
+          - SPLUNK
+          - SPOTIFY
+          - SPREE_COMMERCE
+          - SPROUT_SOCIAL
+          - SQUARE
+          - SQUARESPACE
+          - SSIS
+          - STACK_ADAPT
+          - STATSIG
+          - STRIPE
+          - STYLIGHT
+          - SUBSCRIPT
+          - TABOOLA
+          - TALKDESK
+          - TALKWALKER
+          - TEAMWORK_COM
+          - TEMPO_IO
+          - TERADATA
+          - TERRAFORM
+          - THE_TRADE_DESK
+          - THOUGHT_SPOT
+          - TIKTOK
+          - TOGGL
+          - TRANSCEND
+          - TRELLO
+          - TRISOLUTE
+          - TWILIO
+          - TYPEFORM
+          - UPLAND
+          - USERVOICE
+          - VALIDIO
+          - VEEVA
+          - VERIZON_MEDIA
+          - VITALLY
+          - VONAGE
+          - VUETIFY
+          - WEB_SCRAPER
+          - WEBHOOKS
+          - WHEN_I_WORK
+          - WHEREFOUR
+          - WIKIPEDIA
+          - WOOCOMMERCE
+          - WORDPRESS
+          - WORKABLE
+          - WORKDAY
+          - WORKFLOW_MAX
+          - WRIKE
+          - X
+          - XERO
+          - XRAY
+          - YAHOO
+          - YOTPO
+          - YOUTUBE
+          - ZEENEA
+          - ZEN_CART
+          - ZENDESK_CHAT
+          - ZENDESK_SELL
+          - ZENDESK_SUNSHINE
+          - ZENDESK_SUPPORT
+          - TRINET
+          - ZINGTREE
+          - ZOHO_BOOKS
+          - ZOHO_CAMPAIGNS
+          - ZOHO_CRM
+          - ZOOM
+          - ZUORA
+        terms:
+          type: array
+          description: Business terms of the asset
+          example:
+          - id: 02a15466-1e58-321e-aa5c-1c7388fcb136
+            name: Product
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+        transformationRun:
+          $ref: '#/components/schemas/PublicTransformationRunDto'
+        type:
+          type: string
+          description: Type of the asset
+          enum:
+          - CONNECTOR
+          - DAG
+          - DASHBOARD
+          - EXTERNAL_TABLE
+          - MATERIALIZED_VIEW
+          - ML_MODEL
+          - MODEL
+          - ORCHESTRATOR
+          - OTHER
+          - PIPELINE
+          - REPORT
+          - SNOWFLAKE_STREAM
+          - TABLE
+          - TRANSFORMATION
+          - VIEW
+        uri:
+          type: string
+          description: URI string identifying the asset. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+        urn:
+          type: string
+          description: Internal Sifflet identifier for the asset
+        usage:
+          type: string
+          description: Usage level of the asset
+          enum:
+          - UNSUPPORTED
+          - LOW
+          - MEDIUM
+          - HIGH
+    PublicExternalTagReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        kind:
+          type: string
+          description: Type of the referenced tag
+          enum:
+          - BIGQUERY_EXTERNAL
+          - SNOWFLAKE_EXTERNAL
+          - DBT_EXTERNAL
+          - DATABRICKS_EXTERNAL
+          - ADF_EXTERNAL
+          - ATLAN_EXTERNAL
+          - ALATION_EXTERNAL
+          - AMUNDSEN_EXTERNAL
+          - APACHE_ATLAS_EXTERNAL
+          - CASTOR_DOC_EXTERNAL
+          - COLLIBRA_EXTERNAL
+          - DATAGALAXY_EXTERNAL
+          - INFORMATICA_EXTERNAL
+          - SECODA_EXTERNAL
+          - SELECT_STAR_EXTERNAL
+          - GENERIC_CATALOG_EXTERNAL
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Asset tag from external providers.
+      example:
+        id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+        name: env:prod
+        kind: BIGQUERY_EXTERNAL
+    PublicUpdateAssetColumnDto:
+      required:
+      - name
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the field
+        name:
+          type: string
+          description: Name of the field
+        tags:
+          type: array
+          description: Tags of the field
+          items:
+            $ref: '#/components/schemas/PublicTagReferenceDto'
+        terms:
+          type: array
+          description: Terms of the field
+          items:
+            $ref: '#/components/schemas/PublicReferenceByIdOrNameDto'
+      description: Fields of the asset
+    PublicCustomMetadataEntryTeamReferenceDto:
+      required:
+      - customMetadataName
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCustomMetadataEntryReferenceDto'
+      - type: object
+        properties:
+          name:
+            type: string
+            description: Value of the referenced custom metadata team name
+    PublicExternalTermReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        kind:
+          type: string
+          description: Type of the referenced tag
+          enum:
+          - ATLAN_EXTERNAL
+          - ALATION_EXTERNAL
+          - AMUNDSEN_EXTERNAL
+          - APACHE_ATLAS_EXTERNAL
+          - CASTOR_DOC_EXTERNAL
+          - COLLIBRA_EXTERNAL
+          - DATAGALAXY_EXTERNAL
+          - INFORMATICA_EXTERNAL
+          - SECODA_EXTERNAL
+          - SELECT_STAR_EXTERNAL
+          - GENERIC_CATALOG_EXTERNAL
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Asset business glossary from external providers.
+      example:
+        id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+        name: Product
+        kind: ATLAN_EXTERNAL
+    PublicReferenceByIdOrNameDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Id or name reference to an object
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

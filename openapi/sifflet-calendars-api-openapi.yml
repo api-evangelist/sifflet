@@ -1,0 +1,446 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Calendars API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Calendars
+paths:
+  /v1/calendars:
+    get:
+      operationId: publicGetCalendars
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPageDtoPublicCalendarGetDto'
+          description: Calendars retrieved
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get list of calendars
+      tags:
+      - Calendars
+    post:
+      operationId: publicCreateCalendar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicCalendarCreateDto'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCalendarGetDto'
+          description: Calendar created
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Create a calendar
+      tags:
+      - Calendars
+  /v1/calendars/{id}:
+    delete:
+      operationId: publicDeleteCalendar
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Calendar deleted
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Delete a calendar
+      tags:
+      - Calendars
+    get:
+      operationId: publicGetCalendar
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCalendarGetDto'
+          description: Calendar retrieved
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get a calendar by id
+      tags:
+      - Calendars
+    patch:
+      operationId: publicUpdateCalendar
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicCalendarUpdateDto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCalendarGetDto'
+          description: Calendar updated
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Update a calendar
+      tags:
+      - Calendars
+components:
+  schemas:
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    PublicPageDtoPublicCalendarGetDto:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicCalendarGetDto'
+        totalCount:
+          type: integer
+          format: int64
+    PublicCalendarUpdateDto:
+      required:
+      - name
+      - timeslots
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        timeslots:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarTimeslot'
+    CalendarTimeslot:
+      required:
+      - date
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        description:
+          type:
+          - string
+          - 'null'
+    PublicCalendarGetDto:
+      required:
+      - id
+      - name
+      - timeslots
+      type: object
+      properties:
+        description:
+          type:
+          - string
+          - 'null'
+        editable:
+          type: boolean
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        standardCalendar:
+          type:
+          - string
+          - 'null'
+          enum:
+          - US_PUBLIC_HOLIDAYS
+          - FRANCE_PUBLIC_HOLIDAYS
+          - UK_PUBLIC_HOLIDAYS
+          - BELGIUM_PUBLIC_HOLIDAYS
+          - SPAIN_PUBLIC_HOLIDAYS
+          - GERMANY_PUBLIC_HOLIDAYS
+          - NETHERLANDS_PUBLIC_HOLIDAYS
+          - SUNDAYS
+          - WEEKENDS
+        timeslots:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarTimeslot'
+    PublicCalendarCreateDto:
+      required:
+      - name
+      - timeslots
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        timeslots:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarTimeslot'
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

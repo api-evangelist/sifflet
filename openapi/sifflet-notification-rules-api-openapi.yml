@@ -1,0 +1,865 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Notification Rules API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Notification Rules
+paths:
+  /v1/notification-rules:
+    get:
+      operationId: publicGetNotificationRules
+      parameters:
+      - description: Domain of the notification rules
+        in: query
+        name: domainId
+        required: false
+        schema:
+          type: string
+          description: Domain of the notification rules
+          format: uuid
+      - description: The page number to retrieve. Starts at 0.
+        in: query
+        name: page
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+          format: int32
+      - description: The number of elements to be returned inside the page.
+        in: query
+        name: itemsPerPage
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+          format: int32
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPageDtoPublicGetNotificationRuleDto'
+          description: Notification Rules retrieved
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get list of notification rules
+      tags:
+      - Notification Rules
+    post:
+      operationId: publicCreateNotificationRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicCreateNotificationRuleDto'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetNotificationRuleDto'
+          description: Notification Rule created
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Create a notification rule
+      tags:
+      - Notification Rules
+  /v1/notification-rules/{id}:
+    delete:
+      operationId: publicDeleteNotificationRule
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Notification Rule deleted
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Delete a notification rule
+      tags:
+      - Notification Rules
+    get:
+      operationId: publicGetNotificationRule
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetNotificationRuleDto'
+          description: Notification Rule retrieved
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get a notification rule by id
+      tags:
+      - Notification Rules
+    patch:
+      operationId: publicUpdateNotificationRule
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicUpdateNotificationRuleDto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetNotificationRuleDto'
+          description: Notification Rule updated
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Update a notification rule
+      tags:
+      - Notification Rules
+components:
+  schemas:
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    PublicNotificationRuleMonitorScopeDto:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the notification rule monitor scope
+          enum:
+          - ALL
+          - FILTERED
+      description: Definition of the monitor scope of the notification rule
+      discriminator:
+        mapping:
+          ALL: '#/components/schemas/PublicAllNotificationRuleMonitorScopeDto'
+          FILTERED: '#/components/schemas/PublicFilteredNotificationRuleMonitorScopeDto'
+        propertyName: type
+    PublicJiraTemplateFieldDto:
+      required:
+      - key
+      - type
+      type: object
+      properties:
+        key:
+          type: string
+        type:
+          type: string
+        value:
+          type: string
+      description: Custom fields for jira template
+    PublicWebhookNotificationDestinationReferenceDto:
+      required:
+      - type
+      - webhookName
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationDestinationReferenceDto'
+      - type: object
+        properties:
+          webhookName:
+            type: string
+            description: Name of the referenced webhook
+    PublicFilterNotificationRuleAssetScopeConditionDto:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the condition
+          enum:
+          - SOURCE
+          - TAG
+      description: List of the conditions defining asset scope of the notification rule
+      discriminator:
+        mapping:
+          SOURCE: '#/components/schemas/PublicSourceFilterNotificationRuleAssetScopeConditionDto'
+          TAG: '#/components/schemas/PublicTagFilterNotificationRuleAssetScopeConditionDto'
+        propertyName: type
+    PublicMailNotificationDestinationReferenceDto:
+      required:
+      - email
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationDestinationReferenceDto'
+      - type: object
+        properties:
+          email:
+            type: string
+            description: Referenced email destination address
+    PublicStaticNotificationRuleAssetScopeDto:
+      required:
+      - assets
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationRuleAssetScopeDto'
+      - type: object
+        properties:
+          assets:
+            type: array
+            description: List of the assets in the scope of the notification rule
+            items:
+              type: string
+              description: List of the assets in the scope of the notification rule
+    PublicAllNotificationRuleAssetScopeDto:
+      required:
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationRuleAssetScopeDto'
+    PublicSourceFilterNotificationRuleAssetScopeConditionDto:
+      required:
+      - operator
+      - sources
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicFilterNotificationRuleAssetScopeConditionDto'
+      - type: object
+        properties:
+          operator:
+            type: string
+            description: Operator of the condition
+            enum:
+            - IS
+            - IS_NOT
+          sources:
+            type: array
+            description: List of the sources in the condition in URI format. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+            items:
+              type: string
+              description: List of the sources in the condition in URI format. <a href="https://docs.siffletdata.com/docs/uri">[Read more about URIs]</a>
+    PublicNotificationRuleAssetScopeDto:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the notification rule asset scope
+          enum:
+          - ALL
+          - STATIC
+          - DYNAMIC
+      description: Definition of the asset scope of the notification rule
+      discriminator:
+        mapping:
+          ALL: '#/components/schemas/PublicAllNotificationRuleAssetScopeDto'
+          DYNAMIC: '#/components/schemas/PublicDynamicNotificationRuleAssetScopeDto'
+          STATIC: '#/components/schemas/PublicStaticNotificationRuleAssetScopeDto'
+        propertyName: type
+    PublicNotificationDestinationReferenceDto:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - SLACK
+          - MAIL
+          - MS_TEAMS
+          - WEBHOOK
+      description: Notification destination of the notification rule, like Slack or emails
+      discriminator:
+        mapping:
+          MAIL: '#/components/schemas/PublicMailNotificationDestinationReferenceDto'
+          MS_TEAMS: '#/components/schemas/PublicMsTeamsNotificationDestinationReferenceDto'
+          SLACK: '#/components/schemas/PublicSlackNotificationDestinationReferenceDto'
+          WEBHOOK: '#/components/schemas/PublicWebhookNotificationDestinationReferenceDto'
+        propertyName: type
+    PublicFilteredNotificationRuleMonitorScopeDto:
+      required:
+      - monitorTemplates
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationRuleMonitorScopeDto'
+      - type: object
+        properties:
+          monitorTemplates:
+            type: array
+            description: List of monitor templates in the scope of the notification rule
+            items:
+              type: string
+              description: List of monitor templates in the scope of the notification rule
+              enum:
+              - COMPLETENESS
+              - ROW_LEVEL_DUPLICATES
+              - FRESHNESS
+              - SCHEMA_CHANGE
+              - FRESHNESS_UPDATE_TIME_GAP
+              - NUMERICAL_TRANSFORMATION
+              - CORRELATED_METRICS
+              - CUSTOM_METRICS
+              - DISTRIBUTION
+              - UNIQUE
+              - REFERENTIAL_INTEGRITY
+              - NOT_IN_LIST
+              - COUNT_DUPLICATE
+              - NULLS
+              - VALUE_RANGE
+              - IS_EMAIL
+              - IS_PHONE_NUMBER
+              - IS_UUID
+              - MATCHES_REGEX
+              - NO_CODE_CONDITION
+              - SQL_CONDITION
+              - SQL
+              - DBT
+    PublicGetNotificationRuleDto:
+      required:
+      - domainId
+      - id
+      - name
+      - notificationDestinations
+      - scope
+      - ticketingDestinations
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification rule
+        domainId:
+          type: string
+          description: Domain of the notification rule
+          format: uuid
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: Name of the notification rule
+        notificationDestinations:
+          type: array
+          description: Notification destination of the notification rule, like Slack or emails
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicMailNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicMsTeamsNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicSlackNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicWebhookNotificationDestinationReferenceDto'
+        scope:
+          $ref: '#/components/schemas/PublicNotificationRuleScopeDto'
+        ticketingDestinations:
+          type: array
+          description: Ticketing destination of the notification rule, like Jira or ServiceNow
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicJiraTicketingDestinationParamsDto'
+            - $ref: '#/components/schemas/PublicServiceNowTicketingDestinationParamsDto'
+    PublicTagFilterNotificationRuleAssetScopeConditionDto:
+      required:
+      - operator
+      - tags
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicFilterNotificationRuleAssetScopeConditionDto'
+      - type: object
+        properties:
+          operator:
+            type: string
+            description: Operator of the condition
+            enum:
+            - IS
+            - IS_NOT
+          tags:
+            type: array
+            description: List of the tags references in the condition
+            items:
+              $ref: '#/components/schemas/PublicExternalTagReferenceDto'
+    PublicJiraTicketingDestinationParamsDto:
+      required:
+      - templateName
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTicketingDestinationParamsDto'
+      - type: object
+        properties:
+          fields:
+            type: array
+            description: Custom fields for jira template
+            items:
+              $ref: '#/components/schemas/PublicJiraTemplateFieldDto'
+    PublicUpdateNotificationRuleDto:
+      required:
+      - name
+      - scope
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification rule
+        name:
+          type: string
+          description: Name of the notification rule
+        notificationDestinations:
+          type: array
+          description: Notification destination of the notification rule, like Slack or emails
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicMailNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicMsTeamsNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicSlackNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicWebhookNotificationDestinationReferenceDto'
+        scope:
+          $ref: '#/components/schemas/PublicNotificationRuleScopeDto'
+        ticketingDestinations:
+          type: array
+          description: Ticketing destination of the notification rule, like Jira or ServiceNow
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicJiraTicketingDestinationParamsDto'
+            - $ref: '#/components/schemas/PublicServiceNowTicketingDestinationParamsDto'
+    PublicCreateNotificationRuleDto:
+      required:
+      - domainId
+      - name
+      - scope
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description of the notification rule
+        domainId:
+          type: string
+          description: Domain of the notification rule
+          format: uuid
+        name:
+          type: string
+          description: Name of the notification rule
+        notificationDestinations:
+          type: array
+          description: Notification destination of the notification rule, like Slack or emails
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicMailNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicMsTeamsNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicSlackNotificationDestinationReferenceDto'
+            - $ref: '#/components/schemas/PublicWebhookNotificationDestinationReferenceDto'
+        scope:
+          $ref: '#/components/schemas/PublicNotificationRuleScopeDto'
+        ticketingDestinations:
+          type: array
+          description: Ticketing destination of the notification rule, like Jira or ServiceNow
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicJiraTicketingDestinationParamsDto'
+            - $ref: '#/components/schemas/PublicServiceNowTicketingDestinationParamsDto'
+    PublicTicketingDestinationParamsDto:
+      required:
+      - templateName
+      - type
+      type: object
+      properties:
+        templateName:
+          type: string
+          description: Name of the referenced template
+        type:
+          type: string
+          enum:
+          - JIRA
+          - SERVICENOW
+      description: Ticketing destination of the notification rule, like Jira or ServiceNow
+      discriminator:
+        mapping:
+          JIRA: '#/components/schemas/PublicJiraTicketingDestinationParamsDto'
+          SERVICENOW: '#/components/schemas/PublicServiceNowTicketingDestinationParamsDto'
+        propertyName: type
+    PublicMsTeamsNotificationDestinationReferenceDto:
+      required:
+      - msTeamsName
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationDestinationReferenceDto'
+      - type: object
+        properties:
+          msTeamsName:
+            type: string
+            description: Name of the referenced microsoft teams channel
+    PublicDynamicNotificationRuleAssetScopeDto:
+      required:
+      - conditions
+      - filterLogicalOperator
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationRuleAssetScopeDto'
+      - type: object
+        properties:
+          conditions:
+            type: array
+            description: List of the conditions defining asset scope of the notification rule
+            items:
+              oneOf:
+              - $ref: '#/components/schemas/PublicSourceFilterNotificationRuleAssetScopeConditionDto'
+              - $ref: '#/components/schemas/PublicTagFilterNotificationRuleAssetScopeConditionDto'
+          filterLogicalOperator:
+            type: string
+            description: Logical operator to use between conditions
+            enum:
+            - AND
+            - OR
+    PublicSlackNotificationDestinationReferenceDto:
+      required:
+      - channelName
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationDestinationReferenceDto'
+      - type: object
+        properties:
+          channelName:
+            type: string
+            description: Name of the referenced slack channel
+    PublicAllNotificationRuleMonitorScopeDto:
+      required:
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicNotificationRuleMonitorScopeDto'
+    PublicServiceNowTemplateFieldDto:
+      required:
+      - key
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      description: Custom fields for service now template
+    PublicNotificationRuleScopeDto:
+      required:
+      - assetScope
+      - monitorScope
+      type: object
+      properties:
+        assetScope:
+          oneOf:
+          - $ref: '#/components/schemas/PublicAllNotificationRuleAssetScopeDto'
+          - $ref: '#/components/schemas/PublicDynamicNotificationRuleAssetScopeDto'
+          - $ref: '#/components/schemas/PublicStaticNotificationRuleAssetScopeDto'
+        monitorScope:
+          oneOf:
+          - $ref: '#/components/schemas/PublicAllNotificationRuleMonitorScopeDto'
+          - $ref: '#/components/schemas/PublicFilteredNotificationRuleMonitorScopeDto'
+      description: Definition of the monitors bound to the notification rule
+    PublicPageDtoPublicGetNotificationRuleDto:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicGetNotificationRuleDto'
+        totalCount:
+          type: integer
+          format: int64
+    PublicExternalTagReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the referenced object
+          format: uuid
+        kind:
+          type: string
+          description: Type of the referenced tag
+          enum:
+          - BIGQUERY_EXTERNAL
+          - SNOWFLAKE_EXTERNAL
+          - DBT_EXTERNAL
+          - DATABRICKS_EXTERNAL
+          - ADF_EXTERNAL
+          - ATLAN_EXTERNAL
+          - ALATION_EXTERNAL
+          - AMUNDSEN_EXTERNAL
+          - APACHE_ATLAS_EXTERNAL
+          - CASTOR_DOC_EXTERNAL
+          - COLLIBRA_EXTERNAL
+          - DATAGALAXY_EXTERNAL
+          - INFORMATICA_EXTERNAL
+          - SECODA_EXTERNAL
+          - SELECT_STAR_EXTERNAL
+          - GENERIC_CATALOG_EXTERNAL
+        name:
+          type: string
+          description: Name of the referenced object
+      description: Asset tag from external providers.
+      example:
+        id: 02a15477-1e58-490e-aa5c-1c7388fcb136
+        name: env:prod
+        kind: BIGQUERY_EXTERNAL
+    PublicServiceNowTicketingDestinationParamsDto:
+      required:
+      - templateName
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTicketingDestinationParamsDto'
+      - type: object
+        properties:
+          fields:
+            type: array
+            description: Custom fields for service now template
+            items:
+              $ref: '#/components/schemas/PublicServiceNowTemplateFieldDto'
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

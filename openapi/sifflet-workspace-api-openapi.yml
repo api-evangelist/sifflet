@@ -1,0 +1,2360 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Workspace API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Workspace
+paths:
+  /v1/rules/_all-as-code:
+    get:
+      description: Fetches monitors, converts each to its as-code representation, and returns them in a paginated list.
+      operationId: getAllMonitorsAsCode
+      parameters:
+      - in: query
+        name: mode
+        required: false
+        schema:
+          type: string
+          enum:
+          - RELAXED
+          - STRICT
+          - EXPANDED
+          default: RELAXED
+      - description: Global text search
+        in: query
+        name: textSearch
+        required: false
+        schema:
+          type: string
+      - description: Filter on given rule template name
+        in: query
+        name: ruleTemplateName
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - deprecated: true
+        description: Filter on given last run statuses
+        in: query
+        name: lastRunStatus
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - PENDING
+            - RUNNING
+            - SUCCESS
+            - REQUIRES_YOUR_ATTENTION
+            - TECHNICAL_ERROR
+            - FAILED
+      - description: Filter on given rule status
+        in: query
+        name: ruleStatus
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - NOT_EVALUATED
+            - PASSING
+            - NEEDS_ATTENTION
+            - FAILING
+      - description: Filter on given dataset ids
+        in: query
+        name: dataset
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - description: Filter on given tag ids
+        in: query
+        name: tag
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - description: Filter on given datasource ids
+        in: query
+        name: datasource
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - in: query
+        name: criticality
+        required: false
+        schema:
+          type: array
+          items:
+            maximum: 3
+            minimum: 0
+            type: integer
+            format: int32
+      - description: Domain searched
+        in: query
+        name: domain
+        required: false
+        schema:
+          type: string
+      - description: The requested page number. Zero-based page index (0..N)
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - description: The number of elements to be returned inside the page. Pass a value of -1, to bypass pagination and fetch all items
+        in: query
+        name: itemsPerPage
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      - description: 'The resource fields on which to apply the sort, format : property,ASC|DESC'
+        in: query
+        name: sort
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: The resource field on which to apply the sort followed by the direction
+            format: property,ASC|DESC
+            example: name,ASC
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AsCodeMonitorDto'
+            application/x-yaml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AsCodeMonitorDto'
+          description: Successfully converted monitors to as-code
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Convert all monitors to as-code
+      tags:
+      - Workspace
+components:
+  schemas:
+    AsCodeFieldFormatValidationClauseDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Email
+          - Phone
+          - UUID
+          - Regex
+      discriminator:
+        mapping:
+          Email: '#/components/schemas/AsCodeFieldFormatValidationClauseDto'
+          Phone: '#/components/schemas/AsCodeFieldFormatValidationClauseDto'
+          Regex: '#/components/schemas/AsCodeRegexFieldFormatValidationClauseDto'
+          UUID: '#/components/schemas/AsCodeFieldFormatValidationClauseDto'
+        propertyName: kind
+    AsCodeStaticFieldProfilingMonitorParamsDto:
+      required:
+      - field
+      - profiling
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: array
+            items:
+              type: string
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          profiling:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFieldProfilingClauseDto'
+            - $ref: '#/components/schemas/AsCodeNullFieldProfilingClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeStaticFieldProfilingThresholdDto'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV1'
+          whereStatement:
+            type: string
+    AsCodePartitionClauseDto:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - IngestionTime
+          - IntegerRange
+          - TimeUnitColumn
+      discriminator:
+        mapping:
+          IngestionTime: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+          IntegerRange: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+          TimeUnitColumn: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+        propertyName: kind
+    NumberDto:
+      type: object
+      properties:
+        floatValue:
+          type: number
+          format: float
+        integer:
+          type: boolean
+        integerValue:
+          type: integer
+          format: int32
+        zero:
+          type: boolean
+    AsCodeValueRangeMonitorParamsDto:
+      required:
+      - field
+      - range
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          range:
+            $ref: '#/components/schemas/AsCodeRangeDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeAlertingHookNotificationDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeNotificationReferenceDto'
+      - type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          name:
+            type: string
+    AsCodeVolumeMonitorParamsDto:
+      required:
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          metadataBased:
+            type: boolean
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeStaticFreshnessThresholdDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeFreshnessThresholdDto'
+    AsCodeCustomMetricsMonitorParamsDtoV2:
+      required:
+      - sql
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          emptyMeansZero:
+            type: boolean
+          sql:
+            type: string
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeCustomMetricsTimeWindowDto'
+    AsCodeJoinFieldPairDto:
+      required:
+      - leftField
+      - rightField
+      type: object
+      properties:
+        leftField:
+          $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+        rightField:
+          $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+    AsCodeNotificationReferenceDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Slack
+          - Email
+          - MicrosoftTeams
+          - Jira
+          - ServiceNow
+          - Webhook
+      discriminator:
+        mapping:
+          Email: '#/components/schemas/AsCodeAlertingHookNotificationDto'
+          Jira: '#/components/schemas/AsCodeJiraNotificationDto'
+          MicrosoftTeams: '#/components/schemas/AsCodeAlertingHookNotificationDto'
+          ServiceNow: '#/components/schemas/AsCodeServiceNowNotificationDto'
+          Slack: '#/components/schemas/AsCodeAlertingHookNotificationDto'
+          Webhook: '#/components/schemas/AsCodeAlertingHookNotificationDto'
+        propertyName: kind
+    AsCodeReferentialIntegrityRightDto:
+      required:
+      - field
+      type: object
+      properties:
+        field:
+          type: array
+          items:
+            type: string
+        whereStatement:
+          type: string
+    AsCodeFieldUniquenessMonitorParamsDto:
+      required:
+      - field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: array
+            items:
+              type: string
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV1'
+          whereStatement:
+            type: string
+    AsCodeStaticThresholdDtoV1:
+      type: object
+      properties:
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        isMaxInclusive:
+          type: boolean
+        isMinInclusive:
+          type: boolean
+        max:
+          $ref: '#/components/schemas/NumberOrPercentageDto'
+        min:
+          $ref: '#/components/schemas/NumberOrPercentageDto'
+    AsCodeConnectionParamsOverrideDto:
+      required:
+      - credentials
+      type: object
+      properties:
+        credentials:
+          type: string
+    AsCodeIngestionTimePartitionClauseDto:
+      required:
+      - interval
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodePartitionClauseDto'
+      - type: object
+        properties:
+          interval:
+            $ref: '#/components/schemas/SimpleDuration'
+    AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto:
+      required:
+      - duration
+      - field
+      type: object
+      properties:
+        deltaQuerying:
+          $ref: '#/components/schemas/SimpleDuration'
+        disableDeltaQuerying:
+          type: boolean
+        duration:
+          $ref: '#/components/schemas/SimpleDuration'
+        field:
+          type: string
+        frequency:
+          $ref: '#/components/schemas/SimpleDuration'
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+        rollingTimeWindow:
+          $ref: '#/components/schemas/SimpleDuration'
+    AsCodeThresholdBaseDto:
+      required:
+      - kind
+      type: object
+      properties:
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        kind:
+          type: string
+          enum:
+          - Static
+          - Dynamic
+        valueMode:
+          type: string
+          enum:
+          - Count
+          - Percentage
+      discriminator:
+        mapping:
+          Dynamic: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+          Static: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+        propertyName: kind
+    AsCodeRangeDto:
+      type: object
+      properties:
+        isMaxInclusive:
+          type: boolean
+        isMinInclusive:
+          type: boolean
+        max:
+          $ref: '#/components/schemas/NumberDto'
+        min:
+          $ref: '#/components/schemas/NumberDto'
+    AsCodeCalendarReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        standardCalendar:
+          type: string
+          enum:
+          - US_PUBLIC_HOLIDAYS
+          - FRANCE_PUBLIC_HOLIDAYS
+          - UK_PUBLIC_HOLIDAYS
+          - BELGIUM_PUBLIC_HOLIDAYS
+          - SPAIN_PUBLIC_HOLIDAYS
+          - GERMANY_PUBLIC_HOLIDAYS
+          - NETHERLANDS_PUBLIC_HOLIDAYS
+          - SUNDAYS
+          - WEEKENDS
+    AsCodeDatasetReferenceDto:
+      type: object
+      properties:
+        datasource:
+          $ref: '#/components/schemas/AsCodeReferenceByIdOrNameDtoImpl'
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        uri:
+          type: string
+    AsCodeNumericComparisonConditionDto:
+      required:
+      - kind
+      - leftExpression
+      - rightExpression
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeConditionDto'
+      - type: object
+        properties:
+          leftExpression:
+            $ref: '#/components/schemas/AsCodeFieldExpressionDto'
+          rightExpression:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFieldExpressionDto'
+            - $ref: '#/components/schemas/AsCodeValueExpressionDto'
+    AsCodeAggregationClauseDtoV1:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Average
+          - NormalizedAverage
+          - Count
+          - DistinctCount
+          - Sum
+          - Max
+          - Min
+          - Quantile
+          - Range
+          - StandardDeviation
+          - Variance
+      discriminator:
+        mapping:
+          Average: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          Count: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          DistinctCount: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          Max: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          Min: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          NormalizedAverage: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          Quantile: '#/components/schemas/AsCodeQuantileAggregationClauseDtoV1'
+          Range: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          StandardDeviation: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          Sum: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+          Variance: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+        propertyName: kind
+    AsCodeFreshnessMonitorParamsDtoV1:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFreshnessThresholdDto'
+            - $ref: '#/components/schemas/AsCodeDynamicFreshnessThresholdDto'
+            - $ref: '#/components/schemas/AsCodeStaticFreshnessThresholdDto'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto'
+          whereStatement:
+            type: string
+    AsCodeFieldFormatMonitorParamsDtoV2:
+      required:
+      - field
+      - format
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          format:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFieldFormatValidationClauseDto'
+            - $ref: '#/components/schemas/AsCodeRegexFieldFormatValidationClauseDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeTimeWindowWithOffsetAndFrequencyClauseDto:
+      required:
+      - duration
+      - field
+      type: object
+      properties:
+        deltaQuerying:
+          $ref: '#/components/schemas/SimpleDuration'
+        disableDeltaQuerying:
+          type: boolean
+        duration:
+          $ref: '#/components/schemas/SimpleDuration'
+        field:
+          type: string
+        frequency:
+          $ref: '#/components/schemas/SimpleDuration'
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+    SimpleDuration:
+      type: object
+      properties:
+        unit:
+          type: string
+          enum:
+          - SECONDS
+          - MINUTES
+          - HOURS
+          - DAYS
+          - WEEKS
+          - MONTHS
+          - YEARS
+        value:
+          type: integer
+          format: int32
+    AsCodeDistributionReferenceDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Rolling
+          - Fixed
+      discriminator:
+        mapping:
+          Fixed: '#/components/schemas/AsCodeFixedDistributionReferenceDto'
+          Rolling: '#/components/schemas/AsCodeRollingDistributionReferenceDto'
+        propertyName: kind
+    AsCodeTimeUnitColumnPartitionClauseDto:
+      required:
+      - field
+      - interval
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodePartitionClauseDto'
+      - type: object
+        properties:
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          interval:
+            $ref: '#/components/schemas/SimpleDuration'
+    AsCodeStaticMetricMonitorParamsDto:
+      required:
+      - aggregation
+      - field
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          aggregation:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+            - $ref: '#/components/schemas/AsCodeQuantileAggregationClauseDtoV1'
+          field:
+            type: string
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeStaticThresholdDtoV1'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV1'
+          whereStatement:
+            type: string
+    AsCodeFieldDuplicatesMonitorParamsDto:
+      required:
+      - field
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: array
+            items:
+              $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeFieldInListConstraintMonitorParamsDtoV1:
+      required:
+      - field
+      - values
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: string
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV1'
+          values:
+            type: array
+            items:
+              type: string
+          whereStatement:
+            type: string
+    AsCodeDurationDto:
+      required:
+      - timeUnit
+      - value
+      type: object
+      properties:
+        timeUnit:
+          type: string
+          enum:
+          - days
+          - hours
+          - minutes
+        value:
+          type: integer
+          format: int32
+    AsCodeJoinConditionDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Equality
+      discriminator:
+        propertyName: kind
+    AsCodeStaticCompletenessMonitorParamsDto:
+      required:
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeStaticThresholdWithComparisonModeDto'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV1'
+          whereStatement:
+            type: string
+    AsCodeMetadataFreshnessMonitorParamsDtoV1:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          threshold:
+            $ref: '#/components/schemas/AsCodeDynamicFreshnessThresholdDto'
+    AsCodeTimeWindowClauseDtoV2:
+      required:
+      - field
+      type: object
+      properties:
+        deltaQuerying:
+          $ref: '#/components/schemas/SimpleDuration'
+        field:
+          $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+        firstRun:
+          $ref: '#/components/schemas/SimpleDuration'
+        frequency:
+          $ref: '#/components/schemas/SimpleDuration'
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+        offsetPeriods:
+          type: integer
+          format: int32
+        rollingTimeWindow:
+          $ref: '#/components/schemas/SimpleDuration'
+    AsCodeReferentialIntegrityLeftDtoV1:
+      required:
+      - field
+      type: object
+      properties:
+        field:
+          type: array
+          items:
+            type: string
+        groupBy:
+          $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+        partition:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+          - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+          - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+        timeWindow:
+          $ref: '#/components/schemas/AsCodeTimeWindowWithOffsetAndFrequencyClauseDto'
+        whereStatement:
+          type: string
+    AsCodeMetricsMonitorParamsDto:
+      required:
+      - aggregation
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          aggregation:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+            - $ref: '#/components/schemas/AsCodeCustomAggregationClauseDtoV2'
+            - $ref: '#/components/schemas/AsCodeQuantileAggregationClauseDtoV2'
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeDateConditionDto:
+      required:
+      - dateExpression
+      - duration
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeConditionDto'
+      - type: object
+        properties:
+          dateExpression:
+            $ref: '#/components/schemas/AsCodeFieldExpressionDto'
+          duration:
+            $ref: '#/components/schemas/AsCodeDurationDto'
+    AsCodeTimeWindowClauseDtoV1:
+      required:
+      - duration
+      - field
+      type: object
+      properties:
+        duration:
+          $ref: '#/components/schemas/SimpleDuration'
+        field:
+          type: string
+    AsCodeConditionGroupDto:
+      required:
+      - conditions
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeConditionDto'
+      - type: object
+        properties:
+          conditions:
+            type: array
+            items:
+              oneOf:
+              - $ref: '#/components/schemas/AsCodeConditionGroupDto'
+              - $ref: '#/components/schemas/AsCodeDateConditionDto'
+              - $ref: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+              - $ref: '#/components/schemas/AsCodeStringConditionDto'
+              - $ref: '#/components/schemas/AsCodeUnaryConditionDto'
+    AsCodeCustomMetadataEntryUserValueReferenceDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeCustomMetadataEntryValueReferenceDto'
+      - type: object
+        properties:
+          email:
+            type: string
+    AsCodeMetricClauseDto:
+      required:
+      - aggregation
+      - name
+      type: object
+      properties:
+        aggregation:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          - $ref: '#/components/schemas/AsCodeCustomAggregationClauseDtoV2'
+          - $ref: '#/components/schemas/AsCodeQuantileAggregationClauseDtoV2'
+        field:
+          type: string
+        groupBy:
+          $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+        name:
+          type: string
+        partition:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+          - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+          - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+        timeWindowField:
+          type: string
+        whereStatement:
+          type: string
+    AsCodeFieldFormatMonitorParamsDtoV1:
+      required:
+      - field
+      - format
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: string
+          format:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFieldFormatValidationClauseDto'
+            - $ref: '#/components/schemas/AsCodeRegexFieldFormatValidationClauseDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV1'
+          whereStatement:
+            type: string
+    AsCodeGroupByClauseDto:
+      required:
+      - field
+      type: object
+      properties:
+        field:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+    AsCodeStringConditionDto:
+      required:
+      - kind
+      - leftExpression
+      - rightExpression
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeConditionDto'
+      - type: object
+        properties:
+          leftExpression:
+            $ref: '#/components/schemas/AsCodeFieldExpressionDto'
+          rightExpression:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFieldExpressionDto'
+            - $ref: '#/components/schemas/AsCodeValueExpressionDto'
+    AsCodeTagReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+          enum:
+          - Tag
+          - Classification
+        name:
+          type: string
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    AsCodeConditionDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - andGroup
+          - orGroup
+          - equals
+          - notEquals
+          - greaterThan
+          - greaterThanOrEquals
+          - lessThan
+          - lessThanOrEquals
+          - isNull
+          - isNotNull
+          - contains
+          - notContains
+          - dateOlderThan
+          - dateYoungerThan
+          - isTrue
+          - isFalse
+      discriminator:
+        mapping:
+          andGroup: '#/components/schemas/AsCodeConditionGroupDto'
+          contains: '#/components/schemas/AsCodeStringConditionDto'
+          dateOlderThan: '#/components/schemas/AsCodeDateConditionDto'
+          dateYoungerThan: '#/components/schemas/AsCodeDateConditionDto'
+          equals: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+          greaterThan: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+          greaterThanOrEquals: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+          isNotNull: '#/components/schemas/AsCodeUnaryConditionDto'
+          isNull: '#/components/schemas/AsCodeUnaryConditionDto'
+          lessThan: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+          lessThanOrEquals: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+          notContains: '#/components/schemas/AsCodeStringConditionDto'
+          notEquals: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+          orGroup: '#/components/schemas/AsCodeConditionGroupDto'
+        propertyName: kind
+    AsCodeDynamicThresholdDtoV1:
+      type: object
+      properties:
+        bounds:
+          type: string
+          enum:
+          - MinAndMax
+          - Min
+          - Max
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        sensitivity:
+          type: integer
+          format: int32
+    AsCodeStaticThresholdDtoV2:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeThresholdBaseDto'
+      - type: object
+        properties:
+          comparisonMode:
+            type: string
+            enum:
+            - Absolute
+            - Relative
+            - RelativePercentage
+          isMaxInclusive:
+            type: boolean
+          isMinInclusive:
+            type: boolean
+          max:
+            $ref: '#/components/schemas/NumberOrPercentageDto'
+          min:
+            $ref: '#/components/schemas/NumberOrPercentageDto'
+    AsCodeFreshnessMonitorParamsDtoV2:
+      required:
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeDistributionMonitorParamsDto:
+      required:
+      - field
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: array
+            items:
+              $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          onAddedCategory:
+            type: boolean
+          onRemovedCategory:
+            type: boolean
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          reference:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFixedDistributionReferenceDto'
+            - $ref: '#/components/schemas/AsCodeRollingDistributionReferenceDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeDistributionChangeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeSchemaChangeMonitorParamsDto:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+    AsCodeFreshnessThresholdDto:
+      required:
+      - kind
+      type: object
+      properties:
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        kind:
+          type: string
+          enum:
+          - Dynamic
+          - Static
+      discriminator:
+        propertyName: kind
+    AsCodeReferentialIntegrityMonitorParamsDtoV2:
+      required:
+      - left
+      - matchType
+      - right
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          left:
+            $ref: '#/components/schemas/AsCodeReferentialIntegrityLeftDtoV2'
+          matchType:
+            type: string
+            enum:
+            - Full
+            - LeftOnRight
+            - RightOnLeft
+          right:
+            $ref: '#/components/schemas/AsCodeReferentialIntegrityRightDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+    AsCodeDuplicatesMonitorParamsDto:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV1'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowWithOffsetAndFrequencyClauseDto'
+          whereStatement:
+            type: string
+    AsCodeFieldReferenceDto:
+      required:
+      - name
+      type: object
+      properties:
+        dataset:
+          $ref: '#/components/schemas/AsCodeDatasetReferenceDto'
+        name:
+          type: string
+    AsCodeStaticThresholdWithComparisonModeDto:
+      type: object
+      properties:
+        comparisonMode:
+          type: string
+          enum:
+          - Absolute
+          - Difference
+          - PercentageDifference
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        isMaxInclusive:
+          type: boolean
+        isMinInclusive:
+          type: boolean
+        max:
+          $ref: '#/components/schemas/NumberOrPercentageDto'
+        min:
+          $ref: '#/components/schemas/NumberOrPercentageDto'
+    AsCodeJiraNotificationDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeNotificationReferenceDto'
+      - type: object
+        properties:
+          issueTypeId:
+            type: integer
+            format: int64
+          projectKey:
+            type: string
+          templateName:
+            type: string
+    AsCodeDynamicFreshnessThresholdDto:
+      required:
+      - kind
+      type: object
+      properties:
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        kind:
+          type: string
+          enum:
+          - Dynamic
+          - Static
+        sensitivity:
+          type: integer
+          format: int32
+    AsCodeServiceNowNotificationDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeNotificationReferenceDto'
+      - type: object
+        properties:
+          templateName:
+            type: string
+    AsCodeStaticFieldProfilingThresholdDto:
+      required:
+      - max
+      type: object
+      properties:
+        excludedDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCalendarReferenceDto'
+        max:
+          $ref: '#/components/schemas/NumberOrPercentageDto'
+    AsCodeCustomMetadataEntryTeamValueReferenceDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeCustomMetadataEntryValueReferenceDto'
+      - type: object
+        properties:
+          name:
+            type: string
+    AsCodeValueExpressionDto:
+      required:
+      - kind
+      - value
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeExpressionDto'
+      - type: object
+        properties:
+          value:
+            type: string
+    AsCodeTimeWindowOffsetClauseDto:
+      type: object
+      properties:
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+    AsCodeDistributionChangeTimeWindowClauseDtoV2:
+      required:
+      - field
+      type: object
+      properties:
+        deltaQuerying:
+          $ref: '#/components/schemas/SimpleDuration'
+        duration:
+          $ref: '#/components/schemas/SimpleDuration'
+        field:
+          $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+        firstRun:
+          $ref: '#/components/schemas/SimpleDuration'
+        frequency:
+          $ref: '#/components/schemas/SimpleDuration'
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+        offsetPeriods:
+          type: integer
+          format: int32
+        rollingTimeWindow:
+          $ref: '#/components/schemas/SimpleDuration'
+    AsCodeFieldProfilingClauseDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - DuplicatePercentage
+          - DuplicateCount
+          - NullPercentage
+          - NullCount
+      discriminator:
+        propertyName: kind
+    AsCodeQuantileAggregationClauseDtoV2:
+      required:
+      - kind
+      - quantile
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+      - type: object
+        properties:
+          quantile:
+            type: number
+            format: float
+    AsCodeReferentialIntegrityMonitorParamsDtoV1:
+      required:
+      - left
+      - matchType
+      - right
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          left:
+            $ref: '#/components/schemas/AsCodeReferentialIntegrityLeftDtoV1'
+          matchType:
+            type: string
+            enum:
+            - Full
+            - LeftOnRight
+            - RightOnLeft
+          right:
+            $ref: '#/components/schemas/AsCodeReferentialIntegrityRightDto'
+    AsCodeCorrelatedMetricsMonitorParamsDto:
+      required:
+      - metrics
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          metadataBased:
+            type: boolean
+          metrics:
+            type: array
+            items:
+              $ref: '#/components/schemas/AsCodeMetricClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseWithoutFieldDtoV2'
+    AsCodeEqualityJoinConditionDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeJoinConditionDto'
+      - type: object
+        properties:
+          fieldPairs:
+            type: array
+            items:
+              $ref: '#/components/schemas/AsCodeJoinFieldPairDto'
+    AsCodeDynamicThresholdDtoV2:
+      required:
+      - kind
+      - sensitivity
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeThresholdBaseDto'
+      - type: object
+        properties:
+          bounds:
+            type: string
+            enum:
+            - MinAndMax
+            - Min
+            - Max
+          sensitivity:
+            type: integer
+            format: int32
+    AsCodeDynamicFieldProfilingMonitorParamsDto:
+      required:
+      - field
+      - profiling
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            type: array
+            items:
+              type: string
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          profiling:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeFieldProfilingClauseDto'
+            - $ref: '#/components/schemas/AsCodeNullFieldProfilingClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV1'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto'
+          whereStatement:
+            type: string
+    AsCodeMetadataFreshnessMonitorParamsDtoV2:
+      required:
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+    AsCodeCustomMetadataEntryValueReferenceDto:
+      required:
+      - kind
+      type: object
+      properties:
+        customMetadataName:
+          type: string
+        kind:
+          type: string
+          enum:
+          - Label
+          - String
+          - User
+          - Team
+      discriminator:
+        mapping:
+          Label: '#/components/schemas/AsCodeCustomMetadataEntryLabelValueReferenceDto'
+          String: '#/components/schemas/AsCodeCustomMetadataEntryStringValueReferenceDto'
+          Team: '#/components/schemas/AsCodeCustomMetadataEntryTeamValueReferenceDto'
+          User: '#/components/schemas/AsCodeCustomMetadataEntryUserValueReferenceDto'
+        propertyName: kind
+    AsCodeQuantileAggregationClauseDtoV1:
+      required:
+      - kind
+      - quantile
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+      - type: object
+        properties:
+          quantile:
+            type: number
+            format: float
+    AsCodeRegexFieldFormatValidationClauseDto:
+      required:
+      - kind
+      - regex
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeFieldFormatValidationClauseDto'
+      - type: object
+        properties:
+          regex:
+            type: string
+    AsCodeRollingDistributionReferenceDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeDistributionReferenceDto'
+      - type: object
+        properties:
+          delay:
+            $ref: '#/components/schemas/SimpleDuration'
+    AsCodeExpressionDto:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - field
+          - value
+      discriminator:
+        mapping:
+          field: '#/components/schemas/AsCodeFieldExpressionDto'
+          value: '#/components/schemas/AsCodeValueExpressionDto'
+        propertyName: kind
+    AsCodeFixedDistributionReferenceDto:
+      required:
+      - kind
+      - timestamp
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeDistributionReferenceDto'
+      - type: object
+        properties:
+          timestamp:
+            type: string
+    AsCodeCustomMetadataEntryStringValueReferenceDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeCustomMetadataEntryValueReferenceDto'
+      - type: object
+        properties:
+          stringValue:
+            type: string
+    AsCodeIncidentDto:
+      required:
+      - severity
+      type: object
+      properties:
+        createOnFailure:
+          type: boolean
+        customEmailSubject:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+          enum:
+          - Low
+          - Moderate
+          - High
+          - Critical
+    AsCodeCustomMetricsTimeWindowDto:
+      type: object
+      properties:
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+        offsetPeriods:
+          type: integer
+          format: int32
+    NumberOrPercentageDto:
+      type: object
+      properties:
+        floatValue:
+          type: number
+          format: float
+        integer:
+          type: boolean
+        integerValue:
+          type: integer
+          format: int32
+        percentage:
+          type: boolean
+        zero:
+          type: boolean
+    AsCodeConditionalMonitorParamsDto:
+      required:
+      - condition
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          condition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeConditionGroupDto'
+            - $ref: '#/components/schemas/AsCodeDateConditionDto'
+            - $ref: '#/components/schemas/AsCodeNumericComparisonConditionDto'
+            - $ref: '#/components/schemas/AsCodeStringConditionDto'
+            - $ref: '#/components/schemas/AsCodeUnaryConditionDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeNullFieldProfilingClauseDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeFieldProfilingClauseDto'
+      - type: object
+        properties:
+          nullValues:
+            type: string
+            enum:
+            - 'Null'
+            - NullAndEmpty
+            - NullEmptyAndWhitespaces
+    AsCodeTimeWindowClauseWithoutFieldDtoV2:
+      type: object
+      properties:
+        deltaQuerying:
+          $ref: '#/components/schemas/SimpleDuration'
+        firstRun:
+          $ref: '#/components/schemas/SimpleDuration'
+        frequency:
+          $ref: '#/components/schemas/SimpleDuration'
+        offset:
+          $ref: '#/components/schemas/SimpleDuration'
+        offsetPeriods:
+          type: integer
+          format: int32
+        rollingTimeWindow:
+          $ref: '#/components/schemas/SimpleDuration'
+    AsCodeCustomMetadataEntryLabelValueReferenceDto:
+      required:
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeCustomMetadataEntryValueReferenceDto'
+      - type: object
+        properties:
+          labelValue:
+            type: string
+    AsCodeFieldExpressionDto:
+      required:
+      - field
+      - kind
+      type: object
+      properties:
+        field:
+          $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+        kind:
+          type: string
+          enum:
+          - field
+          - value
+    AsCodeFieldInListConstraintMonitorParamsDtoV2:
+      required:
+      - field
+      - threshold
+      - values
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          values:
+            type: array
+            items:
+              type: string
+          whereStatement:
+            type: string
+    AsCodeCustomMetricsMonitorParamsDtoV1:
+      required:
+      - sql
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          sql:
+            type: string
+          threshold:
+            $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV1'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowOffsetClauseDto'
+    AsCodeReferentialIntegrityLeftDtoV2:
+      required:
+      - field
+      type: object
+      properties:
+        field:
+          type: array
+          items:
+            type: string
+        groupBy:
+          $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+        partition:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+          - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+          - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+        timeWindow:
+          $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+        whereStatement:
+          type: string
+    AsCodeIntegerRangePartitionClauseDto:
+      required:
+      - field
+      - max
+      - min
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodePartitionClauseDto'
+      - type: object
+        properties:
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          max:
+            type: integer
+            format: int32
+          min:
+            type: integer
+            format: int32
+    AsCodeReferenceByIdOrNameDtoImpl:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    AsCodeAggregationClauseDtoV2:
+      required:
+      - kind
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Average
+          - NormalizedAverage
+          - Count
+          - CountAllRows
+          - DistinctCount
+          - Sum
+          - Max
+          - Min
+          - Quantile
+          - StandardDeviation
+          - Variance
+          - CustomAggregation
+      discriminator:
+        mapping:
+          Average: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          Count: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          CountAllRows: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          CustomAggregation: '#/components/schemas/AsCodeCustomAggregationClauseDtoV2'
+          DistinctCount: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          Max: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          Min: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          NormalizedAverage: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          Quantile: '#/components/schemas/AsCodeQuantileAggregationClauseDtoV2'
+          Range: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          StandardDeviation: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          Sum: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+          Variance: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+        propertyName: kind
+    AsCodeFieldNullsMonitorParamsDto:
+      required:
+      - field
+      - nullValues
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          field:
+            $ref: '#/components/schemas/AsCodeFieldReferenceDto'
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          nullValues:
+            type: string
+            enum:
+            - 'Null'
+            - NullAndEmpty
+            - NullEmptyAndWhitespaces
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeUnaryConditionDto:
+      required:
+      - expression
+      - kind
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeConditionDto'
+      - type: object
+        properties:
+          expression:
+            $ref: '#/components/schemas/AsCodeFieldExpressionDto'
+    AsCodeCompletenessMonitorParamsDto:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV1'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto'
+          whereStatement:
+            type: string
+    AsCodeRowDuplicatesMonitorParamsDto:
+      required:
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeJoinDto:
+      required:
+      - dataset
+      - joinCondition
+      - joinType
+      type: object
+      properties:
+        dataset:
+          $ref: '#/components/schemas/AsCodeDatasetReferenceDto'
+        joinCondition:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeEqualityJoinConditionDto'
+        joinType:
+          type: string
+          enum:
+          - Inner
+          - Left
+          - Right
+          - Outer
+    AsCodeDynamicMetricMonitorParamsDto:
+      required:
+      - aggregation
+      - field
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          aggregation:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV1'
+            - $ref: '#/components/schemas/AsCodeQuantileAggregationClauseDtoV1'
+          field:
+            type: string
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          threshold:
+            $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV1'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowWithOffsetFrequencyAndRollingClauseDto'
+          whereStatement:
+            type: string
+    AsCodeSqlConditionMonitorParamsDto:
+      required:
+      - sql
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          groupBy:
+            $ref: '#/components/schemas/AsCodeGroupByClauseDto'
+          partition:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeIngestionTimePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeIntegerRangePartitionClauseDto'
+            - $ref: '#/components/schemas/AsCodeTimeUnitColumnPartitionClauseDto'
+          sql:
+            type: string
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+          timeWindow:
+            $ref: '#/components/schemas/AsCodeTimeWindowClauseDtoV2'
+          whereStatement:
+            type: string
+    AsCodeCustomMetadataEntryReferenceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        value:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeCustomMetadataEntryLabelValueReferenceDto'
+          - $ref: '#/components/schemas/AsCodeCustomMetadataEntryStringValueReferenceDto'
+          - $ref: '#/components/schemas/AsCodeCustomMetadataEntryTeamValueReferenceDto'
+          - $ref: '#/components/schemas/AsCodeCustomMetadataEntryUserValueReferenceDto'
+    AsCodeSqlMonitorParamsDto:
+      required:
+      - sql
+      - threshold
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeMonitorParamsDto'
+      - type: object
+        properties:
+          sql:
+            type: string
+          threshold:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeDynamicThresholdDtoV2'
+            - $ref: '#/components/schemas/AsCodeStaticThresholdDtoV2'
+    AsCodeMonitorParamsDto:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+          - Metrics
+          - Freshness
+          - RowDuplicates
+          - FieldUniqueness
+          - SchemaChange
+          - Sql
+          - Conditional
+          - SqlCondition
+          - CorrelatedMetrics
+          - Distribution
+          - CustomMetrics
+          - FieldFormat
+          - FieldInList
+          - MetadataFreshness
+          - ReferentialIntegrity
+          - Volume
+          - ValueRange
+          - FieldDuplicates
+          - FieldNulls
+          - StaticFieldProfiling
+          - DynamicFieldProfiling
+          - StaticMetrics
+          - DynamicMetrics
+          - Completeness
+          - StaticCompleteness
+          - Duplicates
+      discriminator:
+        mapping:
+          Completeness@1: '#/components/schemas/AsCodeCompletenessMonitorParamsDto'
+          Conditional@2: '#/components/schemas/AsCodeConditionalMonitorParamsDto'
+          CorrelatedMetrics@2: '#/components/schemas/AsCodeCorrelatedMetricsMonitorParamsDto'
+          CustomMetrics@1: '#/components/schemas/AsCodeCustomMetricsMonitorParamsDtoV1'
+          CustomMetrics@2: '#/components/schemas/AsCodeCustomMetricsMonitorParamsDtoV2'
+          Distribution@1: '#/components/schemas/AsCodeDistributionMonitorParamsDto'
+          Distribution@2: '#/components/schemas/AsCodeDistributionMonitorParamsDto'
+          Duplicates@1: '#/components/schemas/AsCodeDuplicatesMonitorParamsDto'
+          DynamicFieldProfiling@1: '#/components/schemas/AsCodeDynamicFieldProfilingMonitorParamsDto'
+          DynamicMetrics@1: '#/components/schemas/AsCodeDynamicMetricMonitorParamsDto'
+          FieldDuplicates@2: '#/components/schemas/AsCodeFieldDuplicatesMonitorParamsDto'
+          FieldFormat@1: '#/components/schemas/AsCodeFieldFormatMonitorParamsDtoV1'
+          FieldFormat@2: '#/components/schemas/AsCodeFieldFormatMonitorParamsDtoV2'
+          FieldInList@1: '#/components/schemas/AsCodeFieldInListConstraintMonitorParamsDtoV1'
+          FieldInList@2: '#/components/schemas/AsCodeFieldInListConstraintMonitorParamsDtoV2'
+          FieldNulls@2: '#/components/schemas/AsCodeFieldNullsMonitorParamsDto'
+          FieldUniqueness@1: '#/components/schemas/AsCodeFieldUniquenessMonitorParamsDto'
+          Freshness@1: '#/components/schemas/AsCodeFreshnessMonitorParamsDtoV1'
+          Freshness@2: '#/components/schemas/AsCodeFreshnessMonitorParamsDtoV2'
+          MetadataFreshness@1: '#/components/schemas/AsCodeMetadataFreshnessMonitorParamsDtoV1'
+          MetadataFreshness@2: '#/components/schemas/AsCodeMetadataFreshnessMonitorParamsDtoV2'
+          Metrics@2: '#/components/schemas/AsCodeMetricsMonitorParamsDto'
+          ReferentialIntegrity@1: '#/components/schemas/AsCodeReferentialIntegrityMonitorParamsDtoV1'
+          ReferentialIntegrity@2: '#/components/schemas/AsCodeReferentialIntegrityMonitorParamsDtoV2'
+          RowDuplicates@2: '#/components/schemas/AsCodeRowDuplicatesMonitorParamsDto'
+          SchemaChange@1: '#/components/schemas/AsCodeSchemaChangeMonitorParamsDto'
+          SchemaChange@2: '#/components/schemas/AsCodeSchemaChangeMonitorParamsDto'
+          Sql@1: '#/components/schemas/AsCodeSqlMonitorParamsDto'
+          Sql@2: '#/components/schemas/AsCodeSqlMonitorParamsDto'
+          SqlCondition@2: '#/components/schemas/AsCodeSqlConditionMonitorParamsDto'
+          StaticCompleteness@1: '#/components/schemas/AsCodeStaticCompletenessMonitorParamsDto'
+          StaticFieldProfiling@1: '#/components/schemas/AsCodeStaticFieldProfilingMonitorParamsDto'
+          StaticMetrics@1: '#/components/schemas/AsCodeStaticMetricMonitorParamsDto'
+          ValueRange@2: '#/components/schemas/AsCodeValueRangeMonitorParamsDto'
+          Volume@2: '#/components/schemas/AsCodeVolumeMonitorParamsDto'
+        propertyName: kind
+    AsCodeCustomAggregationClauseDtoV2:
+      required:
+      - kind
+      - sql
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AsCodeAggregationClauseDtoV2'
+      - type: object
+        properties:
+          sql:
+            type: string
+    AsCodeMonitorDto:
+      required:
+      - incident
+      - joins
+      - name
+      - parameters
+      - version
+      type: object
+      properties:
+        connection:
+          $ref: '#/components/schemas/AsCodeConnectionParamsOverrideDto'
+        customMetadataEntries:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeCustomMetadataEntryReferenceDto'
+        datasets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeDatasetReferenceDto'
+        description:
+          type: string
+        friendlyId:
+          type: string
+        id:
+          type: string
+          format: uuid
+        incident:
+          $ref: '#/components/schemas/AsCodeIncidentDto'
+        joins:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeJoinDto'
+        kind:
+          type: string
+          enum:
+          - Workspace
+          - Monitor
+          - Asset
+          - Source
+          - Lineage
+        name:
+          type: string
+        notifications:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/AsCodeAlertingHookNotificationDto'
+            - $ref: '#/components/schemas/AsCodeJiraNotificationDto'
+            - $ref: '#/components/schemas/AsCodeServiceNowNotificationDto'
+        overrideNotificationRules:
+          type: boolean
+        parameters:
+          oneOf:
+          - $ref: '#/components/schemas/AsCodeCompletenessMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeConditionalMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeCorrelatedMetricsMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeCustomMetricsMonitorParamsDtoV1'
+          - $ref: '#/components/schemas/AsCodeCustomMetricsMonitorParamsDtoV2'
+          - $ref: '#/components/schemas/AsCodeDistributionMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeDuplicatesMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeDynamicFieldProfilingMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeDynamicMetricMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeFieldDuplicatesMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeFieldFormatMonitorParamsDtoV1'
+          - $ref: '#/components/schemas/AsCodeFieldFormatMonitorParamsDtoV2'
+          - $ref: '#/components/schemas/AsCodeFieldInListConstraintMonitorParamsDtoV1'
+          - $ref: '#/components/schemas/AsCodeFieldInListConstraintMonitorParamsDtoV2'
+          - $ref: '#/components/schemas/AsCodeFieldNullsMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeFieldUniquenessMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeFreshnessMonitorParamsDtoV1'
+          - $ref: '#/components/schemas/AsCodeFreshnessMonitorParamsDtoV2'
+          - $ref: '#/components/schemas/AsCodeMetadataFreshnessMonitorParamsDtoV1'
+          - $ref: '#/components/schemas/AsCodeMetadataFreshnessMonitorParamsDtoV2'
+          - $ref: '#/components/schemas/AsCodeMetricsMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeReferentialIntegrityMonitorParamsDtoV1'
+          - $ref: '#/components/schemas/AsCodeReferentialIntegrityMonitorParamsDtoV2'
+          - $ref: '#/components/schemas/AsCodeRowDuplicatesMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeSchemaChangeMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeSqlConditionMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeSqlMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeStaticCompletenessMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeStaticFieldProfilingMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeStaticMetricMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeValueRangeMonitorParamsDto'
+          - $ref: '#/components/schemas/AsCodeVolumeMonitorParamsDto'
+        schedule:
+          type: string
+        scheduleTimezone:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeTagReferenceDto'
+        terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/AsCodeReferenceByIdOrNameDtoImpl'
+        version:
+          type: integer
+          format: int32
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

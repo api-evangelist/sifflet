@@ -1,0 +1,3241 @@
+openapi: 3.2.0
+info:
+  description: 'Requirements:
+
+    - Create your access token through the UI
+
+    - Get your tenant name: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`'
+  title: Sifflet Backend Sources (v2) API
+  version: 1.0.0
+servers:
+- url: https://{tenant}.siffletdata.com/api
+  description: Production tenant
+  variables:
+    tenant:
+      description: if you access to Sifflet with `https://abcdef.siffletdata.com`, then your tenant would be `abcdef`
+      default: publicdemo
+- url: http://localhost:8090
+  description: Dev server started in intellij
+- url: http://localhost:8091
+  description: Dev server started in docker compose
+- url: http://localhost:8099
+  description: Dev server started with api recorder
+tags:
+- name: Sources (v2)
+paths:
+  /v2/sources:
+    get:
+      operationId: publicGetSourcesV2
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPageDtoPublicGetSourceV2Dto'
+          description: Sources retrieved
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get list of sources
+      tags:
+      - Sources (v2)
+    post:
+      operationId: publicCreateSourceV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PublicCreateAdfSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateAirflowSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateAthenaSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateBigQuerySourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDatabricksJobsSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDatabricksSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDbtCloudSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDbtSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateFivetranSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateLookerSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateMicrostrategySourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateMssqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateMysqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateOracleSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreatePostgresqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreatePowerBiSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateQlikSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateQuicksightSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateRedshiftSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateSnowflakeSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateSynapseSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateTableauSourceV2Dto'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PublicGetAdfSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetAirflowSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetAthenaSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetBigQuerySourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDatabricksJobsSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDatabricksSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDbtCloudSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDbtSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetFivetranSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetLookerSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMicrostrategySourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMssqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMysqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetOracleSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetPostgresqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetPowerBiSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetQlikSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetQuicksightSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetRedshiftSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetSnowflakeSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetSynapseSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetTableauSourceV2Dto'
+          description: Source created
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Create a source
+      tags:
+      - Sources (v2)
+  /v2/sources/run-subsource:
+    post:
+      operationId: publicRunSubsourceV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicRunSubsourceV2Dto'
+        required: true
+      responses:
+        '204':
+          description: Job triggered
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Manually trigger a subsource metadata ingestion job
+      tags:
+      - Sources (v2)
+  /v2/sources/test-connection:
+    post:
+      operationId: publicTestSourceConnectionV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PublicCreateAdfSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateAirflowSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateAthenaSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateBigQuerySourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDatabricksJobsSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDatabricksSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDbtCloudSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateDbtSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateFivetranSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateLookerSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateMicrostrategySourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateMssqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateMysqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateOracleSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreatePostgresqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreatePowerBiSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateQlikSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateQuicksightSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateRedshiftSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateSnowflakeSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateSynapseSourceV2Dto'
+              - $ref: '#/components/schemas/PublicCreateTableauSourceV2Dto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicTestSourceConnectionResponseV2Dto'
+          description: Connection test result
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Test connection with given source params
+      tags:
+      - Sources (v2)
+  /v2/sources/test-subsource-connection:
+    post:
+      operationId: publicTestSubsourceConnectionV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PublicTestAdfSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestAthenaSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestBigQuerySubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestDatabricksSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestDbtCloudSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestMssqlSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestOracleSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestPostgresqlSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestPowerBiSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestQlikSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestRedshiftSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestSnowflakeSubsourceConnectionV2Dto'
+              - $ref: '#/components/schemas/PublicTestSynapseSubsourceConnectionV2Dto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicTestSourceConnectionResponseV2Dto'
+          description: Connection test result
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Test connection with given subsource params
+      tags:
+      - Sources (v2)
+  /v2/sources/test-subsource-connection-by-uri:
+    post:
+      operationId: publicTestSubsourceConnectionByUriV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicTestSubsourceConnectionByUriV2Dto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicTestSourceConnectionResponseV2Dto'
+          description: Connection test result
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Test connection for an existing subsource identified by its URI
+      tags:
+      - Sources (v2)
+  /v2/sources/{id}:
+    delete:
+      operationId: publicDeleteSourceV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Source deleted
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Delete a source
+      tags:
+      - Sources (v2)
+    get:
+      operationId: publicGetSourceV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PublicGetAdfSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetAirflowSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetAthenaSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetBigQuerySourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDatabricksJobsSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDatabricksSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDbtCloudSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDbtSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetFivetranSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetLookerSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMicrostrategySourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMssqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMysqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetOracleSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetPostgresqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetPowerBiSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetQlikSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetQuicksightSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetRedshiftSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetSnowflakeSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetSynapseSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetTableauSourceV2Dto'
+          description: Source retrieved
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get a source by id
+      tags:
+      - Sources (v2)
+    patch:
+      operationId: publicEditSourceV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PublicUpdateSnowflakeSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateAirflowSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateMysqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateOracleSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdatePostgresqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateMssqlSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateTableauSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateSynapseSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateRedshiftSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateBigQuerySourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateDatabricksSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateDatabricksJobsSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateDbtSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateAthenaSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateDbtCloudSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateFivetranSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateLookerSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateMicrostrategySourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdatePowerBiSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateQlikSourceV2Dto'
+              - $ref: '#/components/schemas/PublicUpdateQuicksightSourceV2Dto'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PublicGetAdfSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetAirflowSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetAthenaSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetBigQuerySourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDatabricksJobsSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDatabricksSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDbtCloudSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetDbtSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetFivetranSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetLookerSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMicrostrategySourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMssqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetMysqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetOracleSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetPostgresqlSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetPowerBiSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetQlikSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetQuicksightSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetRedshiftSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetSnowflakeSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetSynapseSourceV2Dto'
+                - $ref: '#/components/schemas/PublicGetTableauSourceV2Dto'
+          description: Source edited
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Edit a source
+      tags:
+      - Sources (v2)
+  /v2/sources/{id}/run:
+    post:
+      operationId: publicRunSourceV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Job triggered
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Manually trigger an integration ingestion job
+      tags:
+      - Sources (v2)
+  /v2/sources/{id}/schemas:
+    get:
+      operationId: publicGetSourceSchemaList
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetSourceSchemaListDto'
+          description: Source schemas retrieved
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Get all schemas for a given source id
+      tags:
+      - Sources (v2)
+  /v2/sources/{id}/test-connection:
+    post:
+      operationId: publicTestExistingSourceConnectionV2
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicTestSourceConnectionResponseV2Dto'
+          description: Connection test result
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Bad request
+        '401':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Unauthorized
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Resource not found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Conflict
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiProblemSchema'
+          description: Internal server error
+      security:
+      - JWT: []
+      summary: Test connection for an existing source
+      tags:
+      - Sources (v2)
+components:
+  schemas:
+    TableauInformation:
+      required:
+      - host
+      - site
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Tableau Server hostname
+          example: https://dub01.online.tableau.com
+        site:
+          type: string
+          description: Your Tableau Server site. Leave empty if your Tableau environment is using the Default Site.
+          example: my_site
+      description: Tableau connection settings
+    PublicUpdateSynapseSourceV2Dto:
+      required:
+      - credentials
+      - synapseInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          synapseInformation:
+            $ref: '#/components/schemas/SynapseInformation'
+    PublicGetLastRunV2Dto:
+      type:
+      - object
+      - 'null'
+      properties:
+        status:
+          type: string
+          description: Last run status of the source
+          enum:
+          - RUNNING
+          - SUCCESS
+          - FAILURE
+        timestamp:
+          type: string
+          description: Timestamp of the last update of the source
+          format: date-time
+      description: Information about the last run of the source
+    MicrostrategyInformation:
+      required:
+      - host
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your MicroStrategy host
+      description: MicroStrategy connection settings
+    PublicTestBigQuerySubsourceConnectionV2Dto:
+      required:
+      - bigQueryInformation
+      - credentials
+      - datasetId
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          bigQueryInformation:
+            $ref: '#/components/schemas/BigQueryInformation'
+          datasetId:
+            type: string
+            description: The BigQuery dataset the subsource covers
+    SynapseInformation:
+      required:
+      - host
+      - port
+      type: object
+      properties:
+        host:
+          type: string
+          description: The host of your Synapse server
+          example: synapse-company.sql.azuresynapse.net
+        port:
+          type: integer
+          description: Your Synapse server port
+          format: int32
+          example: 1433
+      description: Synapse connection settings
+    PublicUpdateRedshiftSourceV2Dto:
+      required:
+      - credentials
+      - redshiftInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          redshiftInformation:
+            $ref: '#/components/schemas/RedshiftInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    MssqlInformation:
+      required:
+      - database
+      - host
+      - port
+      - ssl
+      type: object
+      properties:
+        database:
+          type: string
+          description: Your database name
+          example: my_database
+        host:
+          type: string
+          description: Your MSSQL server hostname
+          example: my-mssql-server.com
+        port:
+          type: integer
+          description: Your MSSQL server port
+          format: int32
+          example: 1433
+        ssl:
+          type: boolean
+          description: 'Whether to use SSL to connect to your MSSQL server (recommended: true)'
+      description: MSSQL connection settings
+    PublicUpdatePowerBiSourceV2Dto:
+      required:
+      - credentials
+      - powerBiInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          powerBiInformation:
+            $ref: '#/components/schemas/PowerBiInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateMysqlSourceV2Dto:
+      required:
+      - credentials
+      - mysqlInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          mysqlInformation:
+            $ref: '#/components/schemas/MysqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    AdfInformation:
+      required:
+      - factoryName
+      - resourceGroup
+      - subscriptionId
+      - tenantId
+      type: object
+      properties:
+        factoryName:
+          type: string
+          description: Your ADF Factory Name
+          example: factory-name
+        resourceGroup:
+          type: string
+          description: Your ADF Resource Group
+          example: adf-resource-group
+        subscriptionId:
+          type: string
+          description: Your ADF Subscription ID
+          example: 2e6956d4-16d3-414a-a3ab-441c69dde8bd
+        tenantId:
+          type: string
+          description: Your ADF Tenant ID
+          example: db5fa55d-63f8-7f7c-8bf5-34c4e5af9522
+      description: ADF connection settings
+    PublicTestMssqlSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - mssqlInformation
+      - schema
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          mssqlInformation:
+            $ref: '#/components/schemas/MssqlInformation'
+          schema:
+            type: string
+            description: The MS SQL Server schema the subsource covers
+    DatabricksJobsInformation:
+      required:
+      - host
+      - httpPath
+      - port
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Databricks Jobs server hostname
+          example: abc-123ab1234-abc1.cloud.databricks.com
+        httpPath:
+          type: string
+          description: Your Databricks Jobs HTTP path
+          example: /sql/1.0/warehouses/0123456789
+        port:
+          type: integer
+          description: Your Databricks Jobs server port
+          format: int32
+          example: 443
+      description: Databricks Jobs connection settings
+    PublicTestOracleSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - oracleInformation
+      - schema
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          oracleInformation:
+            $ref: '#/components/schemas/OracleInformation'
+          schema:
+            type: string
+            description: The Oracle schema the subsource covers
+    PublicGetMysqlSourceV2Dto:
+      required:
+      - credentials
+      - mysqlInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          mysqlInformation:
+            $ref: '#/components/schemas/MysqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateFivetranSourceV2Dto:
+      required:
+      - credentials
+      - fivetranInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          fivetranInformation:
+            $ref: '#/components/schemas/FivetranInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetTableauSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - tableauInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          tableauInformation:
+            $ref: '#/components/schemas/TableauInformation'
+    GitConnection:
+      required:
+      - authType
+      - secretId
+      - url
+      type: object
+      properties:
+        authType:
+          type: string
+          enum:
+          - HTTP_AUTHORIZATION_HEADER
+          - USER_PASSWORD
+          - SSH
+        branch:
+          type: string
+        secretId:
+          type: string
+        url:
+          type: string
+      description: 'The LookML configuration. See https://docs.siffletdata.com/docs/looker.
+
+        If you don’t use LookML or omit this field, it will default to an empty list.
+
+        '
+    PublicUpdateSnowflakeSourceV2Dto:
+      required:
+      - credentials
+      - snowflakeInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          snowflakeInformation:
+            $ref: '#/components/schemas/SnowflakeInformation'
+    MysqlInformation:
+      required:
+      - database
+      - host
+      - mysqlTlsVersion
+      - port
+      type: object
+      properties:
+        database:
+          type: string
+          description: Your database name
+          example: my_database
+        host:
+          type: string
+          description: Your MySQL server hostname
+          example: my-mysql-server.com
+        mysqlTlsVersion:
+          type: string
+          description: The TLS version to use to connect to your MySQL server
+          example: TLS_V_1_2
+          enum:
+          - TLS_V_1_2
+          - TLS_V_1_3
+        port:
+          type: integer
+          description: Your MySQL server port
+          format: int32
+          example: 3306
+      description: MySQL connection settings
+    PublicGetSourceSchemaDto:
+      required:
+      - uri
+      type: object
+      properties:
+        uri:
+          type: string
+      description: Schemas existing for the source
+    PublicRunSubsourceV2Dto:
+      required:
+      - uri
+      type: object
+      properties:
+        uri:
+          type: string
+    BigQueryInformation:
+      required:
+      - projectId
+      type: object
+      properties:
+        billingProjectId:
+          type: string
+          description: Your billing project ID
+          example: gcp-billing-project-id
+        projectId:
+          type: string
+          description: Your BigQuery project ID
+          example: gcp-project-id
+        workerProjectIds:
+          type: string
+          description: Comma separated list of project ids where your queries run. Optional if it's the same as the projectId parameter
+          example: gcp-worker-project-id-1,gcp-worker-project-id-2
+      description: BigQuery connection settings
+    PublicUpdateBigQuerySourceV2Dto:
+      required:
+      - bigQueryInformation
+      - credentials
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          bigQueryInformation:
+            $ref: '#/components/schemas/BigQueryInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetMssqlSourceV2Dto:
+      required:
+      - credentials
+      - mssqlInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          mssqlInformation:
+            $ref: '#/components/schemas/MssqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetPowerBiSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - powerBiInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          powerBiInformation:
+            $ref: '#/components/schemas/PowerBiInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - type
+      type: object
+      properties:
+        credentials:
+          type: string
+          description: Identifier (in the secret manager) of the credentials to use for the test
+        type:
+          type: string
+          description: The type of subsource to test
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - MSSQL
+          - MYSQL
+          - POSTGRESQL
+          - ORACLE
+          - SYNAPSE
+          - LOOKER
+          - TABLEAU
+          - QUICKSIGHT
+          - MICROSTRATEGY
+          - QLIK
+          - ADF
+          - AIRFLOW
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - POWER_BI
+          - DECLARATIVE
+      discriminator:
+        mapping:
+          ADF: '#/components/schemas/PublicTestAdfSubsourceConnectionV2Dto'
+          ATHENA: '#/components/schemas/PublicTestAthenaSubsourceConnectionV2Dto'
+          BIGQUERY: '#/components/schemas/PublicTestBigQuerySubsourceConnectionV2Dto'
+          DATABRICKS: '#/components/schemas/PublicTestDatabricksSubsourceConnectionV2Dto'
+          DBTCLOUD: '#/components/schemas/PublicTestDbtCloudSubsourceConnectionV2Dto'
+          MSSQL: '#/components/schemas/PublicTestMssqlSubsourceConnectionV2Dto'
+          ORACLE: '#/components/schemas/PublicTestOracleSubsourceConnectionV2Dto'
+          POSTGRESQL: '#/components/schemas/PublicTestPostgresqlSubsourceConnectionV2Dto'
+          POWER_BI: '#/components/schemas/PublicTestPowerBiSubsourceConnectionV2Dto'
+          QLIK: '#/components/schemas/PublicTestQlikSubsourceConnectionV2Dto'
+          REDSHIFT: '#/components/schemas/PublicTestRedshiftSubsourceConnectionV2Dto'
+          SNOWFLAKE: '#/components/schemas/PublicTestSnowflakeSubsourceConnectionV2Dto'
+          SYNAPSE: '#/components/schemas/PublicTestSynapseSubsourceConnectionV2Dto'
+        propertyName: type
+    PublicTestSourceConnectionResponseV2Dto:
+      type: object
+      properties:
+        errorMessages:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum:
+          - SUCCESS
+          - WARNING
+          - ERROR
+        successMessages:
+          type: array
+          items:
+            type: string
+        warningMessages:
+          type: array
+          items:
+            type: string
+    PublicUpdateQuicksightSourceV2Dto:
+      required:
+      - quicksightInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          quicksightInformation:
+            $ref: '#/components/schemas/QuicksightInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateTableauSourceV2Dto:
+      required:
+      - credentials
+      - tableauInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          tableauInformation:
+            $ref: '#/components/schemas/TableauInformation'
+    PublicUpdatePostgresqlSourceV2Dto:
+      required:
+      - credentials
+      - postgresqlInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          postgresqlInformation:
+            $ref: '#/components/schemas/PostgresqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateSynapseSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - schedule
+      - synapseInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          synapseInformation:
+            $ref: '#/components/schemas/SynapseInformation'
+    PublicGetFivetranSourceV2Dto:
+      required:
+      - credentials
+      - fivetranInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          fivetranInformation:
+            $ref: '#/components/schemas/FivetranInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    RedshiftInformation:
+      required:
+      - host
+      - port
+      - ssl
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Redshift server host
+          example: redshift.example.com
+        port:
+          type: integer
+          description: Your Redshift server port
+          format: int32
+          example: 5439
+        ssl:
+          type: boolean
+          description: Whether to use SSL to connect to your Redshift server
+      description: Redshift connection settings
+    PostgresqlInformation:
+      required:
+      - database
+      - host
+      - port
+      type: object
+      properties:
+        database:
+          type: string
+          description: Your database name
+          example: my_database
+        host:
+          type: string
+          description: Your PostgreSQL server host
+          example: my-postgresql-server.com
+        port:
+          type: integer
+          description: Your PostgreSQL server port
+          format: int32
+          example: 5432
+      description: PostgreSQL connection settings
+    PublicGetRedshiftSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - redshiftInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          redshiftInformation:
+            $ref: '#/components/schemas/RedshiftInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateBigQuerySourceV2Dto:
+      required:
+      - bigQueryInformation
+      - credentials
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          bigQueryInformation:
+            $ref: '#/components/schemas/BigQueryInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateDbtCloudSourceV2Dto:
+      required:
+      - credentials
+      - dbtCloudInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          dbtCloudInformation:
+            $ref: '#/components/schemas/DbtCloudInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestSnowflakeSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - database
+      - schema
+      - snowflakeInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          database:
+            type: string
+            description: The Snowflake database the subsource covers
+          schema:
+            type: string
+            description: The Snowflake schema the subsource covers
+          snowflakeInformation:
+            $ref: '#/components/schemas/SnowflakeInformation'
+    PublicCreateQlikSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - qlikInformation
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          qlikInformation:
+            $ref: '#/components/schemas/QlikInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateAdfSourceV2Dto:
+      required:
+      - adfInformation
+      - credentials
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          adfInformation:
+            $ref: '#/components/schemas/AdfInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestAthenaSubsourceConnectionV2Dto:
+      required:
+      - athenaInformation
+      - credentials
+      - database
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          athenaInformation:
+            $ref: '#/components/schemas/AthenaInformation'
+          database:
+            type: string
+            description: The Athena database the subsource covers
+    PublicTestQlikSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - qlikInformation
+      - spaceId
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          qlikInformation:
+            $ref: '#/components/schemas/QlikInformation'
+          spaceId:
+            type: string
+            description: The Qlik Space ID the subsource covers
+    SnowflakeInformation:
+      required:
+      - accountIdentifier
+      - warehouse
+      type: object
+      properties:
+        accountIdentifier:
+          type: string
+          description: Your Snowflake account identifier
+          example: my_account_identifier
+        warehouse:
+          type: string
+          description: Your Snowflake warehouse
+          example: my_warehouse
+      description: Snowflake connection settings
+    PublicUpdateMysqlSourceV2Dto:
+      required:
+      - credentials
+      - mysqlInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          mysqlInformation:
+            $ref: '#/components/schemas/MysqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    QlikInformation:
+      required:
+      - host
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Qlik server URL
+          example: https://your-qlik-server.com
+      description: Qlik connection settings
+    PublicTestSubsourceConnectionByUriV2Dto:
+      required:
+      - uri
+      type: object
+      properties:
+        uri:
+          type: string
+    PublicCreateLookerSourceV2Dto:
+      required:
+      - credentials
+      - lookerInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          lookerInformation:
+            $ref: '#/components/schemas/LookerInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestPowerBiSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - powerBiInformation
+      - type
+      - workspaceId
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          powerBiInformation:
+            $ref: '#/components/schemas/PowerBiInformation'
+          workspaceId:
+            type: string
+            description: The Power BI workspace ID the subsource covers
+    DbtCloudInformation:
+      required:
+      - accountId
+      - baseUrl
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Your dbt Cloud account ID
+          example: '12345'
+        baseUrl:
+          type: string
+          description: Your dbt Cloud base URL
+          example: https://cloud.getdbt.com/api/v2
+      description: DBT Cloud connection settings
+    DbtInformation:
+      required:
+      - projectName
+      - target
+      type: object
+      properties:
+        projectName:
+          type: string
+          description: Your dbt project name (the 'name' value in your dbt_project.yml file)
+          example: my_project
+        target:
+          type: string
+          description: Your dbt target name (the 'target' value in your profiles.yml file)
+          example: dev
+      description: DBT connection settings
+    PublicCreateRedshiftSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - redshiftInformation
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          redshiftInformation:
+            $ref: '#/components/schemas/RedshiftInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateDbtCloudSourceV2Dto:
+      required:
+      - credentials
+      - dbtCloudInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          dbtCloudInformation:
+            $ref: '#/components/schemas/DbtCloudInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    FivetranInformation:
+      required:
+      - host
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Fivetran environment URL
+          example: https://api.fivetran.com
+      description: Fivetran connection settings
+    PublicGetOracleSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - oracleInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          oracleInformation:
+            $ref: '#/components/schemas/OracleInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestSynapseSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - database
+      - schema
+      - synapseInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          database:
+            type: string
+            description: The Synapse database the subsource covers
+          schema:
+            type: string
+            description: The Synapse schema the subsource covers
+          synapseInformation:
+            $ref: '#/components/schemas/SynapseInformation'
+    PublicGetDatabricksJobsSourceV2Dto:
+      required:
+      - credentials
+      - databricksJobsInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          databricksJobsInformation:
+            $ref: '#/components/schemas/DatabricksJobsInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateDatabricksJobsSourceV2Dto:
+      required:
+      - credentials
+      - databricksJobsInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          databricksJobsInformation:
+            $ref: '#/components/schemas/DatabricksJobsInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    ApiProblemSchema:
+      type: object
+      properties:
+        detail:
+          type: string
+        response:
+          type: string
+        status:
+          type: integer
+          format: int32
+        title:
+          type: string
+        type:
+          type: string
+    PublicUpdateSourceV2Dto:
+      required:
+      - type
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the source
+        type:
+          type: string
+          description: Source type
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - MSSQL
+          - MYSQL
+          - POSTGRESQL
+          - ORACLE
+          - SYNAPSE
+          - LOOKER
+          - TABLEAU
+          - QUICKSIGHT
+          - MICROSTRATEGY
+          - QLIK
+          - ADF
+          - AIRFLOW
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - POWER_BI
+          - DECLARATIVE
+      discriminator:
+        mapping:
+          ADF: '#/components/schemas/PublicUpdateAdfSourceV2Dto'
+          AIRFLOW: '#/components/schemas/PublicUpdateAirflowSourceV2Dto'
+          ATHENA: '#/components/schemas/PublicUpdateAthenaSourceV2Dto'
+          BIGQUERY: '#/components/schemas/PublicUpdateBigQuerySourceV2Dto'
+          DATABRICKS: '#/components/schemas/PublicUpdateDatabricksSourceV2Dto'
+          DATABRICKS_JOBS: '#/components/schemas/PublicUpdateDatabricksJobsSourceV2Dto'
+          DBT: '#/components/schemas/PublicUpdateDbtSourceV2Dto'
+          DBTCLOUD: '#/components/schemas/PublicUpdateDbtCloudSourceV2Dto'
+          FIVETRAN: '#/components/schemas/PublicUpdateFivetranSourceV2Dto'
+          LOOKER: '#/components/schemas/PublicUpdateLookerSourceV2Dto'
+          MICROSTRATEGY: '#/components/schemas/PublicUpdateMicrostrategySourceV2Dto'
+          MSSQL: '#/components/schemas/PublicUpdateMssqlSourceV2Dto'
+          MYSQL: '#/components/schemas/PublicUpdateMysqlSourceV2Dto'
+          ORACLE: '#/components/schemas/PublicUpdateOracleSourceV2Dto'
+          POSTGRESQL: '#/components/schemas/PublicUpdatePostgresqlSourceV2Dto'
+          POWER_BI: '#/components/schemas/PublicUpdatePowerBiSourceV2Dto'
+          QLIK: '#/components/schemas/PublicUpdateQlikSourceV2Dto'
+          QUICKSIGHT: '#/components/schemas/PublicUpdateQuicksightSourceV2Dto'
+          REDSHIFT: '#/components/schemas/PublicUpdateRedshiftSourceV2Dto'
+          SNOWFLAKE: '#/components/schemas/PublicUpdateSnowflakeSourceV2Dto'
+          SYNAPSE: '#/components/schemas/PublicUpdateSynapseSourceV2Dto'
+          TABLEAU: '#/components/schemas/PublicUpdateTableauSourceV2Dto'
+        propertyName: type
+    LookerInformation:
+      required:
+      - host
+      type: object
+      properties:
+        gitConnections:
+          type: array
+          description: 'The LookML configuration. See https://docs.siffletdata.com/docs/looker.
+
+            If you don’t use LookML or omit this field, it will default to an empty list.
+
+            '
+          items:
+            $ref: '#/components/schemas/GitConnection'
+        host:
+          type: string
+          description: "URL of the Looker site and append at the end the following \"/api/4.0\".\nFor instance if you usually connect to Looker on \"https://abcdef.cloud.looker.com/\",\n then you should add the following on host: \"https://abcdef.cloud.looker.com/api/4.0\"\n"
+          example: https://abcdef.cloud.looker.com/api/4.0
+      description: Looker connection settings
+    PublicCreateMssqlSourceV2Dto:
+      required:
+      - credentials
+      - mssqlInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          mssqlInformation:
+            $ref: '#/components/schemas/MssqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateDatabricksSourceV2Dto:
+      required:
+      - credentials
+      - databricksInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          databricksInformation:
+            $ref: '#/components/schemas/DatabricksInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetQuicksightSourceV2Dto:
+      required:
+      - name
+      - quicksightInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          quicksightInformation:
+            $ref: '#/components/schemas/QuicksightInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateAthenaSourceV2Dto:
+      required:
+      - athenaInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          athenaInformation:
+            $ref: '#/components/schemas/AthenaInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateTableauSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - schedule
+      - tableauInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          tableauInformation:
+            $ref: '#/components/schemas/TableauInformation'
+    PublicCreateDatabricksJobsSourceV2Dto:
+      required:
+      - credentials
+      - databricksJobsInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          databricksJobsInformation:
+            $ref: '#/components/schemas/DatabricksJobsInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    DatabricksInformation:
+      required:
+      - host
+      - httpPath
+      - port
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Databricks server hostname
+          example: abc-123ab1234-abc1.cloud.databricks.com
+        httpPath:
+          type: string
+          description: Your Databricks HTTP path
+          example: /sql/1.0/warehouses/0123456789
+        port:
+          type: integer
+          description: Your Databricks server port
+          format: int32
+          example: 443
+      description: Databricks connection settings
+    PublicCreateSnowflakeSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - schedule
+      - snowflakeInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          snowflakeInformation:
+            $ref: '#/components/schemas/SnowflakeInformation'
+    PublicGetAthenaSourceV2Dto:
+      required:
+      - athenaInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          athenaInformation:
+            $ref: '#/components/schemas/AthenaInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetSourceV2Dto:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+          description: id the source
+          format: uuid
+        lastRun:
+          $ref: '#/components/schemas/PublicGetLastRunV2Dto'
+        name:
+          type: string
+          description: Name of the source
+        type:
+          type: string
+          description: Source type
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - MSSQL
+          - MYSQL
+          - POSTGRESQL
+          - ORACLE
+          - SYNAPSE
+          - LOOKER
+          - TABLEAU
+          - QUICKSIGHT
+          - MICROSTRATEGY
+          - QLIK
+          - ADF
+          - AIRFLOW
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - POWER_BI
+          - DECLARATIVE
+      discriminator:
+        mapping:
+          ADF: '#/components/schemas/PublicGetAdfSourceV2Dto'
+          AIRFLOW: '#/components/schemas/PublicGetAirflowSourceV2Dto'
+          ATHENA: '#/components/schemas/PublicGetAthenaSourceV2Dto'
+          BIGQUERY: '#/components/schemas/PublicGetBigQuerySourceV2Dto'
+          DATABRICKS: '#/components/schemas/PublicGetDatabricksSourceV2Dto'
+          DATABRICKS_JOBS: '#/components/schemas/PublicGetDatabricksJobsSourceV2Dto'
+          DBT: '#/components/schemas/PublicGetDbtSourceV2Dto'
+          DBT_CLOUD: '#/components/schemas/PublicGetDbtCloudSourceV2Dto'
+          FIVETRAN: '#/components/schemas/PublicGetFivetranSourceV2Dto'
+          LOOKER: '#/components/schemas/PublicGetLookerSourceV2Dto'
+          MICROSTRATEGY: '#/components/schemas/PublicGetMicrostrategySourceV2Dto'
+          MSSQL: '#/components/schemas/PublicGetMssqlSourceV2Dto'
+          MYSQL: '#/components/schemas/PublicGetMysqlSourceV2Dto'
+          ORACLE: '#/components/schemas/PublicGetOracleSourceV2Dto'
+          POSTGRESQL: '#/components/schemas/PublicGetPostgresqlSourceV2Dto'
+          POWER_BI: '#/components/schemas/PublicGetPowerBiSourceV2Dto'
+          QLIK: '#/components/schemas/PublicGetQlikSourceV2Dto'
+          QUICKSIGHT: '#/components/schemas/PublicGetQuicksightSourceV2Dto'
+          REDSHIFT: '#/components/schemas/PublicGetRedshiftSourceV2Dto'
+          SNOWFLAKE: '#/components/schemas/PublicGetSnowflakeSourceV2Dto'
+          SYNAPSE: '#/components/schemas/PublicGetSynapseSourceV2Dto'
+          TABLEAU: '#/components/schemas/PublicGetTableauSourceV2Dto'
+        propertyName: type
+    PublicCreateQuicksightSourceV2Dto:
+      required:
+      - name
+      - quicksightInformation
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          quicksightInformation:
+            $ref: '#/components/schemas/QuicksightInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestDatabricksSubsourceConnectionV2Dto:
+      required:
+      - catalog
+      - credentials
+      - databricksInformation
+      - schema
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          catalog:
+            type: string
+            description: The Databricks catalog the subsource covers
+          databricksInformation:
+            $ref: '#/components/schemas/DatabricksInformation'
+          schema:
+            type: string
+            description: The Databricks schema the subsource covers
+    PublicGetQlikSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - qlikInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          qlikInformation:
+            $ref: '#/components/schemas/QlikInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateDatabricksSourceV2Dto:
+      required:
+      - credentials
+      - databricksInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          databricksInformation:
+            $ref: '#/components/schemas/DatabricksInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateLookerSourceV2Dto:
+      required:
+      - credentials
+      - lookerInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          lookerInformation:
+            $ref: '#/components/schemas/LookerInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetBigQuerySourceV2Dto:
+      required:
+      - bigQueryInformation
+      - credentials
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          bigQueryInformation:
+            $ref: '#/components/schemas/BigQueryInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetDatabricksSourceV2Dto:
+      required:
+      - credentials
+      - databricksInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          databricksInformation:
+            $ref: '#/components/schemas/DatabricksInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateQlikSourceV2Dto:
+      required:
+      - credentials
+      - qlikInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          qlikInformation:
+            $ref: '#/components/schemas/QlikInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PowerBiInformation:
+      required:
+      - clientId
+      - tenantId
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: Your Azure AD client ID
+          example: 12345678-1234-1234-1234-123456789012
+        tenantId:
+          type: string
+          description: Your Azure AD tenant ID
+          example: 12345678-1234-1234-1234-123456789012
+      description: Power BI connection settings
+    PublicGetDbtSourceV2Dto:
+      required:
+      - dbtInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          dbtInformation:
+            $ref: '#/components/schemas/DbtInformation'
+    PublicGetLookerSourceV2Dto:
+      required:
+      - credentials
+      - lookerInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          lookerInformation:
+            $ref: '#/components/schemas/LookerInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetPostgresqlSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - postgresqlInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          postgresqlInformation:
+            $ref: '#/components/schemas/PostgresqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicGetAdfSourceV2Dto:
+      required:
+      - adfInformation
+      - credentials
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          adfInformation:
+            $ref: '#/components/schemas/AdfInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    AirflowInformation:
+      required:
+      - host
+      - port
+      type: object
+      properties:
+        host:
+          type: string
+          description: Your Airflow server hostname
+          example: airflow.example.com
+        port:
+          type: integer
+          description: Your Airflow server port
+          format: int32
+          example: 8080
+      description: Airflow connection settings
+    PublicUpdateAthenaSourceV2Dto:
+      required:
+      - athenaInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          athenaInformation:
+            $ref: '#/components/schemas/AthenaInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestPostgresqlSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - postgresqlInformation
+      - schema
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          postgresqlInformation:
+            $ref: '#/components/schemas/PostgresqlInformation'
+          schema:
+            type: string
+            description: The PostgreSQL schema the subsource covers
+    PublicGetSnowflakeSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - snowflakeInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          snowflakeInformation:
+            $ref: '#/components/schemas/SnowflakeInformation'
+    PublicGetSourceSchemaListDto:
+      required:
+      - id
+      - schemas
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        schemas:
+          type: array
+          description: Schemas existing for the source
+          items:
+            $ref: '#/components/schemas/PublicGetSourceSchemaDto'
+    PublicTestDbtCloudSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - dbtCloudInformation
+      - projectId
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          dbtCloudInformation:
+            $ref: '#/components/schemas/DbtCloudInformation'
+          projectId:
+            type: string
+            description: The dbt Cloud project ID the subsource covers
+    PublicCreateFivetranSourceV2Dto:
+      required:
+      - credentials
+      - fivetranInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          fivetranInformation:
+            $ref: '#/components/schemas/FivetranInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateMssqlSourceV2Dto:
+      required:
+      - credentials
+      - mssqlInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          mssqlInformation:
+            $ref: '#/components/schemas/MssqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateAirflowSourceV2Dto:
+      required:
+      - airflowInformation
+      - credentials
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          airflowInformation:
+            $ref: '#/components/schemas/AirflowInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateSourceV2Dto:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the source
+        type:
+          type: string
+          description: Source type
+          enum:
+          - ATHENA
+          - BIGQUERY
+          - REDSHIFT
+          - SNOWFLAKE
+          - DATABRICKS
+          - DATABRICKS_JOBS
+          - MSSQL
+          - MYSQL
+          - POSTGRESQL
+          - ORACLE
+          - SYNAPSE
+          - LOOKER
+          - TABLEAU
+          - QUICKSIGHT
+          - MICROSTRATEGY
+          - QLIK
+          - ADF
+          - AIRFLOW
+          - DBT
+          - DBTCLOUD
+          - FIVETRAN
+          - POWER_BI
+          - DECLARATIVE
+      discriminator:
+        mapping:
+          ADF: '#/components/schemas/PublicCreateAdfSourceV2Dto'
+          AIRFLOW: '#/components/schemas/PublicCreateAirflowSourceV2Dto'
+          ATHENA: '#/components/schemas/PublicCreateAthenaSourceV2Dto'
+          BIGQUERY: '#/components/schemas/PublicCreateBigQuerySourceV2Dto'
+          DATABRICKS: '#/components/schemas/PublicCreateDatabricksSourceV2Dto'
+          DATABRICKS_JOBS: '#/components/schemas/PublicCreateDatabricksJobsSourceV2Dto'
+          DBT: '#/components/schemas/PublicCreateDbtSourceV2Dto'
+          DBTCLOUD: '#/components/schemas/PublicCreateDbtCloudSourceV2Dto'
+          FIVETRAN: '#/components/schemas/PublicCreateFivetranSourceV2Dto'
+          LOOKER: '#/components/schemas/PublicCreateLookerSourceV2Dto'
+          MICROSTRATEGY: '#/components/schemas/PublicCreateMicrostrategySourceV2Dto'
+          MSSQL: '#/components/schemas/PublicCreateMssqlSourceV2Dto'
+          MYSQL: '#/components/schemas/PublicCreateMysqlSourceV2Dto'
+          ORACLE: '#/components/schemas/PublicCreateOracleSourceV2Dto'
+          POSTGRESQL: '#/components/schemas/PublicCreatePostgresqlSourceV2Dto'
+          POWER_BI: '#/components/schemas/PublicCreatePowerBiSourceV2Dto'
+          QLIK: '#/components/schemas/PublicCreateQlikSourceV2Dto'
+          QUICKSIGHT: '#/components/schemas/PublicCreateQuicksightSourceV2Dto'
+          REDSHIFT: '#/components/schemas/PublicCreateRedshiftSourceV2Dto'
+          SNOWFLAKE: '#/components/schemas/PublicCreateSnowflakeSourceV2Dto'
+          SYNAPSE: '#/components/schemas/PublicCreateSynapseSourceV2Dto'
+          TABLEAU: '#/components/schemas/PublicCreateTableauSourceV2Dto'
+        propertyName: type
+    PublicGetMicrostrategySourceV2Dto:
+      required:
+      - credentials
+      - microstrategyInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          microstrategyInformation:
+            $ref: '#/components/schemas/MicrostrategyInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    QuicksightInformation:
+      required:
+      - accountId
+      - awsRegion
+      - roleArn
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: Your AWS account ID
+          example: '123456789101'
+        awsRegion:
+          type: string
+          description: Your AWS region
+          example: us-east-1
+        roleArn:
+          type: string
+          description: The ARN for your QuickSight role
+          example: arn:aws:iam::123456789101:role/sifflet_quicksight_read_role
+      description: QuickSight connection settings
+    PublicUpdateMicrostrategySourceV2Dto:
+      required:
+      - credentials
+      - microstrategyInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          microstrategyInformation:
+            $ref: '#/components/schemas/MicrostrategyInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreatePowerBiSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - powerBiInformation
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          powerBiInformation:
+            $ref: '#/components/schemas/PowerBiInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateMicrostrategySourceV2Dto:
+      required:
+      - credentials
+      - microstrategyInformation
+      - name
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          microstrategyInformation:
+            $ref: '#/components/schemas/MicrostrategyInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateOracleSourceV2Dto:
+      required:
+      - credentials
+      - oracleInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          oracleInformation:
+            $ref: '#/components/schemas/OracleInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    AthenaInformation:
+      required:
+      - datasource
+      - region
+      - roleArn
+      - s3OutputLocation
+      - workgroup
+      type: object
+      properties:
+        datasource:
+          type: string
+          description: Your Athena data source name
+          example: AwsDataCatalog
+        region:
+          type: string
+          description: Your Athena instance AWS region
+          example: us-east-1
+        roleArn:
+          type: string
+          description: ARN of the IAM role to use for Athena queries
+          example: arn:aws:iam::123456789101:role/sifflet_athena_read_role
+        s3OutputLocation:
+          type: string
+          description: The S3 location where Athena query results are stored
+          example: s3://my-athena-bucket/
+        vpcUrl:
+          type: string
+          description: Your VPC URL for Athena connection
+        workgroup:
+          type: string
+          description: Your Athena workgroup name
+          example: primary
+      description: Athena connection settings
+    PublicUpdateDbtSourceV2Dto:
+      required:
+      - dbtInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          dbtInformation:
+            $ref: '#/components/schemas/DbtInformation'
+    PublicTestRedshiftSubsourceConnectionV2Dto:
+      required:
+      - credentials
+      - database
+      - redshiftInformation
+      - schema
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          database:
+            type: string
+            description: The Redshift database the subsource covers
+          redshiftInformation:
+            $ref: '#/components/schemas/RedshiftInformation'
+          schema:
+            type: string
+            description: The Redshift schema the subsource covers
+    PublicGetDbtCloudSourceV2Dto:
+      required:
+      - credentials
+      - dbtCloudInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          dbtCloudInformation:
+            $ref: '#/components/schemas/DbtCloudInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicUpdateAirflowSourceV2Dto:
+      required:
+      - airflowInformation
+      - credentials
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicUpdateSourceV2Dto'
+      - type: object
+        properties:
+          airflowInformation:
+            $ref: '#/components/schemas/AirflowInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreateDbtSourceV2Dto:
+      required:
+      - dbtInformation
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          dbtInformation:
+            $ref: '#/components/schemas/DbtInformation'
+    PublicCreateOracleSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - oracleInformation
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          oracleInformation:
+            $ref: '#/components/schemas/OracleInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicTestAdfSubsourceConnectionV2Dto:
+      required:
+      - adfInformation
+      - credentials
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicTestSubsourceConnectionV2Dto'
+      - type: object
+        properties:
+          adfInformation:
+            $ref: '#/components/schemas/AdfInformation'
+    PublicGetSynapseSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - synapseInformation
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+          synapseInformation:
+            $ref: '#/components/schemas/SynapseInformation'
+    PublicGetAirflowSourceV2Dto:
+      required:
+      - airflowInformation
+      - credentials
+      - name
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicGetSourceV2Dto'
+      - type: object
+        properties:
+          airflowInformation:
+            $ref: '#/components/schemas/AirflowInformation'
+          credentials:
+            type: string
+            description: Credentials of the source
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    PublicCreatePostgresqlSourceV2Dto:
+      required:
+      - credentials
+      - name
+      - postgresqlInformation
+      - schedule
+      - type
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/PublicCreateSourceV2Dto'
+      - type: object
+        properties:
+          credentials:
+            type: string
+            description: Credentials of the source
+          postgresqlInformation:
+            $ref: '#/components/schemas/PostgresqlInformation'
+          schedule:
+            type:
+            - string
+            - 'null'
+            description: Schedule of the source. Supports CRON syntax. If empty, the source won't be scheduled.
+    OracleInformation:
+      required:
+      - database
+      - host
+      - port
+      type: object
+      properties:
+        database:
+          type: string
+          description: Your database name
+          example: my_database
+        host:
+          type: string
+          description: Your Oracle server hostname
+          example: my-oracle-server.com
+        port:
+          type: integer
+          description: Your Oracle server port
+          format: int32
+          example: 1521
+      description: Oracle connection settings
+    PublicPageDtoPublicGetSourceV2Dto:
+      required:
+      - data
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/PublicGetAdfSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetAirflowSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetAthenaSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetBigQuerySourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetDatabricksJobsSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetDatabricksSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetDbtCloudSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetDbtSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetFivetranSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetLookerSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetMicrostrategySourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetMssqlSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetMysqlSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetOracleSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetPostgresqlSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetPowerBiSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetQlikSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetQuicksightSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetRedshiftSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetSnowflakeSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetSynapseSourceV2Dto'
+            - $ref: '#/components/schemas/PublicGetTableauSourceV2Dto'
+        totalCount:
+          type: integer
+          format: int64
+  securitySchemes:
+    JWT:
+      bearerFormat: Bearer [token]
+      description: JWT authentication with bearer token. [Create your access token through the UI](https://docs.siffletdata.com/docs/generate-an-api-token#create-an-api-token).
+      scheme: bearer
+      type: http
+x-provenance:
+  method: searched
+  source: https://docs.siffletdata.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.siffletdata.com/reference/decryptrulegroups.md
+  - https://docs.siffletdata.com/reference/decryptrulerungroups.md
+  - https://docs.siffletdata.com/reference/getallmonitorsascode.md
+  - https://docs.siffletdata.com/reference/getallrule.md
+  - https://docs.siffletdata.com/reference/getsiffletruledetails.md
+  - https://docs.siffletdata.com/reference/getsiffletruleinfo.md
+  - https://docs.siffletdata.com/reference/getsiffletruleoverview.md
+  - https://docs.siffletdata.com/reference/getsiffletrulerun.md
+  - https://docs.siffletdata.com/reference/getsiffletruleruns.md
+  - https://docs.siffletdata.com/reference/publiccreatecalendar.md
+  - https://docs.siffletdata.com/reference/publiccreatecredentials.md
+  - https://docs.siffletdata.com/reference/publiccreatedomain.md
+  - https://docs.siffletdata.com/reference/publiccreatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publiccreatesource.md
+  - https://docs.siffletdata.com/reference/publiccreatesourcev2.md
+  - https://docs.siffletdata.com/reference/publiccreateteam.md
+  - https://docs.siffletdata.com/reference/publiccreateuser.md
+  - https://docs.siffletdata.com/reference/publicdeletecalendar.md
+  - https://docs.siffletdata.com/reference/publicdeletecredentials.md
+  - https://docs.siffletdata.com/reference/publicdeletedomain.md
+  - https://docs.siffletdata.com/reference/publicdeletenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcebyid.md
+  - https://docs.siffletdata.com/reference/publicdeletesourcev2.md
+  - https://docs.siffletdata.com/reference/publicdeleteteam.md
+  - https://docs.siffletdata.com/reference/publicdeleteuser.md
+  - https://docs.siffletdata.com/reference/publicdeleteworkspace.md
+  - https://docs.siffletdata.com/reference/publiceditasset-1.md
+  - https://docs.siffletdata.com/reference/publiceditsource.md
+  - https://docs.siffletdata.com/reference/publiceditsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetallcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetasset-1.md
+  - https://docs.siffletdata.com/reference/publicgetassets-1.md
+  - https://docs.siffletdata.com/reference/publicgetcalendar.md
+  - https://docs.siffletdata.com/reference/publicgetcalendars.md
+  - https://docs.siffletdata.com/reference/publicgetcredentials.md
+  - https://docs.siffletdata.com/reference/publicgetdomain.md
+  - https://docs.siffletdata.com/reference/publicgetdomains.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrule.md
+  - https://docs.siffletdata.com/reference/publicgetnotificationrules.md
+  - https://docs.siffletdata.com/reference/publicgetsource.md
+  - https://docs.siffletdata.com/reference/publicgetsources.md
+  - https://docs.siffletdata.com/reference/publicgetsourceschemalist.md
+  - https://docs.siffletdata.com/reference/publicgetsourcesv2.md
+  - https://docs.siffletdata.com/reference/publicgetsourcev2.md
+  - https://docs.siffletdata.com/reference/publicgetteam.md
+  - https://docs.siffletdata.com/reference/publicgetteams.md
+  - https://docs.siffletdata.com/reference/publicgetuser.md
+  - https://docs.siffletdata.com/reference/publicgetusers.md
+  - https://docs.siffletdata.com/reference/publicimportexternalcatalog.md
+  - https://docs.siffletdata.com/reference/publicresetuserpassword.md
+  - https://docs.siffletdata.com/reference/publicrunsourcev2.md
+  - https://docs.siffletdata.com/reference/publicrunsubsourcev2.md
+  - https://docs.siffletdata.com/reference/publicsourceingestionmanualrun.md
+  - https://docs.siffletdata.com/reference/publicsyncassets.md
+  - https://docs.siffletdata.com/reference/publictestexistingsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionbyuriv2.md
+  - https://docs.siffletdata.com/reference/publictestsubsourceconnectionv2.md
+  - https://docs.siffletdata.com/reference/publicupdatecalendar.md
+  - https://docs.siffletdata.com/reference/publicupdatecredentials.md
+  - https://docs.siffletdata.com/reference/publicupdatedomain.md
+  - https://docs.siffletdata.com/reference/publicupdatenotificationrule.md
+  - https://docs.siffletdata.com/reference/publicupdateteam.md
+  - https://docs.siffletdata.com/reference/publicupdateuser.md
+  - https://docs.siffletdata.com/reference/siffletrulemanualrun.md
+  - https://docs.siffletdata.com/reference/testsourceconnection.md
+  - https://docs.siffletdata.com/reference/uploaddbtmetadatafiles.md
+  merge:
+    pages: 67
+    deduped: 626
+    conflicts_kept_first: 0

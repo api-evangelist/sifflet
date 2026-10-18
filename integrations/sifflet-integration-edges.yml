@@ -1,5 +1,5 @@
 generated: '2026-10-14'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/sifflet/integrations
 - https://n8n.io/integrations/sifflet/
@@ -10,7 +10,25 @@ checked:
 - https://monid.ai/tools/sifflet
 - https://n8n.io/integrations/sifflet/
 - https://zapier.com/apps/sifflet/integrations
+- slack/integrations/slack-integration-edges.yml
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: Slack (own)
+  partner: slack
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://slack.com/marketplace/A02STM3M664-sifflet-app
+  mirror_of: slack/integrations/slack-integration-edges.yml
+  apps:
+  - Sifflet App
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Slack app
 templates: []

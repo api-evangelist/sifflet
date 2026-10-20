@@ -7,8 +7,13 @@ source:
 - https://monid.ai/tools/sifflet
 checked:
 - https://api.nuget.org/v3
+- https://cdn.winget.microsoft.com/cache
 - https://composio.dev/toolkits/sifflet
 - https://crates.io/api/v1
+- https://formulae.brew.sh/api/cask.json
+- https://formulae.brew.sh/api/formula.json
+- https://github.com/ScoopInstaller/Extras
+- https://github.com/ScoopInstaller/Main
 - https://monid.ai/tools/sifflet
 - https://n8n.io/integrations/sifflet/
 - https://proxy.golang.org
@@ -68,4 +73,34 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official CLI (PyPI)
+  evidence: https://pypi.org/project/sifflet/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public package index)
+    spec_file: null
+    packages:
+    - name: sifflet
+      version: 0.6.1
+      released: '2026-07-23'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/sifflet/
+      cli: 'PyPI name/summary: Sifflet CLI'
+      repo_leg: domain:siffletdata.com
+      publisher_leg: email:siffletdata.com
+      matched_by: domain
+    current: true
+    signal_note: 'the provider''s own command-line tool on a package manager: distribution, not an integration;
+      lapsed = no release in 24 months or deprecated / disabled by the manager'
+    detected_by: sweep-official-clis.py
+    detected: '2026-10-20'
+  detected_by: sweep-official-clis.py
+  first_seen: '2026-10-20'
 templates: []
